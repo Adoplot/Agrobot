@@ -1,0 +1,152 @@
+Entry Text File Format Version: 1.0
+_ROBOT.INF( SYSTEM INFORMATION OF ROBOT CONTROLLER )
+_INF file made date   : 2024-09-04     18:42:26
+_INF file backup date : 2024/10/15     09:35:20
+
+=<< Body Information >>=================================
+     Robot type       =HH7-02
+     Axis Number      =6[Axes]
+     Add Axis Number  =0[Axes]
+ 
+=<< Main Board Information >>==========================
+     Main S/W   =V40.25-00, 2021.07.01
+     Built it at Jul  1 2021, 09:33:50
+     Main B/D Serial Number = BD511V10-2110-185
+     Main B/D PLD = V1.0
+     Dip Switch=FF
+ 
+=<< T/P Information >>=================================
+     T/P Version=V40.25-00, 2021.08.31
+     OS Build   =V1.03,    2021.06.14
+ 
+=<< DSP Board Information >>===========================
+     DSP1 S/W   =V06.31,    2020.11.27
+     DSP2 S/W   =V06.31,    2020.11.27
+     DSP3 S/W   =V00.00,    0000.00.00
+     DSP4 S/W   =V00.00,    0000.00.00
+     HW #1=BD544V0B, PLD=00.14
+     HW #2=, PLD=00.00
+ 
+=<< I/O Board Information >>===========================
+     Sys.IO H/W =BD530V22, PLD=00.00
+     Sys.IO S/W =V03.02,    2015.11.12
+     User #1 H/W =BD587V10, PLD=00.00
+     User #1 S/W =V01.00,    2016.10.31
+ 
+=<< Display Of Run Time >>=============================
+     Run time   =0:00:00.00
+     Cycle time =0:00:00.00,      Cycle=0
+     Gun1 time  =0:00:00.00,      count=0
+     Gun2 time  =0:00:00.00,      count=0
+     Gun3 time  =0:00:00.00,      count=0
+     Gun4 time  =0:00:00.00,      count=0
+     Wait,DI waiting time =0:00:00.00
+     Timer waiting time   =0:00:00.00
+ 
+=<< Display Of Total Run Time >>=======================
+     Total run time    =0Days 2:39:01.28
+     Total cycle count =1
+     Gun1 time  =0Days 0:00:00.00,      count=0
+     Gun2 time  =0Days 0:00:00.00,      count=0
+     Gun3 time  =0Days 0:00:00.00,      count=0
+     Gun4 time  =0Days 0:00:00.00,      count=0
+     Wait,DI waiting time =0:00:00.00
+     Timer waiting time   =0:13:12.00
+     Motor on time        =0Days 3:51:39.00
+     Moving time in auto mode = 0Days 2:38:14.00
+ 
+=<< Display Of Arc Data >>=============================
+  Arc On time (Cumulation)   =0:00:00.00
+  Arc On time (1 Cycle)      =0:00:00.00
+  Tip Use Hour(Limit)   =0 min(0 min)
+  Arc Retry count     = 0
+  Auto Stick Recovery = 0
+  Arc Off Overlap     = 0
+  Wire Off Overlap    = 0
+  Limit Over Overlap  = 0
+  Gas Off Overlap     = 0
+  Coolant Off Overlap = 0
+
+=<< Exception >>=======================================
+ - date : 2024-07-30 14:52:57
+ - code : Embedded Floating-Point Data(reason=0030083C) - Invalid operation
+ - addr : nip=016ACE0C, link=015F48D0, dar=01AE3670
+ - ver. : 40.25-0000
+
+<< trace >>
+015134AC <- 015F48D0 <- 015F5E1C <- 015F79A4
+015839B8 <- 01002244 <- 010032F0 <- 01B0E210
+01AEBF34 <- 01AEB5B4 <- 01887374 <- 018C006C
+018BE0A4 <- 018BE524 <- 018A2E68 <- 0188B04C
+010037E0 <- 01AB7FE8 <- 01000488
+
+
+=<< System Characteristic Data >>=======================
+      U Ph,  V Ph,  i/ir,  I/Ir,  i/ip,  I/Ip, cnt i, cnt I, poerr, PoErr,  dtau,  dTAU, dtaur, dTAUR,  enct,  EncT, eFail,  mSpd,   RLexp,  RLrat,  tr_r,  tr_m,  Tr_r,  Tr_m,  GSMove, GSDay
+  1=   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    33,    33,     0,     0, 10y  0d,    99%,     0,     0,     0,     0,   0.000,     0
+  2=   0.2,   0.2,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    33,    33,     0,     0, 10y  0d,    99%,     0,    19,     0,    19,   0.000,     0
+  3=   0.2,   0.2,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    33,    33,     0,     0, 10y  0d,    99%,     0,    23,     0,    23,   0.000,     0
+  4=   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    33,    33,     0,     0, 10y  0d,    99%,     0,     0,     0,     0,   0.000,     0
+  5=   -0.1,   0.0,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    34,    34,     0,     0, 10y  0d,    99%,     0,    22,     0,    22,   0.000,     0
+  6=   0.0,   -0.1,   0.0,   0.0,   0.0,   0.0,  15.6,  66.5,     0,     0, 0.00, 0.00, 0.00, 0.00,    34,    34,     0,     0, 10y  0d,    99%,     0,     0,     0,     0,   0.000,     0
+
+=<< Module Execution/Elapse Time >>=====================
+[Nr]ModuleName     Minimum  Maximum  - (20130408)[msec]
+[01]SerialReceive    0.001    0.039    0.002 (4076314)
+[02]COC_StartMng     0.000    0.037    0.003 (4076314)
+[03]COC_Manager      0.000    0.034    -0.005 (4076314)
+[04]DataGathering    0.000    0.035    0.004 (4076314)
+[05]SV_Cmd_Out       0.001    0.062    -0.010 (4076314)
+[06]Dbg_WatchDog     0.000    0.034    -0.006 (4076314)
+[09]SUM(1mISR)___    0.006    0.070    -0.008 (4076314)
+--------
+[11]OnLineTrack      0.006    0.114    0.073 (2038157)
+[12]CMD_Dispatch     0.006    0.223    0.107 (2038157)
+[13]DSP_WatchDog     0.001    0.038    -0.005 (2038157)
+[14]CalDynamics      0.194    0.412    -0.595 (2038157)
+[15]DynTerm2SV       0.052    0.086    -0.006 (2038157)
+[16]FK_Update        0.034    0.070    -0.019 (2038157)
+[17]ServoSim         0.000    0.031    -0.009 (2038157)
+[18]<<Debugging>>    0.011    0.682    0.682 (1)
+[19]SUM(CmdISR)__    0.303    0.683    -0.469 (2038157)
+--------
+[21]CpuStdio         0.001    0.026    -0.012 (815263)
+[22]SV_TimeTick      0.000    0.036    0.002 (815263)
+[23]SW_TimeTick      0.001    0.021    -0.010 (815263)
+[24]PWD_Checker      0.004    0.042    0.009 (815258)
+[25]MtDataGenerat    0.002    0.029    -0.010 (815258)
+[26]IO_Main          0.061    0.110    -0.241 (815258)
+[27]SystemCheck      0.055    0.128    0.073 (815258)
+[28]SignalProcess    0.015    0.053    -0.014 (815258)
+[29]GunProcessing    0.002    0.037    -0.000 (815258)
+[30]PlyTimeTick      0.014    0.050    -0.007 (815258)
+[31]JoystickMode     0.001    0.020    -0.013 (815258)
+[32]KeyCodeByIn      0.002    0.030    -0.002 (815258)
+[33]CnvyDataUpdat    0.004    0.032    -0.002 (815258)
+[34]SpdOut2Analog    0.003    0.032    -0.004 (815258)
+[35]MacroRobot       0.002    0.029    -0.010 (815258)
+[36]GetMovingDist    0.000    0.047    -0.020 (815258)
+[37]SSMDoService     0.002    0.045    -0.254 (815258)
+[38]SetDate&File     0.001    0.020    -0.023 (815258)
+[39]motion_int       0.226    1.173    0.248 (815258)
+    0.001    0.043    0.043 (815258)
+[47]ISR_Margin___    1.708    3.749    -0.784 (407630)
+[49]SUM(MainISR)_    0.448    1.459    0.215 (815258)
+--------
+[51]LTC_1msecISR     0.969    1.042    -0.012 (4076314)
+[52]LTC_CmdMngISR    1.962    2.057    0.000 (2038157)
+[53]LTC_MainISR      4.371    5.644    -0.495 (815263)
+--------
+[55]PlyOnCycle       3.806    6.158    -1.214 (815258)
+[56]Mot_Planner      3.802   10.188    -6.051 (815257)
+[57]TP_CommCheck     3.006   10.491    -7.731 (815257)
+[58]Playback_ISR     3.006   10.493    -7.730 (815257)
+[59]SLDoService      1.057   20.120    1.878 (815225)
+[60]RealTimeDisp     0.680   21.093    2.868 (815225)
+[61]ExtIOSigProc     0.812   21.119    1.874 (815216)
+[62]TerminalEmul     0.059  120.562   56.510 (814986)
+[63]ErrProc          0.054  122.364   54.636 (814980)
+[64]LowestTask       0.053  200.339  132.611 (814887)
+[65]__Main____       0.042  200.349  132.617 (814887)
+[66]__T/P(Input)_    4.693  226.383  220.651 (177325)
+=========================================

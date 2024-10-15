@@ -1,0 +1,869 @@
+Entry Text File Format Version: 1.0
+_HISTORY.TXT( HISTORY OF EXECUTION )
+_Backup at 2024/2/27 11:28:26
+(Elapsed Time[usec])Messages----------
+
+
+(    670)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 274313)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    202)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    737)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:30:46](20094683)  
+(     69)    .DELAY 20
+(    224)    .END
+(8831950)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:31:43](48355951)  
+(     77)Operation mode has been changed to AUTO!
+(   4508)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     66)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    633)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(     79)MotStateBackup [27,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    305)AutoBackupForEvent
+(2415521)_____[START]__________(P4/S0./F0)___
+(    123)>>>> Adjust PSF in [lTask:0]____________
+(     64)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     72)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    668)====.Start 0004.JOB
+(    198)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 199352)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    201)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    209)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    213)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:32:01](15015444)  
+(     69)_____[ PlyStopActionProcess() ]
+(    792)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4557)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:33:51](110682559)  
+(     68)Operation mode has been changed to AUTO!
+(   5093)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(    103)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    237)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(     80)MotStateBackup [01,29,04,3D,09,02]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    317)AutoBackupForEvent
+(4585858)_____[START by Internal]
+(   5483)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [02,07,03,05,0A,28]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4243)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     72)Cleared by changing SF_____
+(    439)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    324)====.Start 0004.JOB
+(    174)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 510764)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    202)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    737)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:34:17](20094665)  
+(     69)    .DELAY 20
+(    222)    .END
+( 673021)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:35:21](63417805)  
+(     67)Operation mode has been changed to AUTO!
+(   4484)Set_StepSetAlarm!!!!
+(     41)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    238)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(    468)MotStateBackup [29,04,3D,09,02,42]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    329)AutoBackupForEvent
+(2249431)_____[START]__________(P4/S0./F0)___
+(     76)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     83)Cleared by changing SF_____
+(    469)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    187)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    324)====.Start 0004.JOB
+(    173)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 154359)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    202)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    209)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    214)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:35:43](20095257)  
+(     68)    .DELAY 20
+(    223)    .END
+(1491523)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:36:11](26401255)  
+(     66)Operation mode has been changed to AUTO!
+(   4470)Set_StepSetAlarm!!!!
+(     41)Cur(0): ProgNo=4, StepNo=1, FuncNo=3
+(     59)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    239)BD530CANData [CC,11,00,88,F8,AA,03,F9,F0,00,66,00]
+(    471)MotStateBackup [29,04,3D,09,02,42]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    339)AutoBackupForEvent
+(=Stamp=)[2024/2/26 14:36:27](15774060)  
+(     67)Operation mode has been changed to TEACH!
+(2467036)Operation mode has been changed to AUTO!
+(=Stamp=)[2024/2/26 14:36:41](11655663)  
+(     67)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:36:55](14162032)  
+(     66)Operation mode has been changed to AUTO!
+(=Stamp=)[2024/2/26 14:37:06](11007688)  
+(    114)_____[START]__________(P4/S0./F0)___
+(     71)>>>> Adjust PSF in [lTask:0]____________
+(     62)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     73)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    674)====.Start 0004.JOB
+(    173)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 475165)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    202)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    758)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:37:27](20094626)  
+(     68)    .DELAY 20
+(    224)    .END
+(5581941)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/26 14:38:09](37151715)  
+(     67)Operation mode has been changed to AUTO!
+(5284996)_____[START]__________(P4/S1./F5)___
+(    300)====.Start 0004.JOB
+(    570)S1  >MOVE P,P1,S=60%,A=3,T=0
+( 531735)S1  .MOVE P,P1,S=60%,A=3,T=0
+(    203)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    739)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/26 14:38:35](20094646)  
+(     67)    .DELAY 20
+(    223)    .END
+(4697877)Operation mode has been changed to TEACH!
+(      0)_____^^^^^ Previous Contents ^^^^^______
+
+
+
+( 763235) AlivedTimeAfterPowerDown = 2264154[usec]
+(     69)/*=========== Power Failure ==============*/
+(     64)/\/\/\ Detected Time:2024/02/26 14:39:05
+(     72)/*========================================*/
+(     64)========================================
+(     69) Hi5a Booting at 2024/2/27 10:22:00
+(     55)----------------------------------------
+(   5462)[2024/02/27 10:22:00] __netmon_error_lost_chain=800
+( 195056)waiting SSM request from teach pendant...
+
+(8704410)SSM received first : 8 sec 
+
+(4893161)PoseShiftOpt=1
+(=Stamp=)[2024/2/27 10:23:56](102761062)  
+(     67)>>>> Adjust PSF in [lTask:0]____________
+(     61)ChangeExecPsfInfoOnModify:(P4/S1/F0)
+(    418)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     74)New:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(=Stamp=)[2024/2/27 10:24:13](16593529)  
+(    103)Operation mode has been changed to AUTO!
+(   4542)Set_StepSetAlarm!!!!
+(     41)Cur(0): ProgNo=4, StepNo=1, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    248)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(     79)MotStateBackup [01,29,04,3D,09,02]
+(    428)iMPTestStateBackup [00,00,00,00,00,00]
+(     88)_____{Error:W00174(0)} 
+(     46)AutoBackupForEvent
+(=Stamp=)[2024/2/27 10:24:23](10132756)  
+(    101)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:25:37](73646024)  
+(     67)Operation mode has been changed to AUTO!
+(5652159)_____[START]__________(P4/S0./F0)___
+(    124)>>>> Adjust PSF in [lTask:0]____________
+(     64)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     73)Cleared by changing SF_____
+(     48)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     82)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    675)====.Start 0004.JOB
+(    177)S1  >MOVE P,P1,S=100%,A=3,T=0
+( 686262)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    204)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    735)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/27 10:26:03](20094691)  
+(     68)    .DELAY 20
+(    224)    .END
+(=Stamp=)[2024/2/27 10:28:38](154462387)  
+(     68)Operation mode has been changed to TEACH!
+(3480952)Operation mode has been changed to AUTO!
+(   5220)Set_StepSetAlarm!!!!
+(     41)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(    103)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    243)BD530CANData [CC,11,00,00,F8,AA,03,F8,F0,00,66,00]
+(     80)MotStateBackup [27,29,04,3D,09,02]
+(     66)iMPTestStateBackup [03,02,01,00,00,00]
+(     85)_____{Error:W00174(0)} 
+(    384)AutoBackupForEvent
+(2254452)_____[START]__________(P4/S0./F0)___
+(     77)>>>> Adjust PSF in [lTask:0]____________
+(     62)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     73)Cleared by changing SF_____
+(     48)Old:CallStack[R0/M0]
+(    435)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    188)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    323)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=100%,A=3,T=0
+( 571036)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    203)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    737)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/27 10:29:04](19778477)  
+(    115)_____[ PlyStopActionProcess() ]
+(    356)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     79)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4259)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:43:41](877215073)  
+(     68)Operation mode has been changed to AUTO!
+(   5176)Set_StepSetAlarm!!!!
+(     51)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     86)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    261)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(     81)MotStateBackup [01,29,04,3D,09,02]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    396)AutoBackupForEvent
+(3857670)_____[START by Internal]
+(   4674)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [02,07,03,05,0A,28]
+(    464)iMPTestStateBackup [03,02,01,03,02,01]
+(   4570)_____[START]__________(P4/S0./F0)___
+(    121)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    668)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=100%,A=3,T=0
+( 203964)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    224)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    746)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/27 10:43:56](10518904)  
+(     68)_____[ PlyStopActionProcess() ]
+(    743)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     79)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4613)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:47:04](188091899)  
+(     68)Operation mode has been changed to AUTO!
+(   5180)Set_StepSetAlarm!!!!
+(     99)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     59)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    247)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(     90)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     92)_____{Error:W00174(0)} 
+(    781)AutoBackupForEvent
+(4173363)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:47:37](29108759)  
+(     66)Operation mode has been changed to AUTO!
+(4401080)_____[START by Internal]
+(   5405)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     79)MotStateBackup [02,07,03,05,0A,28]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4274)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(    443)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     72)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    318)====.Start 0004.JOB
+(    175)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18393)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    199)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    693)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(4138615)_____[ PlyStopActionProcess() ]
+(    751)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4603)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:50:15](149859726)  
+(    454)>>>> Adjust PSF in [lTask:0]____________
+(     62)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     58)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     85)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     78)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(6103390)Operation mode has been changed to AUTO!
+(   4573)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    244)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(    454)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    475)AutoBackupForEvent
+(4545983)_____[START by Internal]
+(   4582)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [02,07,03,05,0A,28]
+(    462)iMPTestStateBackup [03,02,01,03,02,01]
+(   4550)_____[START]__________(P4/S0./F0)___
+(    121)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     72)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    685)====.Start 0004.JOB
+(    178)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18454)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    200)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    212)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    213)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(8117947)_____[ PlyStopActionProcess() ]
+(    403)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4316)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:52:08](93330522)  
+(     68)Operation mode has been changed to AUTO!
+(   4503)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    245)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(    454)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    473)AutoBackupForEvent
+(5947160)_____[START by Internal]
+(   5462)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [02,07,03,05,0A,28]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4267)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     72)Cleared by changing SF_____
+(    442)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    318)====.Start 0004.JOB
+(    174)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18399)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    201)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    699)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(5876818)_____[ PlyStopActionProcess() ]
+(    358)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(    478)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4651)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:53:32](72068405)  
+(     67)Operation mode has been changed to AUTO!
+(   5135)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(    106)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    247)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(     81)MotStateBackup [01,29,04,3D,09,02]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    441)AutoBackupForEvent
+(4098808)_____[START by Internal]
+(   4674)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     91)MotStateBackup [02,07,03,05,0A,28]
+(    474)iMPTestStateBackup [03,02,01,03,02,01]
+(   4546)_____[START]__________(P4/S0./F0)___
+(    118)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    672)====.Start 0004.JOB
+(    173)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18433)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    201)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    212)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    213)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(4093443)_____[ PlyStopActionProcess() ]
+(    778)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4700)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:54:41](61553541)  
+(     67)Operation mode has been changed to AUTO!
+(   4523)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    619)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(     79)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     86)_____{Error:W00174(0)} 
+(    498)AutoBackupForEvent
+(4324723)_____[START by Internal]
+(   4697)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [02,07,03,05,0A,28]
+(    460)iMPTestStateBackup [03,02,01,03,02,01]
+(   4550)_____[START]__________(P4/S0./F0)___
+(    120)>>>> Adjust PSF in [lTask:0]____________
+(     64)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     63)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    664)====.Start 0004.JOB
+(    177)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18457)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    202)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    212)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    214)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(3958131)_____[ PlyStopActionProcess() ]
+(    411)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     79)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4287)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 10:56:03](73405499)  
+(     67)Operation mode has been changed to AUTO!
+(   4475)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    249)BD530CANData [CC,11,00,88,F8,AA,03,F9,F0,00,66,00]
+(    453)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     86)_____{Error:W00174(0)} 
+(    510)AutoBackupForEvent
+(4139801)_____[START by Internal]
+(   4152)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     91)MotStateBackup [02,07,03,05,0A,28]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4248)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     75)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     80)Cleared by changing SF_____
+(    439)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    324)====.Start 0004.JOB
+(    174)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18394)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    200)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    696)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(3370356)_____[ PlyStopActionProcess() ]
+(    368)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     79)MotStateBackup [41,02,0E,02,07,03]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+( 225283)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:00:33](262141073)  
+(     69)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     57)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     74)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(3440716)Operation mode has been changed to AUTO!
+(   4552)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    250)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(    485)MotStateBackup [27,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    520)AutoBackupForEvent
+(2701577)_____[START by Internal]
+(   5474)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [02,07,03,05,0A,28]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4279)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(    445)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    187)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     70)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    320)====.Start 0004.JOB
+(    175)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18365)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    201)    .OnLTrack ON,IP=169.254.100.166,PORT=9000,CRD=1,Bypass,Fn=10
+(    697)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(3621387)_____[ PlyStopActionProcess() ]
+(    459)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4279)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:01:10](27099407)  
+(    446)>>>> Adjust PSF in [lTask:0]____________
+(     65)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     57)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     74)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(=Stamp=)[2024/2/27 11:02:33](83472546)  
+(     66)Operation mode has been changed to AUTO!
+(   4505)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    262)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(    460)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    529)AutoBackupForEvent
+(4188687)_____[START by Internal]
+(   5505)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [02,07,03,05,0A,28]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4269)_____[START]__________(P4/S0./F0)___
+(     75)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     41)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    467)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    198)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     79)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    316)====.Start 0004.JOB
+(    174)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18329)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    201)    .OnLTrack ON,IP=169.254.100.166,PORT=9569,CRD=1,Bypass,Fn=10
+(    698)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(6469666)_____[ PlyStopActionProcess() ]
+(    369)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(    477)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4668)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:03:06](21748505)  
+(    458)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     58)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     74)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(5570910)Operation mode has been changed to AUTO!
+(   4568)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    252)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(    455)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    540)AutoBackupForEvent
+(4741335)_____[START by Internal]
+(   5461)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     91)MotStateBackup [02,07,03,05,0A,28]
+(     74)iMPTestStateBackup [03,02,01,03,02,01]
+(   4242)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     74)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     49)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(    441)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    186)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    319)====.Start 0004.JOB
+(    175)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18382)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    201)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    684)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    216)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(9961649)_____[ PlyStopActionProcess() ]
+(    420)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     80)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4279)Operation mode has been changed to TEACH!
+(1281474)Operation mode has been changed to AUTO!
+(=Stamp=)[2024/2/27 11:13:31](604025980)  
+(     67)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:13:52](21050976)  
+(     67)>>>> Adjust PSF in [lTask:0]____________
+(     61)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     57)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     74)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     83)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(3179449)Operation mode has been changed to AUTO!
+(   4524)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     58)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    253)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(    455)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     87)_____{Error:W00174(0)} 
+(    551)AutoBackupForEvent
+(4947732)_____[START by Internal]
+(   4722)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(    472)MotStateBackup [02,07,03,05,0A,28]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4488)_____[START]__________(P4/S0./F0)___
+(    121)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(     48)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    687)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  33162)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    202)    .OnLTrack ON,IP=10.2.129.213,PORT=9569,CRD=1,Bypass,Fn=10
+(    748)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(5711341)_____[ PlyStopActionProcess() ]
+(    470)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [42,41,02,0E,02,07]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(   4219)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:14:55](48762546)  
+(     67)Operation mode has been changed to AUTO!
+(   5172)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(    102)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    254)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(     80)MotStateBackup [01,29,04,3D,09,02]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    894)AutoBackupForEvent
+(7263450)_____[START by Internal]
+(   4724)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(    473)MotStateBackup [02,07,03,05,0A,28]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4487)_____[START]__________(P4/S0./F0)___
+(    121)>>>> Adjust PSF in [lTask:0]____________
+(     64)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     41)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     73)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     70)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     60)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    667)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18445)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    199)    .OnLTrack ON,IP=10.2.129.213,PORT=9569,CRD=1,Bypass,Fn=10
+(    209)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    224)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(4203966)_____[ PlyStopActionProcess() ]
+(    767)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(     81)MotStateBackup [42,41,02,0E,02,07]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4651)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:16:26](79433676)  
+(    461)>>>> Adjust PSF in [lTask:0]____________
+(     74)ChangeExecPsfInfoOnModify:(P4/S1/F1)
+(     57)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     74)New:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     72)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(=Stamp=)[2024/2/27 11:17:13](47284583)  
+(     66)Operation mode has been changed to AUTO!
+(   5115)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(    106)Mov(0): ProgNo=4, StepNo=1, FuncNo=4
+(    275)BD530CANData [CC,11,00,00,F8,AA,03,F9,F0,00,66,00]
+(     79)MotStateBackup [01,29,04,3D,09,02]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    898)AutoBackupForEvent
+(=Stamp=)[2024/2/27 11:17:31](18064925)  
+(     67)_____[START by Internal]
+(   4700)BD530CANData [44,11,00,00,F8,88,00,F0,F0,00,44,00]
+(    480)MotStateBackup [02,07,03,05,0A,28]
+(     67)iMPTestStateBackup [03,02,01,03,02,01]
+(   4560)_____[START]__________(P4/S0./F0)___
+(     74)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     64)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(     72)Cleared by changing SF_____
+(     49)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F4), RunningPSF=(P4/S1/F4)
+(    185)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    666)====.Start 0004.JOB
+(    174)S1  >MOVE P,P1,S=100%,A=3,T=0
+(  18414)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    200)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    208)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    214)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(=Stamp=)[2024/2/27 11:17:52](20095277)  
+(     69)    .DELAY 20
+(    222)    .END
+(=Stamp=)[2024/2/27 11:18:12](20588042)  
+(     67)Operation mode has been changed to TEACH!
+(=Stamp=)[2024/2/27 11:28:22](609893833)  
+(    739)Operation mode has been changed to AUTO!
+(   4312)Set_StepSetAlarm!!!!
+(     42)Cur(0): ProgNo=4, StepNo=0, FuncNo=0
+(     93)Mov(0): ProgNo=4, StepNo=1, FuncNo=5
+(    260)BD530CANData [9D,33,00,88,F8,AA,03,F9,F0,00,66,00]
+(     79)MotStateBackup [29,04,3D,09,02,42]
+(     66)iMPTestStateBackup [03,02,01,03,02,01]
+(     85)_____{Error:W00174(0)} 
+(    922)AutoBackupForEvent
+(3318967)_____[START]__________(P4/S0./F0)___
+(     77)>>>> Adjust PSF in [lTask:0]____________
+(     63)ChangeExecPsf4StartAtChangedPSF:(P4/S0/F0)
+(     75)Old:CallStack[R0/M0]
+(     42)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(     80)Cleared by changing SF_____
+(    434)Old:CallStack[R0/M0]
+(     43)Old:Moving_PSF=(P4/S1/F5), RunningPSF=(P4/S1/F5)
+(    188)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     71)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(     59)New:Moving_PSF=(P4/S0/F0), RunningPSF=(P4/S0/F0)
+(     72)New:CallStack[R0/M0]
+(     39)^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(    312)====.Start 0004.JOB
+(    176)S1  >MOVE P,P1,S=100%,A=3,T=0
+( 259540)S1  .MOVE P,P1,S=100%,A=3,T=0
+(    205)    .OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=1,Bypass,Fn=10
+(    740)    .LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+(    217)    .LIMIT VEL,X=300,Y=300,Z=300,RX=150,RY=150,RZ=150
+(   4483)[2024/02/27 11:28:26] __netmon_error_lost_chain=832
+

@@ -1,0 +1,17 @@
+Program File Format Version : 1.6  MechType: 714(HH7-02)  TotalAxis: 6  AuxAxis: 0
+     V1%=0
+S1   MOVE P,(0.373,66.433,-35.118,4.085,53.841,-2.503)A,S=5%,A=3,T=0
+     CALL 2 'enet1
+     DELAY 2
+     CALL 3 'onltrack on
+     PRINT ENET1,"init"
+   1 INPUT ENET1,V1%,0.1,1
+     IF V1%=2 THEN
+     CALL 12 'return_to_base
+     ELSEIF V1%=3 THEN
+     CALL 13 'cut
+     ELSEIF V1%=4 THEN
+     CALL 14 'store
+     ENDIF
+     GOTO 1
+     END

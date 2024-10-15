@@ -1,0 +1,5 @@
+Program File Format Version : 1.6  MechType: 714(HH7-02)  TotalAxis: 6  AuxAxis: 0
+     OnLTrack ON,IP=192.168.0.54,PORT=9569,CRD=0
+     LIMIT POS,+X=5000,-X=5000,+Y=5000,-Y=5000,+Z=5000,-Z=5000
+     LIMIT VEL,X=50,Y=50,Z=50,RX=10,RY=10,RZ=10
+     END

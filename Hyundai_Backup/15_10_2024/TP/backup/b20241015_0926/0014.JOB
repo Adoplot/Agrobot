@@ -1,0 +1,7 @@
+Program File Format Version : 1.6  MechType: 714(HH7-02)  TotalAxis: 6  AuxAxis: 0
+     OnLTrack OFF
+     DELAY 0.5
+S1   MOVE P,P4,S=5%,A=3,T=0
+     PRINT ENET1,"store_complete"
+     CALL 3 'onltrack on
+     END

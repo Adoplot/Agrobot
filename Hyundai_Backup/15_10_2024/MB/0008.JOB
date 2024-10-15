@@ -1,0 +1,13 @@
+Program File Format Version : 1.6  MechType: 714(HH7-02)  TotalAxis: 6  AuxAxis: 0
+S1   MOVE P,(-50.581,141.784,176.935,17.070,-52.818,-191.170)A,S=5%,A=3,T=0
+     ENET1.IP="192.168.0.54"
+     ENET1.LPORT=6666
+     ENET1.RPORT=7777
+     ENET1.OPEN 1
+     CLR_RBUF ENET1
+     PRINT ENET1,"1"
+     PRINT ENET1,P*.J1,P*.J2,P*.J3,P*.J4,P*.J5,P*.J6
+   2 INPUT ENET1,V1%,1,2
+S2   MOVE P,(V1%,141.785,176.937,17.071,-52.817,-191.171)A,S=5%,A=3,T=0
+     GOTO 2
+     END

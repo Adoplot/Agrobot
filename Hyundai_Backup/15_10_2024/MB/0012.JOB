@@ -1,0 +1,8 @@
+Program File Format Version : 1.6  MechType: 714(HH7-02)  TotalAxis: 6  AuxAxis: 0
+     PRINT ENET1,"started return seq"
+     OnLTrack OFF
+     DELAY 1
+S1   MOVE P,P1,S=5%,A=3,T=0
+     PRINT ENET1,"return_to_base_complete"
+     CALL 3 'onltrack on
+     END
