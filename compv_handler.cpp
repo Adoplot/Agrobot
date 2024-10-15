@@ -62,6 +62,7 @@ void Compv_HandleCmd(const std::string* data){
     sockaddr_enet1 = Connection_GetSockAddr(SOCKTYPE_ENET1);
     char buf_cmd[2]{};
     double distance2target{0};
+    bool orientation_reached{false};
 
     // Declare jsons and strings to send later
     json json_send{};
@@ -86,8 +87,11 @@ void Compv_HandleCmd(const std::string* data){
                                                                         SCISSORS_LENGTH);
 
             distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame,&targetPos_worldFrame);
-            if (distance2target < POSITIONING_ACCURACY) {
-                cout << "distance2target reached" << endl;
+            orientation_reached = Transform_CompareOrientations(ORIENTATION_ACCURACY, eePos_worldFrame, &targetPos_worldFrame);
+
+
+            if ((distance2target <= POSITIONING_ACCURACY) && orientation_reached) {
+                cout << "pos and ori is reached" << endl;
                 json_send["request"] = "SET_POS";
                 json_send["status"] = "COMPLETE";
                 string_send = json_send.dump();

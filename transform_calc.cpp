@@ -14,6 +14,9 @@ using Eigen::Matrix4d;
 using Eigen::Matrix3d;
 using Eigen::AngleAxisd;
 using Eigen::Vector3d;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 static Quaterniond quat_conjugate(const Quaterniond q);
 static Quaterniond convertEuler2Quat(const double rotZ, const double rotY, const double rotX);
@@ -298,21 +301,28 @@ double Transform_CalcDistanceBetweenPoints(const Hyundai_Data_t *eePos_worldFram
 
 // Compares two orientations in quaternion form with a defined precision
 // Returns: true - orientations are the same, false - not the same
-bool Transform_CompareOrientations(double precision, const Quaterniond *q1, const Quaterniond *q2){
-    double w1 = q1->w();
-    double x1 = q1->x();
-    double y1 = q1->y();
-    double z1 = q1->z();
-    double w2 = q2->w();
-    double x2 = q2->x();
-    double y2 = q2->y();
-    double z2 = q2->z();
+bool Transform_CompareOrientations(double precision,
+                                    const Hyundai_Data_t *eePos_worldFrame,
+                                    const Cartesian_Pos_t *targetPos_worldFrame) {
+
+    Cartesian_Pos_t camPos_worldFrame = convertFrameCam2World(eePos_worldFrame,SCISSORS_LENGTH);
+    Quaterniond q1 = convertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
+    Quaterniond q2 = convertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
+                                                                    targetPos_worldFrame->rotx);
+    double w1 = q1.w();
+    double x1 = q1.x();
+    double y1 = q1.y();
+    double z1 = q1.z();
+    double w2 = q2.w();
+    double x2 = q2.x();
+    double y2 = q2.y();
+    double z2 = q2.z();
 
     // Compare q1 with q2
-    bool directComparison = (std::abs(w1 - w2) < precision) &&
-                            (std::abs(x1 - x2) < precision) &&
-                            (std::abs(y1 - y2) < precision) &&
-                            (std::abs(z1 - z2) < precision);
+    bool directComparison = (std::fabs(w1 - w2) < precision) &&
+                            (std::fabs(x1 - x2) < precision) &&
+                            (std::fabs(y1 - y2) < precision) &&
+                            (std::fabs(z1 - z2) < precision);
     // Compare q1 with -q2
     bool oppositeComparison = (std::fabs(w1 + w2) < precision) &&
                               (std::fabs(x1 + x2) < precision) &&

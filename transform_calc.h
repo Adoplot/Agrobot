@@ -19,9 +19,10 @@ Cartesian_Pos_t Transform_CalculateOrientationIncrements(const Hyundai_Data_t *e
 double Transform_CalcDistanceBetweenPoints(const Hyundai_Data_t *eePos_worldFrame,
                                             const Cartesian_Pos_t *targetPos_worldFrame);
 
+
 bool Transform_CompareOrientations(double precision,
-                                    const Eigen::Quaterniond *q1,
-                                    const Eigen::Quaterniond *q2);
+                                    const Hyundai_Data_t *eePos_worldFrame,
+                                    const Cartesian_Pos_t *targetPos_worldFrame);
 
 
 
