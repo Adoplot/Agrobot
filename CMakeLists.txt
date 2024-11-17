@@ -8,7 +8,7 @@ include_directories(${CMAKE_SOURCE_DIR}/Dependencies/json/include/)
 include_directories(${CMAKE_SOURCE_DIR}/Dependencies/Eigen)
 
 
-add_executable(testing main.cpp
+add_executable(robot main.cpp
         connection_handler.cpp
         connection_handler.h
         enet_handler.cpp
