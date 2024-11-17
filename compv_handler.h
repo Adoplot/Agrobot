@@ -5,9 +5,16 @@
 
 #include "onltrack_handler.h"
 
+#define COMPV_ANSW_UNREACHABLE "UNREACHABLE"
+
+#define COMPV_REQUEST_SET_POSITION "SET_POS"
+#define COMPV_ANSW_COMPLETE "COMPLETE"
+#define COMPV_ANSW_IN_PROGRESS "IN_PROGRESS"
+
 typedef enum {
     REQ_INVALID_JSON, //TODO: not used?
     REQ_INVALID,
+    REQ_SYNC_TARGETS,
     REQ_SET_POS,
     REQ_RETURN_TO_BASE,
     REQ_CUT,

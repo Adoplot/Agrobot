@@ -19,6 +19,8 @@ add_executable(robot main.cpp
         compv_handler.h
         transform_calc.cpp
         transform_calc.h
-        )
+        robot_api.cpp
+        robot_api.h
+)
 
 
