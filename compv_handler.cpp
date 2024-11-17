@@ -132,24 +132,21 @@ void Compv_HandleCmd(const std::string* data){
         case REQ_RETURN_TO_BASE:
             cout << "Initiating <Return To Base> sequence" << endl;
             snprintf(buf_cmd,sizeof(buf_cmd),"%d", ENET_RETURN_TO_BASE);     //buffer should be null-terminated. sprintf ensures \0 at the end.
-            //TODO: sendUdp should be as an RobotApi_SendCmd or smth
-            Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
+            RobotAPI_SendCmd(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
             bzero(buf_cmd,sizeof(buf_cmd));
             break;
 
         case REQ_CUT:
             cout << "Initiating <Cut> sequence" << endl;
             snprintf(buf_cmd,sizeof(buf_cmd),"%d",ENET_CUT);
-            //TODO: sendUdp should be as an RobotApi_SendCmd or smth
-            Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
+            RobotAPI_SendCmd(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
             bzero(buf_cmd,sizeof(buf_cmd));
             break;
 
         case REQ_STORE:
             cout << "Initiating <Store> sequence" << endl;
             snprintf(buf_cmd,sizeof(buf_cmd),"%d",ENET_STORE);
-            //TODO: sendUdp should be as an RobotApi_SendCmd or smth
-            Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
+            RobotAPI_SendCmd(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
             bzero(buf_cmd,sizeof(buf_cmd));
             break;
 
