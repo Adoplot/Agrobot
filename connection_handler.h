@@ -91,7 +91,7 @@ typedef enum {
 } SockType_t;
 
 
-typedef struct{
+typedef struct Received_Message_t{
     int errnum{RECV_OK};
     long received_bytes_count{};
     sockaddr_in server_address{};

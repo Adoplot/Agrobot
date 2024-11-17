@@ -18,7 +18,7 @@ typedef enum {
 } Enet_Cmd_t;
 
 
-typedef struct {
+typedef struct Enet_RecvStr_t {
     char init[6] = "init\012";      //program receives init from hyundai to detect pc address
     char return_to_base[25] = "return_to_base_complete\012";
     char cut[14] = "cut_complete\012";

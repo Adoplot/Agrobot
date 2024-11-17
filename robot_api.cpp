@@ -31,8 +31,11 @@ void RobotAPI_SendCmd(const int sockfd_enet, const sockaddr_in remoteAddr_enet, 
 
 static bool withinRobotsKinematics(Cartesian_Pos_t *targetWorldFrame){
     //todo: integrate check of inverse kinematics
+
+    return true;
 }
 
 static bool withinRobotsWorkspace(Cartesian_Pos_t *targetWorldFrame){
     //todo: integrate check of the workspace violations
+    return true;
 }
