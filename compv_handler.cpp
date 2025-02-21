@@ -40,13 +40,13 @@ static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions);
 // Interface to set value of targetPos_worldFrame
 void CompV_SetTargetPosWorldFrame(Cartesian_Pos_t new_value) {
     targetPos_worldFrame = new_value;
-};
+}
 
 
 // Interface to set value of targetPos_camFrame
 void CompV_SetTargetPosCamFrame(Cartesian_Pos_t new_value) {
     targetPos_camFrame = new_value;
-};
+}
 
 
 // Interface to get pointer to targetPos_camFrame
