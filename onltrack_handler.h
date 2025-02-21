@@ -12,6 +12,8 @@ typedef struct{
 
 
 typedef struct {
+    int id;
+    bool isReachable;
     double x;
     double y;
     double z;

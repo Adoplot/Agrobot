@@ -27,12 +27,15 @@ static Tcp_Data_t tcp_data_state = TCP_DATA_NOT_AVAILABLE;  // tracks if new cmd
 static json jsonParse(const std::string* data);
 static CompV_Request_t getJsonRequest(const json* json);
 static Cartesian_Pos_t getJsonPos(const json* json);
+static std::vector<Cartesian_Pos_t> getJsonPositions(const json* json);
 
 static void handleSetPositionRequest(const json& json);
 static void sendUnreachableResponse();
 static void sendCompleteResponse();
 static void sendInProgressResponse();
 static void sendRobotCommand(int command, const std::string& action_name);
+static void handleSyncTargetsRequest(const json& json);
+static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions);
 
 // Interface to set value of targetPos_worldFrame
 void CompV_SetTargetPosWorldFrame(Cartesian_Pos_t new_value) {
@@ -78,6 +81,7 @@ void Compv_HandleCmd(const std::string* data) {
 
         case REQ_SYNC_TARGETS:
             cout << "Requested target synchronization" << endl;
+            handleSyncTargetsRequest(json);
             break;
 
         case REQ_SET_POS:
@@ -115,6 +119,68 @@ static json jsonParse(const std::string* data) {
         received_json = json::parse(*data);
     }
     return received_json;
+}
+
+static void handleSyncTargetsRequest(const json& json){
+    cout    << "Received Sync Targets request\n"
+            << "Checking if targets are reachable" << endl;
+
+    std::vector<Cartesian_Pos_t> positions = getJsonPositions(&json);
+
+    for (auto& pos : positions) {
+
+        if(RobotAPI_TargetIsReachable(&pos)){
+            cout << "Target ID: " << pos.id << "is reachable\n"
+                << "Coordinates:\n"
+                << "x: " << pos.x << "\n"
+                << "y: " << pos.y << "\n"
+                << "z: " << pos.z << "\n" << endl;
+
+            pos.isReachable = true;
+        } else {
+            cout << "Target ID: " << pos.id << "is NOT reachable\n"
+                 << "Coordinates:\n"
+                 << "x: " << pos.x << "\n"
+                 << "y: " << pos.y << "\n"
+                 << "z: " << pos.z << "\n" << endl;
+
+            pos.isReachable = false;
+        }
+    }
+
+    sendSyncTargetsResponse(positions);
+}
+
+static void positionToJson(json& j, const Cartesian_Pos_t& pos) {
+    j = json{
+            {"id", pos.id},
+            {"isReachable", pos.isReachable},
+            {"x", pos.x},
+            {"y", pos.y},
+            {"z", pos.z},
+            {"rotx", pos.rotx},
+            {"roty", pos.roty},
+            {"rotz", pos.rotz}
+    };
+}
+
+static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions){
+    cout << "Answer to CompV: Reachable targets JSON" << endl;
+    json json_send;
+
+    // Serialize vector of Cartesian_Pos_t using positionToJson()
+    json json_positions = json::array();
+    for (const auto& pos : positions) {
+        json j;
+        positionToJson(j, pos);
+        json_positions.push_back(j);
+    }
+    json_send["request"] = COMPV_REQUEST_SYNC_TARGETS;
+    json_send["status"] = COMPV_ANSW_COMPLETE;
+    json_send["positions"] = json_positions;
+
+    std::string string_send = json_send.dump();
+    Connection_SendTcp(sockfd_compv, &string_send);
 }
 
 static void handleSetPositionRequest(const json& json) {
@@ -199,6 +265,10 @@ static CompV_Request_t getJsonRequest(const json* json){
         // same but uses ptp motion position to the storing position
         else if (json->at("request") == "STORE")
             req = REQ_STORE;
+
+        else if(json->at("request") == COMPV_REQUEST_SYNC_TARGETS){
+            req = REQ_SYNC_TARGETS;
+        }
         else
             req = REQ_INVALID;
     }
@@ -237,3 +307,18 @@ static Cartesian_Pos_t getJsonPos(const json* json) {
     return pos;
 }
 
+static std::vector<Cartesian_Pos_t> getJsonPositions(const nlohmann::json* json) {
+    std::vector<Cartesian_Pos_t> positions;
+
+    try {
+        for (const auto& item : json->at("positions")) {
+            positions.push_back(getJsonPos(&item));
+        }
+    } catch (const nlohmann::json::exception& e) {
+#ifdef DEBUG_JSON_ELEMENT
+        std::cerr << "Error parsing positions array: " << e.what() << std::endl;
+#endif
+    }
+
+    return positions;
+}
