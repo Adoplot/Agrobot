@@ -16,6 +16,24 @@ using std::endl;
 using nlohmann::json;
 
 static int sockfd_enet1;
+constexpr const char* NONE_STR = "NONE";
+constexpr const char* APPROACH_STR = "APPROACH";
+constexpr const char* FINAL_APPROACH_STR = "FINAL_APPROACH";
+constexpr const char* CUT_STR = "CUT";
+constexpr const char* STORE_STR = "STORE";
+constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
+constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE";
+
+constexpr const char* COMPV_ANSW_UNREACHABLE = "UNREACHABLE";
+constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
+constexpr const char* COMPV_ANSW_IN_PROGRESS = "IN_PROGRESS";
+constexpr const char* COMPV_ANSW_FAIL = "FAIL";
+constexpr const char* COMPV_ANSW_REQUESTED = "REQUESTED";
+
+constexpr const char* COMPV_REQUEST_SYNC_TARGETS = "SYNC_TARGETS";
+constexpr const char* COMPV_REQUEST_SET_POSITION = "SET_POS";
+constexpr const char* COMPV_REQUEST_CUT = "CUT";
+
 static int sockfd_compv;
 static sockaddr_in sockaddr_enet1;
 
