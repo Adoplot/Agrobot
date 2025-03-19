@@ -1,6 +1,7 @@
 #include <iostream>
 #include "connection_handler.h"
-
+#include "compv_handler.h"
+#include "robot_api.h"
 
 using std::cout;
 using std::cerr;
@@ -24,11 +25,12 @@ using std::endl;
 
 int main(void)
 {
+    CompV_Init();
     Connection_Init();
-
 
     while(1){
         Connection_ProcessAction();
+        RobotAPI_ProcessAction();
     }
 };
 

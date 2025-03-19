@@ -5,6 +5,7 @@
 #include "compv_handler.h"
 #include "connection_handler.h"
 #include "transform_calc.h"
+#include "robot_api.h"
 
 using std::cout;
 using std::cerr;
@@ -103,32 +104,35 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     //printOnltrackData(eePos_worldFrame, PRINT_RECV);
 
     // Send zero increments while zeros are received from Compv, so robot does not move
-    if ((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) {
+    if (((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) ||
+            !RobotAPI_IsApproachSequenceActive() ||
+            !RobotAPI_IsFinalApproachSequenceActive()) {
+
         zeroingPosIncrements(&sendIncrements);
     }
     else {
         pos_increments = Transform_CalculatePositionIncrements(eePos_worldFrame, targetPos_worldFrame);
     }
 
-    // Send zero increments while zeros are received from Compv, so robot does not move
-    if ((targetPos_camFrame->rotx == 0) && (targetPos_camFrame->roty == 0) && (targetPos_camFrame->rotz == 0)) {
-        zeroingOriIncrements(&sendIncrements);
+    double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);
+    bool orientation_reached = Transform_CompareOrientations(ORIENTATION_ACCURACY, eePos_worldFrame, targetPos_worldFrame);
+
+    if ((distance2target <= POSITIONING_ACCURACY) && orientation_reached) {
+        RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
+    } else {
+        // Send increments to hyundai
+
+        sendIncrements.coord[0] = pos_increments.x;
+        sendIncrements.coord[1] = pos_increments.y;
+        sendIncrements.coord[2] = pos_increments.z;
+        sendIncrements.coord[3] = ori_increments.rotx;
+        sendIncrements.coord[4] = ori_increments.roty;
+        sendIncrements.coord[5] = ori_increments.rotz;
+
+        sendIncrements.Command = ONLTRACK_CMD_PLAY;
+
+        Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
     }
-    else {
-        ori_increments = Transform_CalculateOrientationIncrements(eePos_worldFrame, targetPos_worldFrame);
-    }
-
-    sendIncrements.coord[0] = pos_increments.x;
-    sendIncrements.coord[1] = pos_increments.y;
-    sendIncrements.coord[2] = pos_increments.z;
-    sendIncrements.coord[3] = ori_increments.rotx;
-    sendIncrements.coord[4] = ori_increments.roty;
-    sendIncrements.coord[5] = ori_increments.rotz;
-
-    sendIncrements.Command = ONLTRACK_CMD_PLAY;
-
-    // Send increments to hyundai
-    Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
 
     for(int i = 0; i < 3; i++){
         if(sendIncrements.coord[i] > 0.5){

@@ -7,13 +7,15 @@
 
 
 typedef enum {
-    REQ_INVALID_JSON, //TODO: not used?
-    REQ_INVALID,
-    REQ_SYNC_TARGETS,
-    REQ_SET_POS,
-    REQ_RETURN_TO_BASE,
-    REQ_CUT,
-    REQ_STORE
+    COMPV_REQ_INVALID_JSON, //TODO: not used?
+    COMPV_REQ_INVALID,
+    COMPV_REQ_SYNC_TARGETS,
+    COMPV_REQ_SET_POS,
+    COMPV_REQ_FINAL_APPROACH,
+    COMPV_REQ_CUT,
+    COMPV_REQ_STORE,
+    COMPV_REQ_RETURN_TO_BASE,
+    COMPV_REQ_SWITCH_BASE
 } CompV_Request_t;
 /*
 typedef struct {
@@ -29,5 +31,6 @@ Cartesian_Pos_t* Compv_GetTargetPosCamFrame();
 Cartesian_Pos_t* Compv_GetTargetPosWorldFrame();
 
 void Compv_HandleCmd(const std::string* data);
+void CompV_Init();
 
 #endif //ROBOTARM_COMPV_HANDLER_H

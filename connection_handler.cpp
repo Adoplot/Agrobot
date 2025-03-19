@@ -181,9 +181,6 @@ static void pollingSockets() {
 }
 
 
-
-
-
 // Manages communication with Controller via OnLTrack
 static void handleConnectionOnltrack(){
     Received_Message_t received_message;
