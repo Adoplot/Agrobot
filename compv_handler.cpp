@@ -200,10 +200,13 @@ static void handleSyncTargetsRequest(const json& json){
     cout    << "Received Sync Targets request\n"
             << "Checking if targets are reachable" << endl;
 
-    std::vector<Cartesian_Pos_t> positions = getJsonPositions(&json);
+    std::vector<Cartesian_Pos_t> positions = getJsonPositions(&json); //cam frame
+    Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
 
     for (auto& pos : positions) {
-
+        Cartesian_Pos_t targetWorldFrame = Transform_ConvertFrameTarget2World(&pos,
+                                                                              eePos_worldFrame,
+                                                                              SCISSORS_LENGTH);
         if(RobotAPI_TargetIsReachable(&pos)){
             cout << "Target ID: " << pos.id << "is reachable\n"
                 << "Coordinates:\n"
