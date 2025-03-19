@@ -2,7 +2,19 @@
 #define ROBOTARM_ROBOT_API_H
 #include "transform_calc.h"
 #include "enet_handler.h"
+#include "Matlab_ik_types.h"
 #include <functional>
+
+#define CIRCLE_RADIUS                   0.3
+#define NUM_CIRCLE_POINTS               10
+//Solver parameters
+#define SOLVER_MAX_ITERATIONS           1500
+#define SOLVER_MAXTIME                  10
+#define SOLVER_ENFORCE_JOINT_LIMITS     true
+#define SOLVER_ALLOW_RANDOM_RESTARTS    true
+#define SOLVER_STEP_TOLERANCE           1.0E-13
+#define SOLVER_POSITION_TOLERANCE       0.2
+#define SOLVER_ORIENTATION_TOLERANCE    0.1
 
 enum class Robot_Sequence_t {
     IDLE,
@@ -48,5 +60,7 @@ void RobotAPI_EndSequence(Robot_Sequence_Result_t reason);
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd);
 
 void RobotAPI_ProcessAction();
+
+void RobotAPI_InitSolverParameters(struct0_T *solverParameters);
 
 #endif //ROBOTARM_ROBOT_API_H

@@ -1,6 +1,8 @@
 #include <netinet/in.h>
 #include "robot_api.h"
 #include "connection_handler.h"
+#include "Matlab_ik.h"
+#include "Matlab_ik_types.h"
 
 using std::cout;
 using std::cerr;
@@ -36,20 +38,53 @@ static void resetSequenceState(){
     ROBOTAPI_LOG("Reset sequence to idle state");
 }
 
-bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetWorldFrame){
-    if(withinRobotsKinematics(targetWorldFrame)){
-        if(withinRobotsWorkspace(targetWorldFrame)){
-            return true;
-        } else {
-            cout << "Robot API: Target unreachable" << endl;
-            return false;
+// Todo: PASHA targetCoords_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
+// Todo: ADOPLOT get branchStart and branchDir from targetCoords_worldFrame
+bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetCoords_worldFrame){
+    //TEST DEFINITIONS - have to be inputs in the RobotAPI_TargetIsReachable()
+    double branchStart[3]       {0.6,1.8,0};
+    double branchDir[3]         {0.4,0,0};
+    double eePos_worldFrame[3]  {0.5715,0,0.931};
+    double currentConfig[6]     {0,1.5708,0,0,0,0};
+    //TEST DEFINITIONS END
+
+    coder::array<double, 2U> sortedList;
+    double listLength {0};  //redundant
+    //Todo: need input branchStart, branchDir, eePos_worldFrame
+    //Get sortedList with points on a circle around the cutting place
+    Matlab_getSortedCirclePointList(CIRCLE_RADIUS,branchStart, branchDir, NUM_CIRCLE_POINTS, eePos_worldFrame, sortedList, &listLength);
+
+    double exitCode {0};
+    int code {0};
+    int n {0};
+    struct1_T solutionInfoApr {}; //only for debug
+    double qWaypoints[18] {0};
+    //Initialize solver parameters
+    struct0_T solverParameters {};
+    RobotAPI_InitSolverParameters(&solverParameters);
+
+    //Loop through sortedList points and try to find valid waypoints
+    //Loop through n points until found valid robot waypoints or until half of the points were checked.
+    while ((code != 1) && (n < NUM_CIRCLE_POINTS/2) ){
+        //Prepare targetApr from n_th row of sortedList
+        double targetApr[8] {0};
+        for(int i=0; i<8;i++){
+            targetApr[i] = sortedList.at(n, i);
         }
-    } else {
-        cout << "Inverse kinematics: Target unreachable" << endl;
+        //Todo: need currentConfig, branchStart
+        //Check if robot can reach both waypoints (on circle and cutplace) and if so, output waypoints
+        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters,&exitCode,&solutionInfoApr,qWaypoints);
+        code = static_cast<int>(exitCode+0.1);  //to safely cast double to int, because (0.9999 -> 0)
+        n++;
+    }
+    if (code == 1){
+        std::cout << "found solution on n = " << n << std::endl;
+        return true;
+    }
+    else{
+        std::cout << "has not found solution for first " << n << " points" << std::endl;
         return false;
     }
-
-    return true;
 }
 
 static bool withinRobotsKinematics(Cartesian_Pos_t *targetWorldFrame){
@@ -219,4 +254,15 @@ void RobotAPI_ProcessAction(){
             resetSequenceState();
             break;
     }
+}
+
+
+void RobotAPI_InitSolverParameters(struct0_T *solverParameters){
+    solverParameters->maxIterations          = SOLVER_MAX_ITERATIONS;
+    solverParameters->maxTime                = SOLVER_MAXTIME;
+    solverParameters->enforceJointLimits     = SOLVER_ENFORCE_JOINT_LIMITS;
+    solverParameters->allowRandomRestarts    = SOLVER_ALLOW_RANDOM_RESTARTS;
+    solverParameters->stepTolerance          = SOLVER_STEP_TOLERANCE;
+    solverParameters->positionTolerance      = SOLVER_POSITION_TOLERANCE;
+    solverParameters->orientationTolerance   = SOLVER_ORIENTATION_TOLERANCE;
 }
