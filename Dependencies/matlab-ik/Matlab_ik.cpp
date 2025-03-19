@@ -33818,6 +33818,26 @@ namespace coder
   }
 }
 
+
+//  Checks if robot is in self-collision and if true outputs collision pair numbers.
+//  Input:
+//  currentConfig     - 1x6 array of robot configuration (axis angles in radians)
+//  Output:
+//  isSelfColliding   - bool representing if robot is in self-collision
+//  collPairs         - 1x2 array of robot body indexes that are in
+//                      collision. If no collision its value is [0,0]
+//  0 - means no collision found
+//  1 - bodyBase
+//  2 - bodyA1
+//  3 - bodyA2
+//  4 - bodyA3
+//  5 - bodyA4
+//  6 - bodyA5
+//  7 - bodyA6
+//  8 - bodyEE
+//  9 - bodyTool
+//  10 - bodyToolEE
+//  11 - base
 void Matlab_checkCollision(const double currentConfig[6], boolean_T
   *isSelfColliding, double collPairs[2])
 {
@@ -33830,25 +33850,7 @@ void Matlab_checkCollision(const double currentConfig[6], boolean_T
     Matlab_ik_initialize();
   }
 
-  //  Checks if robot is in self-collision and if true outputs collision pair numbers.
-  //  Input:
-  //  currentConfig - 1x6 array of robot configuration (axis angles in radians)
-  //  Output:
-  //  isSelfColliding   - bool representing if robot is in self-collision
-  //  collPairs         - 1x2 array of robot body indexes that are in
-  //                      collision. If no collision its value is [0,0]
-  //  0 - means no collision found
-  //  1 - bodyBase
-  //  2 - bodyA1
-  //  3 - bodyA2
-  //  4 - bodyA3
-  //  5 - bodyA4
-  //  6 - bodyA5
-  //  7 - bodyA6
-  //  8 - bodyEE
-  //  9 - bodyTool
-  //  10 - bodyToolEE
-  //  11 - base
+
   //  Import Agrobot rbt model available for codegen
   if (!robot_not_empty) {
     rbtForCodegen(gobj_4[0], gobj_5[0], gobj_6[0], robot);
@@ -33899,6 +33901,20 @@ void Matlab_checkCollision(const double currentConfig[6], boolean_T
   //  show(robot,currentConfig, "Collisions","off");
 }
 
+
+//  Calculates bodyEE position and orientation in bodyBase frame for current robot configuration.
+//  Input:
+//  currentConfig - 1x6 array of robot configuration (axis angles in radians)
+//  whichEE       - integer (enum) representing what robot body to solve
+//                  FK for: 0 - bodyEE, 1 - bodyToolEE
+//  Output:
+//  se3   - 4x4 array representing homogeneous transformation matrix (SE3)
+//          between bodyEE and bodyBase
+//  pos   - 1x3 array representing x,y,z position of bodyEE in bodyBase
+//          frame
+//  ori   - 1x3 array [X Y Z] representing orientation of
+//          bodyEE in bodyBase frame in form of Euler angles (in radians)
+//          using ZYX intrinsic convention
 void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
   double robotSE3[16], double pos[3], double ori[3])
 {
@@ -33907,19 +33923,7 @@ void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
     Matlab_ik_initialize();
   }
 
-  //  Calculates bodyEE position and orientation in bodyBase frame for current robot configuration.
-  //  Input:
-  //  currentConfig - 1x6 array of robot configuration (axis angles in radians)
-  //  whichEE       - integer (enum) representing what robot body to solve
-  //                  FK for: 0 - bodyEE, 1 - bodyToolEE
-  //  Output:
-  //  se3   - 4x4 array representing homogeneous transformation matrix (SE3)
-  //          between bodyEE and bodyBase
-  //  pos   - 1x3 array representing x,y,z position of bodyEE in bodyBase
-  //          frame
-  //  ori   - 1x3 array [X Y Z] representing orientation of
-  //          bodyEE in bodyBase frame in form of Euler angles (in radians)
-  //          using ZYX intrinsic convention
+
   //  Import Agrobot rbt model available for codegen
   if (!b_robot_not_empty) {
     rbtForCodegen(gobj_4[20], gobj_5[20], gobj_6[10], b_robot);
@@ -33965,6 +33969,26 @@ void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
   //  show(robot,currentConfig, "Collisions","off");
 }
 
+
+
+/* Finds robot configuration only for Final Approach sequence.
+ * Input:
+ * currentConfig     - 1x6 array of robot configuration (axis angles in radians)
+ * target_Apr        - 1x8 array representing approach target xyz
+ *                     position(1:3), orientation(4:7) as wxyz quaternion,
+ *                     distance(8).
+ * targetPos_Fin     - 1x3 array representing final approach target xyz
+ *                     position
+ * solverParameters  - struct, holds solver parameters
+ * Output:
+ * qWaypoint         - 1x6 array of robot configuration (axis angles in
+ *                     radians) for Final Approach target.
+ * solutionInfoFin   - struct that holds GIKsolver info about Final
+ *                     Approach waypoint
+ * exitCode:
+ *      0 - GIK fail
+ *      1 - GIK success
+ */
 void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
                       const double targetPos_Fin[3], const struct0_T
                       *solverParameters, double *exitCode, struct1_T
@@ -34075,23 +34099,8 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   gik._pobj4.matlabCodegenIsDeleted = true;
   gik.matlabCodegenIsDeleted = true;
 
-  //  Finds robot configuration only for Final Approach sequence.
-  //  Input:
-  //  currentConfig - 1x6 array of robot configuration (axis angles in radians)
-  //  target_Apr    - 1x8 array representing approach target xyz
-  //                  position(1:3), orientation(4:7) as wxyz quaternion,
-  //                  distance(8).
-  //  targetPos_Fin - 1x3 array representing final approach target xyz
-  //                  position
-  //  Output:
-  //  qWaypoint       - 1x6 array of robot configuration (axis angles in
-  //                    radians) for Final Approach target.
-  //  solutionInfoFin - struct that holds GIKsolver info about Final
-  //                    Approach waypoint
-  //  exitCode:
-  //  0 - GIK fail
-  //  1 - GIK success
-  //         %% Add ori and pos tolerance inputs!!!!!!!!!!!!!!!!!!!
+
+
   //  Import Agrobot rbt model available for codegen
   if (!robot_rbt_not_empty) {
     rbtForCodegen(gobj_4[40], gobj_5[40], gobj_6[20], robot_rbt);
@@ -34265,6 +34274,28 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   *exitCode = b_exitCode;
 }
 
+
+/* Finds robot configurations for Approach and Final Approach sequence.
+ * Input:
+ * currentConfig     - 1x6 array of robot configuration (axis angles in radians)
+ * target_Apr        - 1x8 array representing approach target xyz
+ *                     position(1:3), orientation(4:7) as wxyz quaternion,
+ *                     distance(8).
+ * targetPos_Fin     - 1x3 array representing final approach target xyz
+ *                     position
+ * solverParameters  - struct, holds solver parameters
+ *
+ * Output:
+ * qWaypoints        - 3x6 array of robot configurations (axis angles in
+ *                     radians). 1st row - current config, 2nd - approach
+ *                     target, 3rd - final approach target.
+ * solutionInfoApr   - struct that holds GIKsolver info about second
+ *                     waypoint (Approach sequence)
+ * exitCode:
+ *      0 - GIK fail
+ *      1 - GIK success
+ *      2 - GIK final approach fail
+ */
 void Matlab_getGikFull(const double currentConfig[6], const double target_Apr[8],
   const double targetPos_Fin[3], const struct0_T *solverParameters, double
   *exitCode, struct1_T *solutionInfoApr, double qWaypoints[18])
@@ -34387,24 +34418,7 @@ void Matlab_getGikFull(const double currentConfig[6], const double target_Apr[8]
   gik._pobj4.matlabCodegenIsDeleted = true;
   gik.matlabCodegenIsDeleted = true;
 
-  //  Finds robot configurations for Approach and Final Approach sequence.
-  //  Input:
-  //  currentConfig - 1x6 array of robot configuration (axis angles in radians)
-  //  target_Apr    - 1x8 array representing approach target xyz
-  //                  position(1:3), orientation(4:7) as wxyz quaternion,
-  //                  distance(8).
-  //  targetPos_Fin - 1x3 array representing final approach target xyz
-  //                  position
-  //  Output:
-  //  qWaypoints      - 3x6 array of robot configurations (axis angles in
-  //                    radians). 1st row - current config, 2nd - approach
-  //                    target, 3rd - final approach target.
-  //  solutionInfoApr - struct that holds GIKsolver info about second
-  //                    waypoint (Approach sequence)
-  //  exitCode:
-  //  0 - GIK fail
-  //  1 - GIK success
-  //  2 - GIK final approach fail
+
   //  Import Agrobot rbt model available for codegen
   if (!b_robot_rbt_not_empty) {
     rbtForCodegen(gobj_4[60], gobj_5[60], gobj_6[30], b_robot_rbt);
@@ -34647,6 +34661,30 @@ void Matlab_getGikFull(const double currentConfig[6], const double target_Apr[8]
   *exitCode = b_exitCode;
 }
 
+
+/*
+ * Draws a circle around target branch, calculates points on that circle
+ * and sorts them based on distance from the robot's bodyToolEE
+ * Input:
+ * R                 - double, radius of the circle (in meters)
+ * branchStart       - 1x3 array representing [x y z] position of the
+ *                     cutting point
+ * branchEnd         - 1x3 array representing [x y z] position of the
+ *                     target branch end or any point on the branch in
+ *                     the direction of the branch growth
+ * numCirclePoints   - double, defines how many evenly spaced points on
+ *                     the circle to output
+ * pos_toolEE        - 1x3 array representing [x y z] position of the
+ *                     robot's bodyToolEE (scissor's end effector)
+ * Output:
+ * sortedList        - Nx8 array of points on the circle with orientation
+ *                     (Z toward center, Y inverted normal). Each point
+ *                     represented by xyz position (col1:3), quaternion
+ *                     (col4:7-wxyz) and distance to bodyToolEE (col8).
+ *                     N is defined with numCirclePoints.
+ * listLength        - double, represents the number of rows in
+ *                     sortedList. Should be the same as numCirclePoints
+ */
 void Matlab_getSortedCirclePointList(double R, const double branchStart[3],
   const double branchEnd[3], double numCirclePoints, const double pos_toolEE[3],
   coder::array<double, 2U> &sortedList, double *listLength)
@@ -34692,27 +34730,7 @@ void Matlab_getSortedCirclePointList(double R, const double branchStart[3],
     Matlab_ik_initialize();
   }
 
-  //  Draws a circle around target branch, calculates points on that circle
-  //  and sorts them based on distance from the robot's bodyToolEE
-  //  Input:
-  //  R                 - double, radius of the circle (in meters)
-  //  branchStart       - 1x3 array representing [x y z] position of the
-  //                      cutting point
-  //  branchEnd         - 1x3 array representing [x y z] position of the
-  //                      target branch end or any point on the branch in
-  //                      the direction of the branch growth
-  //  numCirclePoints   - double, defines how many evenly spaced points on
-  //                      the circle to output
-  //  pos_toolEE        - 1x3 array representing [x y z] position of the
-  //                      robot's bodyToolEE (scissor's end effector)
-  //  Output:
-  //  sortedList        - Nx8 array of points on the circle with orientation
-  //                      (Z toward center, Y inverted normal). Each point
-  //                      represented by xyz position (col1:3), quaternion
-  //                      (col4:7-wxyz) and distance to bodyToolEE (col8).
-  //                      N is defined with numCirclePoints.
-  //  listLength        - double, represents the number of rows in
-  //                      sortedList. Should be the same as numCirclePoints
+
   _mm_storeu_pd(&vdir[0], _mm_sub_pd(_mm_loadu_pd(&branchEnd[0]), _mm_loadu_pd
     (&branchStart[0])));
   vdir[2] = branchEnd[2] - branchStart[2];

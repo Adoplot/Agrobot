@@ -45,6 +45,29 @@ extern void Matlab_getGikFull(const double currentConfig[6],
                               double *exitCode, struct1_T *solutionInfoApr,
                               double qWaypoints[18]);
 
+/*
+ * Draws a circle around target branch, calculates points on that circle
+ * and sorts them based on distance from the robot's bodyToolEE
+ * Input:
+ * R                 - double, radius of the circle (in meters)
+ * branchStart       - 1x3 array representing [x y z] position of the
+ *                     cutting point
+ * branchEnd         - 1x3 array representing [x y z] position of the
+ *                     target branch end or any point on the branch in
+ *                     the direction of the branch growth
+ * numCirclePoints   - double, defines how many evenly spaced points on
+ *                     the circle to output
+ * pos_toolEE        - 1x3 array representing [x y z] position of the
+ *                     robot's bodyToolEE (scissor's end effector)
+ * Output:
+ * sortedList        - Nx8 array of points on the circle with orientation
+ *                     (Z toward center, Y inverted normal). Each point
+ *                     represented by xyz position (col1:3), quaternion
+ *                     (col4:7-wxyz) and distance to bodyToolEE (col8).
+ *                     N is defined with numCirclePoints.
+ * listLength        - double, represents the number of rows in
+ *                     sortedList. Should be the same as numCirclePoints
+ */
 extern void Matlab_getSortedCirclePointList(
     double R, const double branchStart[3], const double branchEnd[3],
     double numCirclePoints, const double pos_toolEE[3],
