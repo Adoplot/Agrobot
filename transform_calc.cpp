@@ -96,6 +96,85 @@ Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* target
 }
 
 
+
+/*
+ * Converts target frame to world frame. Scissor parameters are embedded (change defines in transform_calc.h)
+ * Inputs:
+ * targetPos_camFrame   - target position in camera frame [xyz]
+ * eePos_worldFrame     - robot EE coordinates in world frame [xyzABC]
+ * Output:
+ * Cartesian coordinates of the target in world frame [xyzABC]
+ */
+Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* targetPos_camFrame,
+                                                   const Hyundai_Data_t* eePos_worldFrame) {
+    Cartesian_Pos_t targetPos_worldFrame{};
+
+    Matrix4d H1;        //  ee   in world frame
+    Matrix4d H2;        //  cam  in ee frame
+    Matrix4d H3;        //target in cam   frame
+    Matrix4d H;         //target in world frame
+    Matrix3d H1_rot;    // H1 rotation matrix
+    Vector3d H1_tran;   // H1 translation vector
+    Matrix3d H3_rot;    // H3 rotation matrix
+    Vector3d H3_tran;   // H3 translation vector
+
+    // H1: world -> ee
+    // Creating homogenous transformation matrix H1 from received Hyundai data using ZYX convention
+    H1_tran << eePos_worldFrame->coord[0], eePos_worldFrame->coord[1], eePos_worldFrame->coord[2];
+    H1_rot = AngleAxisd(eePos_worldFrame->coord[5], Vector3d::UnitZ())
+             * AngleAxisd(eePos_worldFrame->coord[4], Vector3d::UnitY())
+             * AngleAxisd(eePos_worldFrame->coord[3], Vector3d::UnitX());
+    H1.setIdentity();
+    H1.block<3,3>(0,0) = H1_rot;
+    H1.block<3,1>(0,3) = H1_tran;
+
+    // ee -> cam  (ZYX notation z=-90 deg)
+    H2 <<   0, 1, 0, CAMERA_POS_X,
+            -1, 0, 0, CAMERA_POS_Y,
+            0, 0, 1, CAMERA_POS_Z,
+            0, 0, 0, 1;
+
+    // H3: cam -> target
+    // Creating homogenous transformation matrix H3 from received Compv data
+    // using ZYX convention
+    H3_tran << targetPos_camFrame->x, targetPos_camFrame->y, targetPos_camFrame->z;
+    H3_rot = AngleAxisd(targetPos_camFrame->rotz, Vector3d::UnitZ())
+             * AngleAxisd(targetPos_camFrame->roty, Vector3d::UnitY())
+             * AngleAxisd(targetPos_camFrame->rotx, Vector3d::UnitX());
+    H3.setIdentity();
+    H3.block<3,3>(0,0) = H3_rot;
+    H3.block<3,1>(0,3) = H3_tran;
+
+    H = H1*H2*H3;
+
+#ifdef DEBUG_H_MATRICES
+    //Print H values to log file
+    std::ofstream fs("/home/adoplot/ClionProjects/AgrobotHH7/log.txt");
+
+    if(!fs)
+    {
+        std::cerr<<"Cannot open the output file."<<std::endl;
+    }
+    else {
+        fs << "H1\n" << H1 << std::endl;
+        fs << "H2\n" << H2 << std::endl;
+        fs << "H3\n" << H3 << std::endl;
+        fs << "H1*H2*H3\n" << H << std::endl;
+        fs.close();
+    }
+#endif
+
+    targetPos_worldFrame.rotx = std::atan2(H(2, 1), H(2, 2));
+    targetPos_worldFrame.roty = std::atan2(-H(2, 0), std::sqrt(H(2, 1) * H(2, 1) + H(2, 2) * H(2, 2)));
+    targetPos_worldFrame.rotz = std::atan2(H(1, 0), H(0, 0));
+    targetPos_worldFrame.x = H(0,3);
+    targetPos_worldFrame.y = H(1,3);
+    targetPos_worldFrame.z = H(2,3);
+
+    return targetPos_worldFrame;
+}
+
+
 // Converts camera frame to world frame, taking into account scissors length
 // Returns: Cartesian coordinates of the camera in world frame
 Cartesian_Pos_t convertFrameCam2World(const Hyundai_Data_t* eePos_worldFrame,
