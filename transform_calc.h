@@ -5,6 +5,14 @@
 
 #include "onltrack_handler.h"
 
+// robot parameters
+#define LERP_INTERP_FACTOR 0.01     // changes interpolation resolution (can try also 0.005)
+#define SLERP_INTERP_FACTOR 0.001   // changes interpolation resolution (can try also 0.005)
+#define POSITIONING_ACCURACY 0.02   // distance from ee to target that is considered negligible
+#define ORIENTATION_ACCURACY 0.02   // difference between ee and target ori that is considered negligible
+#define SCISSORS_LENGTH 0.3         // in meters
+#define CAMERA_POS_X 0.0            // -0.04 m
+#define CAMERA_POS_Y 0.0            // 0.033 m
 
 Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* targetPos_camFrame,
                                                    const Hyundai_Data_t* eePos_worldFrame,

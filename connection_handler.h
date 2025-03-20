@@ -14,15 +14,6 @@
 //#define DEBUG_H_MATRICES
 //#define DEBUG_LERP              //print res and incr XYZ values (1) or not (any)
 
-// robot parameters
-#define LERP_INTERP_FACTOR 0.01     // changes interpolation resolution (can try also 0.005)
-#define SLERP_INTERP_FACTOR 0.001   // changes interpolation resolution (can try also 0.005)
-#define POSITIONING_ACCURACY 0.02   // distance from ee to target that is considered negligible
-#define ORIENTATION_ACCURACY 0.02   // difference between ee and target ori that is considered negligible
-#define SCISSORS_LENGTH 0.3         // in meters
-#define CAMERA_POS_X 0.0            // -0.04 m
-#define CAMERA_POS_Y 0.0            // 0.033 m
-
 // poll() macros
 #define POLL_LIST_FD_COUNT 3        //number of file descriptors(sockets) for poll_list structure
 
