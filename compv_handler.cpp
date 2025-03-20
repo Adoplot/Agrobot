@@ -271,6 +271,31 @@ static void handleSetPositionRequest(const json& json) {
     targetPos_worldFrame = Transform_ConvertFrameTarget2World(&targetPos_camFrame,
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
+    //TEST PARAMETERS
+    Cartesian_Pos_t targetStart_camFrame{};
+    Cartesian_Pos_t targetDir_camFrame{};
+    Target_Parameters_t targetParameters{};
+    Cartesian_Pos_t targetStart_worldFrame{};
+    Cartesian_Pos_t targetDir_worldFrame{};
+    //TEST PARAMETERS END
+
+    // Divide targetParameters into targetStart_camFrame and targetDir_camFrame
+    targetStart_camFrame.x = targetParameters.x1;
+    targetStart_camFrame.y = targetParameters.y1;
+    targetStart_camFrame.z = targetParameters.z1;
+
+    targetDir_camFrame.x = targetParameters.x2;
+    targetDir_camFrame.y = targetParameters.y2;
+    targetDir_camFrame.z = targetParameters.z2;
+
+
+    //ToDo: ADOPLOT get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
+    // convert them from camFrame to worldFrame
+    // get sortedList
+    // receive currentConfig from hyundai
+    // loop through sortedList with getGikFull and output qWaypoints or send failMessage
+    // get pathApr from Transform_getTrajectory
+    // save pathApr for further onltrack increment calculations
 
     RobotAPI_StartApproachSequence();
 }
