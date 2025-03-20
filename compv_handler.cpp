@@ -262,6 +262,7 @@ static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions){
 }
 
 static void handleSetPositionRequest(const json& json) {
+    /*
     cout << "Initiating <Set Pos> sequence" << endl;
 
     Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
@@ -271,15 +272,33 @@ static void handleSetPositionRequest(const json& json) {
     targetPos_worldFrame = Transform_ConvertFrameTarget2World(&targetPos_camFrame,
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
-    //TEST PARAMETERS
+*/
+    //TEST PARAMETERS---------------------------------------
+    /*
+    Hyundai_Data_t *eePos_worldFrame;
+    eePos_worldFrame->coord[0] = 0.5715;
+    eePos_worldFrame->coord[1] = 0;
+    eePos_worldFrame->coord[2] = 0.931;
+    eePos_worldFrame->coord[3] = 0;
+    eePos_worldFrame->coord[4] = 1.5708;
+    eePos_worldFrame->coord[5] = 0;
+     */
+    typedef struct{
+        double x1  {0};
+        double y1  {0};
+        double z1  {0};
+        double x2  {0};
+        double y2  {0};
+        double z2  {0};
+    }Target_Parameters_t;
+    Target_Parameters_t targetParameters {0,0,0,0,0,0};
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
-    Target_Parameters_t targetParameters{};
     Cartesian_Pos_t targetStart_worldFrame{};
     Cartesian_Pos_t targetDir_worldFrame{};
-    //TEST PARAMETERS END
+    //TEST PARAMETERS END----------------------------------
 
-    // Divide targetParameters into targetStart_camFrame and targetDir_camFrame
+    //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
     targetStart_camFrame.x = targetParameters.x1;
     targetStart_camFrame.y = targetParameters.y1;
     targetStart_camFrame.z = targetParameters.z1;
@@ -288,9 +307,27 @@ static void handleSetPositionRequest(const json& json) {
     targetDir_camFrame.y = targetParameters.y2;
     targetDir_camFrame.z = targetParameters.z2;
 
+    //Get current robot EE coords
+    Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
 
-    //ToDo: ADOPLOT get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
-    // convert them from camFrame to worldFrame
+    //Transform targetParameters to worldFrame
+    targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eePos_worldFrame);
+    targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eePos_worldFrame);
+
+    //Show targetStart_worldFrame coords
+    std::cout << std::fixed << std::showpoint;
+    std::cout << std::setprecision(3);
+    std::cout << "x=" << targetStart_worldFrame.x;
+    std::cout << " y=" << targetStart_worldFrame.y;
+    std::cout << " z=" << targetStart_worldFrame.z;
+    std::cout << " rotX=" << targetStart_worldFrame.rotx;
+    std::cout << " rotY=" << targetStart_worldFrame.roty;
+    std::cout << " rotZ=" << targetStart_worldFrame.rotz;
+    cout << endl;
+
+    //ToDo: ADOPLOT
+    // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
+    // + convert them from camFrame to worldFrame
     // get sortedList
     // receive currentConfig from hyundai
     // loop through sortedList with getGikFull and output qWaypoints or send failMessage
