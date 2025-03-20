@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Add libraries
 include_directories(${CMAKE_SOURCE_DIR}/Dependencies/json/include/)
 include_directories(${CMAKE_SOURCE_DIR}/Dependencies/Eigen)
-set(CODEGEN_DIR "${CMAKE_SOURCE_DIR}/Dependencies/matlab-ik")
+set(CODEGEN_DIR "${CMAKE_SOURCE_DIR}/Dependencies/matlab-ik-ARM")
 include_directories(${CODEGEN_DIR})
 
 # Find all source files for compilation
