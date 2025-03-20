@@ -12,14 +12,14 @@ typedef struct{
 
 
 typedef struct {
-    int id;
-    bool isReachable;
-    double x;
-    double y;
-    double z;
-    double rotx;
-    double roty;
-    double rotz;
+    int id              {0};
+    bool isReachable    {false};
+    double x            {0};
+    double y            {0};
+    double z            {0};
+    double rotx         {0};
+    double roty         {0};
+    double rotz         {0};
 } Cartesian_Pos_t;
 
 
