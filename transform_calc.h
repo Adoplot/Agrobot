@@ -11,9 +11,16 @@
 #define POSITIONING_ACCURACY 0.02   // distance from ee to target that is considered negligible
 #define ORIENTATION_ACCURACY 0.02   // difference between ee and target ori that is considered negligible
 #define SCISSORS_LENGTH 0.3         // in meters
-#define CAMERA_POS_X 0.03           // 0.03 m
-#define CAMERA_POS_Y 0.0            // 0 m
-#define CAMERA_POS_Z 0.26           // 0.26 m
+
+// Camera and toolEE position in robotEE frame
+#define CAMERA_POS_X (-0.1025)      // -0.1025 m
+#define CAMERA_POS_Y 0.0325         // 0.0325 m
+#define CAMERA_POS_Z 0.037          // 0.037 m
+#define TOOLEE_POS_X 0.03           // 0.03 m
+#define TOOLEE_POS_Y 0.0            // 0 m
+#define TOOLEE_POS_Z 0.26           // 0.26 m
+
+Hyundai_Data_t Transform_ConvertFrameRobotEE2ToolEE(const Hyundai_Data_t* eePos_worldFrame);
 
 Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* targetPos_camFrame,
                                                    const Hyundai_Data_t* eePos_worldFrame,

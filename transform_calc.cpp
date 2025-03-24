@@ -25,6 +25,7 @@ static Cartesian_Pos_t convertQuat2Euler(Quaterniond q);
 
 // Converts target frame to world frame, taking into account scissors length
 // Returns: Cartesian coordinates of the target in world frame
+// OLD
 Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* targetPos_camFrame,
                                                    const Hyundai_Data_t* eePos_worldFrame,
                                                    double scissors_length) {
@@ -98,7 +99,7 @@ Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* target
 
 
 /*
- * Converts target frame to world frame. Scissor parameters are embedded (change defines in transform_calc.h)
+ * Converts target SE3 in camera frame to world frame. Scissor parameters are embedded (change defines in transform_calc.h)
  * Inputs:
  * targetPos_camFrame   - target position in camera frame [xyz]
  * eePos_worldFrame     - robot EE coordinates in world frame [xyzABC]
