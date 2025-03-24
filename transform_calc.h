@@ -20,6 +20,10 @@
 #define TOOLEE_POS_Y 0.0            // 0 m
 #define TOOLEE_POS_Z 0.26           // 0.26 m
 
+// Circle point list parameters
+#define CIRCLE_RADIUS       0.3
+#define CIRCLE_POINT_NUM    10
+
 Hyundai_Data_t Transform_ConvertFrameRobotEE2ToolEE(const Hyundai_Data_t* eePos_worldFrame);
 
 Cartesian_Pos_t Transform_ConvertFrameTarget2World(const Cartesian_Pos_t* targetPos_camFrame,

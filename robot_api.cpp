@@ -38,11 +38,13 @@ static void resetSequenceState(){
     ROBOTAPI_LOG("Reset sequence to idle state");
 }
 
-// Todo: PASHA targetCoords_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
-// Todo: ADOPLOT get branchStart and branchDir from targetCoords_worldFrame
-bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetCoords_worldFrame){
+// Todo: PASHA - targetParameters_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
+//             - create pseudo function for calculating targetParameters_worldFrame from targetParameters_camFrame.
+//               Input - *eePos_worldFrame
+// Todo: ADOPLOT get branchStart and branchDir from targetParameters_worldFrame
+bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     //TEST DEFINITIONS - have to be inputs in the RobotAPI_TargetIsReachable()
-    double branchStart[3]       {0.6,1.8,0};
+    double branchStart[3]       {0.6,0.8,0};
     double branchDir[3]         {0.4,0,0};
     double eePos_worldFrame[3]  {0.5715,0,0.931};
     double currentConfig[6]     {0,1.5708,0,0,0,0};
@@ -52,7 +54,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetCoords_worldFrame){
     double listLength {0};  //redundant
     //Todo: need input branchStart, branchDir, eePos_worldFrame
     //Get sortedList with points on a circle around the cutting place
-    Matlab_getSortedCirclePointList(CIRCLE_RADIUS,branchStart, branchDir, NUM_CIRCLE_POINTS, eePos_worldFrame, sortedList, &listLength);
+    Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, eePos_worldFrame, sortedList, &listLength);
 
     double exitCode {0};
     int code {0};
@@ -65,7 +67,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetCoords_worldFrame){
 
     //Loop through sortedList points and try to find valid waypoints
     //Loop through n points until found valid robot waypoints or until half of the points were checked.
-    while ((code != 1) && (n < NUM_CIRCLE_POINTS/2) ){
+    while ((code != 1) && (n < CIRCLE_POINT_NUM/2) ){
         //Prepare targetApr from n_th row of sortedList
         double targetApr[8] {0};
         for(int i=0; i<8;i++){

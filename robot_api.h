@@ -5,8 +5,7 @@
 #include "Matlab_ik_types.h"
 #include <functional>
 
-#define CIRCLE_RADIUS                   0.3
-#define NUM_CIRCLE_POINTS               10
+
 //Solver parameters
 #define SOLVER_MAX_ITERATIONS           1500
 #define SOLVER_MAXTIME                  10
