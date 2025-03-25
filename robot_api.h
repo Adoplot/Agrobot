@@ -60,6 +60,4 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd);
 
 void RobotAPI_ProcessAction();
 
-void RobotAPI_InitSolverParameters(struct0_T *solverParameters);
-
 #endif //ROBOTARM_ROBOT_API_H

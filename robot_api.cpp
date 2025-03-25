@@ -3,6 +3,7 @@
 #include "connection_handler.h"
 #include "Matlab_ik.h"
 #include "Matlab_ik_types.h"
+#include "ik_wrapper.h"
 
 using std::cout;
 using std::cerr;
@@ -52,7 +53,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
 
     coder::array<double, 2U> sortedList;
     double listLength {0};  //redundant
-    //Todo: need input branchStart, branchDir, eePos_worldFrame
+    //Todo: need input - branchStart, branchDir, eePos_worldFrame
     //Get sortedList with points on a circle around the cutting place
     Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, eePos_worldFrame, sortedList, &listLength);
 
@@ -63,7 +64,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     double qWaypoints[18] {0};
     //Initialize solver parameters
     struct0_T solverParameters {};
-    RobotAPI_InitSolverParameters(&solverParameters);
+    IK_InitSolverParameters(&solverParameters);
 
     //Loop through sortedList points and try to find valid waypoints
     //Loop through n points until found valid robot waypoints or until half of the points were checked.
@@ -259,12 +260,3 @@ void RobotAPI_ProcessAction(){
 }
 
 
-void RobotAPI_InitSolverParameters(struct0_T *solverParameters){
-    solverParameters->maxIterations          = SOLVER_MAX_ITERATIONS;
-    solverParameters->maxTime                = SOLVER_MAXTIME;
-    solverParameters->enforceJointLimits     = SOLVER_ENFORCE_JOINT_LIMITS;
-    solverParameters->allowRandomRestarts    = SOLVER_ALLOW_RANDOM_RESTARTS;
-    solverParameters->stepTolerance          = SOLVER_STEP_TOLERANCE;
-    solverParameters->positionTolerance      = SOLVER_POSITION_TOLERANCE;
-    solverParameters->orientationTolerance   = SOLVER_ORIENTATION_TOLERANCE;
-}
