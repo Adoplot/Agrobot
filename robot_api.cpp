@@ -48,46 +48,24 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     double branchStart[3]       {0.6,0.8,0};
     double branchDir[3]         {0.4,0,0};
     double eePos_worldFrame[3]  {0.5715,0,0.931};
+    //Todo: PASHA get currentConfig
     double currentConfig[6]     {0,1.5708,0,0,0,0};
     //TEST DEFINITIONS END
 
-    coder::array<double, 2U> sortedList;
-    double listLength {0};  //redundant
-    //Todo: need input - branchStart, branchDir, eePos_worldFrame
-    //Get sortedList with points on a circle around the cutting place
-    Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, eePos_worldFrame, sortedList, &listLength);
+    // Declare outputs
+    int code;
+    double qWaypoints[18];
 
-    double exitCode {0};
-    int code {0};
-    int n {0};
-    struct1_T solutionInfoApr {}; //only for debug
-    double qWaypoints[18] {0};
-    //Initialize solver parameters
-    struct0_T solverParameters {};
-    IK_InitSolverParameters(&solverParameters);
+    // Get waypoints and success/fail code
+    IK_getWaypointsForApproach(branchStart, branchDir, eePos_worldFrame, currentConfig, &code, qWaypoints);
 
-    //Loop through sortedList points and try to find valid waypoints
-    //Loop through n points until found valid robot waypoints or until half of the points were checked.
-    while ((code != 1) && (n < CIRCLE_POINT_NUM/2) ){
-        //Prepare targetApr from n_th row of sortedList
-        double targetApr[8] {0};
-        for(int i=0; i<8;i++){
-            targetApr[i] = sortedList.at(n, i);
-        }
-        //Todo: need currentConfig, branchStart
-        //Check if robot can reach both waypoints (on circle and cutplace) and if so, output waypoints
-        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters,&exitCode,&solutionInfoApr,qWaypoints);
-        code = static_cast<int>(exitCode+0.1);  //to safely cast double to int, because (0.9999 -> 0)
-        n++;
-    }
     if (code == 1){
-        std::cout << "found solution on n = " << n << std::endl;
         return true;
     }
     else{
-        std::cout << "has not found solution for first " << n << " points" << std::endl;
         return false;
     }
+
 }
 
 static bool withinRobotsKinematics(Cartesian_Pos_t *targetWorldFrame){

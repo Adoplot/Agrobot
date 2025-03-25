@@ -6,6 +6,11 @@
 #include "enet_handler.h"
 #include "transform_calc.h"
 
+void IK_getWaypointsForApproach(const double branchStart[3], const double branchDir[3], const double eePos_worldFrame[3],
+                                const double currentConfig[6], int *code, double qWaypoints[18]);
+
 void IK_InitSolverParameters(struct0_T *solverParameters);
+
+void IK_PrintWaypoints(const double qWaypoints[18]);
 
 #endif //ROBOTARM_IK_WRAPPER_H
