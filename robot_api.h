@@ -6,14 +6,7 @@
 #include <functional>
 
 
-//Solver parameters
-#define SOLVER_MAX_ITERATIONS           1500
-#define SOLVER_MAXTIME                  10
-#define SOLVER_ENFORCE_JOINT_LIMITS     true
-#define SOLVER_ALLOW_RANDOM_RESTARTS    true
-#define SOLVER_STEP_TOLERANCE           1.0E-13
-#define SOLVER_POSITION_TOLERANCE       0.2
-#define SOLVER_ORIENTATION_TOLERANCE    0.1
+
 
 enum class Robot_Sequence_t {
     IDLE,

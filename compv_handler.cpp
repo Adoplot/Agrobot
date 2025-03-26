@@ -5,6 +5,9 @@
 #include "transform_calc.h"
 #include "nlohmann/json.hpp"
 #include "robot_api.h"
+#include "Matlab_ik.h"
+#include "Matlab_ik_types.h"
+#include "ik_wrapper.h"
 
 
 using std::cout;
@@ -273,31 +276,30 @@ static void handleSetPositionRequest(const json& json) {
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
 */
-    //TEST PARAMETERS---------------------------------------
-    /*
-    Hyundai_Data_t *eePos_worldFrame;
-    eePos_worldFrame->coord[0] = 0.5715;
-    eePos_worldFrame->coord[1] = 0;
-    eePos_worldFrame->coord[2] = 0.931;
-    eePos_worldFrame->coord[3] = 0;
-    eePos_worldFrame->coord[4] = 1.5708;
-    eePos_worldFrame->coord[5] = 0;
-     */
-    typedef struct{
-        double x1  {0};
-        double y1  {0};
-        double z1  {0};
-        double x2  {0};
-        double y2  {0};
-        double z2  {0};
-    }Target_Parameters_t;
-    Target_Parameters_t targetParameters {0,0,0,0,0,0};
+
+    //Get current robot EE coords
+    Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
+
+    //=========TEST PARAMETERS========================
+    //Todo: PASHA - get targetParameters (as func input or otherwise)
+    Target_Parameters_t targetParameters {-0.7675,1.0335,-0.0085,0.0325,1.0335,-0.2085};
+    //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
+    double currentConfig[6] {0,1.5708,0,0,0,0};
+
+    eeCoords_worldFrame->coord[0] = 0.5715;
+    eeCoords_worldFrame->coord[1] = 0;
+    eeCoords_worldFrame->coord[2] = 0.931;
+    eeCoords_worldFrame->coord[3] = 0;
+    eeCoords_worldFrame->coord[4] = 1.5708;
+    eeCoords_worldFrame->coord[5] = 0;
+    //=========TEST PARAMETERS END====================
+
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
     Cartesian_Pos_t targetStart_worldFrame{};
     Cartesian_Pos_t targetDir_worldFrame{};
-    //TEST PARAMETERS END----------------------------------
 
+    // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
     targetStart_camFrame.x = targetParameters.x1;
     targetStart_camFrame.y = targetParameters.y1;
@@ -307,16 +309,14 @@ static void handleSetPositionRequest(const json& json) {
     targetDir_camFrame.y = targetParameters.y2;
     targetDir_camFrame.z = targetParameters.z2;
 
-    //Get current robot EE coords
-    Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
-
     //Transform targetParameters to worldFrame
-    targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eePos_worldFrame);
-    targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eePos_worldFrame);
+    targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
+    targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
 
     //Show targetStart_worldFrame coords
     std::cout << std::fixed << std::showpoint;
     std::cout << std::setprecision(3);
+    std::cout << "targetStart \t";
     std::cout << "x=" << targetStart_worldFrame.x;
     std::cout << " y=" << targetStart_worldFrame.y;
     std::cout << " z=" << targetStart_worldFrame.z;
@@ -324,17 +324,61 @@ static void handleSetPositionRequest(const json& json) {
     std::cout << " rotY=" << targetStart_worldFrame.roty;
     std::cout << " rotZ=" << targetStart_worldFrame.rotz;
     cout << endl;
+    std::cout << std::fixed << std::showpoint;
+    std::cout << std::setprecision(3);
+    std::cout << "targetDir \t";
+    std::cout << "x=" << targetDir_worldFrame.x;
+    std::cout << " y=" << targetDir_worldFrame.y;
+    std::cout << " z=" << targetDir_worldFrame.z;
+    std::cout << " rotX=" << targetDir_worldFrame.rotx;
+    std::cout << " rotY=" << targetDir_worldFrame.roty;
+    std::cout << " rotZ=" << targetDir_worldFrame.rotz;
+    cout << endl;
+
+
+    //------------------------------------------------------------
+    //Get sorted list of points on a circle around cutplace
+    //------------------------------------------------------------
+    double branchStart[3] {0};
+    double branchDir[3] {0};
+    branchStart[0] = targetStart_worldFrame.x;
+    branchStart[1] = targetStart_worldFrame.y;
+    branchStart[2] = targetStart_worldFrame.z;
+    branchDir[0] = targetDir_worldFrame.x;
+    branchDir[1] = targetDir_worldFrame.y;
+    branchDir[2] = targetDir_worldFrame.z;
+
+    // Declare outputs
+    int code;
+    double qWaypoints[18];
+
+    // Get waypoints and success/fail code
+    IK_getWaypointsForApproach(branchStart, branchDir, eeCoords_worldFrame, currentConfig, &code, qWaypoints);
+
+    IK_PrintWaypoints(qWaypoints);
 
     //ToDo: ADOPLOT
     // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
     // + convert them from camFrame to worldFrame
-    // get sortedList
-    // receive currentConfig from hyundai
-    // loop through sortedList with getGikFull and output qWaypoints or send failMessage
-    // get pathApr from Transform_getTrajectory
+    // + get sortedList
+    // + receive currentConfig from hyundai
+    // + loop through sortedList with getGikFull and output qWaypoints or send failMessage
+    // - get pathApr from Transform_getTrajectory
     // save pathApr for further onltrack increment calculations
 
-    RobotAPI_StartApproachSequence();
+
+    //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
+    //      terminate called after throwing an instance of 'std::bad_function_call'
+    //      what():  bad_function_call
+    //RobotAPI_StartApproachSequence();
+}
+
+//Todo: delete
+void TEST_handleSetPositionRequest(){
+    json blankjson;
+
+    handleSetPositionRequest(blankjson);
+
 }
 
 static void handleFinalApproachRequest(const json& json) {

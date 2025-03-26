@@ -7,13 +7,20 @@
 #include "ik_wrapper.h"
 
 
+
+
+
+
 /*
  * Calculates waypoints for Approach sequence.
  * Calculates circle around the cutplace, calculates sorted list of points for Approach sequence, chooses valid
  * waypoints for Approach and FinalApr sequence.
- * Input:
- *
- * Output:
+ *      Input:
+ * branchStart          - 1x3 array, cutplace position in world frame [xyz]
+ * branchDir            - 1x3 array, branch direction vector in world frame [xyz]
+ * eeCoords_worldFrame  - struct, robotEE coords in world frame from Hyundai controller
+ * currentConfig        - 1x6 array, current configuration of the robot from Hyundai controller [A1-A6]
+ *      Output:
  * code         - int, exit code: 0 - Apr fail, 1 - Success, 2 - FinalApr fail
  * qWaypoints   - 3x6 array with 3 robot configurations: 1row - current, 2 - Approach, 3 - FinalApr. (in radians)
  */
@@ -33,6 +40,7 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
     //Get sortedList with points on a circle around the cutting place
     Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, tooleePos_worldFrame, sortedList, &listLength);
 
+    //Todo: comment out if not debugging
     IK_PrintSortedPointList(&sortedList);
 
     double exitCode {0};
@@ -63,6 +71,9 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
         std::cout << "has not found solution for first " << n << " points" << std::endl;
     }
 }
+
+
+
 
 
 // Prints to console values in qWaypoints[18]. There are 3 rows and 6 columns.

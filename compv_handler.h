@@ -24,6 +24,7 @@ typedef struct {
     char store[6] = "store";
 } Enet1_Cmd_t;
 */
+void TEST_handleSetPositionRequest(); //ToDo: delete
 
 void CompV_SetTargetPosWorldFrame(Cartesian_Pos_t new_value);
 void CompV_SetTargetPosCamFrame(Cartesian_Pos_t new_value);
