@@ -23,6 +23,16 @@ typedef struct {
 } Cartesian_Pos_t;
 
 
+typedef struct{
+    double x1  {0};
+    double y1  {0};
+    double z1  {0};
+    double x2  {0};
+    double y2  {0};
+    double z2  {0};
+}Target_Parameters_t;   //ToDo: PASHA - this is temporary struct, keep the name, keep x1,y1,z1,x2,y2,z2.
+
+
 void Onltrack_AnswerHandle(const Hyundai_Data_t* eePos_worldFrame, long buflen);
 
 #endif //ROBOTARM_ONLTRACK_HANDLER_H
