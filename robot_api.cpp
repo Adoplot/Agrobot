@@ -42,13 +42,19 @@ static void resetSequenceState(){
 // Todo: PASHA - targetParameters_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
 //             - create pseudo function for calculating targetParameters_worldFrame from targetParameters_camFrame.
 //               Input - *eePos_worldFrame
+// Todo: PASHA - get currentConfig from Hyundai
 // Todo: ADOPLOT get branchStart and branchDir from targetParameters_worldFrame
 bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     //TEST DEFINITIONS - have to be inputs in the RobotAPI_TargetIsReachable()
     double branchStart[3]       {0.6,0.8,0};
     double branchDir[3]         {0.4,0,0};
-    double eePos_worldFrame[3]  {0.5715,0,0.931};
-    //Todo: PASHA get currentConfig
+    Hyundai_Data_t eeCoords_worldFrame{};
+    eeCoords_worldFrame.coord[0] = 0.5715;
+    eeCoords_worldFrame.coord[1] = 0;
+    eeCoords_worldFrame.coord[2] = 0.931;
+    eeCoords_worldFrame.coord[3] = 0;
+    eeCoords_worldFrame.coord[4] = 1.5708;
+    eeCoords_worldFrame.coord[5] = 0;
     double currentConfig[6]     {0,1.5708,0,0,0,0};
     //TEST DEFINITIONS END
 
@@ -57,7 +63,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     double qWaypoints[18];
 
     // Get waypoints and success/fail code
-    IK_getWaypointsForApproach(branchStart, branchDir, eePos_worldFrame, currentConfig, &code, qWaypoints);
+    IK_getWaypointsForApproach(branchStart, branchDir, &eeCoords_worldFrame, currentConfig, &code, qWaypoints);
 
     if (code == 1){
         return true;
