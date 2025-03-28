@@ -7,8 +7,144 @@
 #include "ik_wrapper.h"
 
 
+/*
+ * Calculates Cartesian trajectory from one config to another, based on speed and number of steps
+ * Input:
+ * currentConfig    - 1x6 array, start configuration of the robot (in radians)
+ * waypoint         - 1x6 array, final configuration of the robot (in radians)
+ * Output:
+ * pathCartesian    - Nx6 array, trajectory of the robot end-effector, where every row is a Cartesian coordinate [xyzABC]
+ * true             - bool, trajectory is valid
+ * false            - bool, trajectory is NOT valid (axis limit violation or self-collision detected)
+ */
+bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity, double pathCartesian[PATH_STEP_NUM][6]){
+    bool isValid {true};
+    double pathConfig[PATH_STEP_NUM][6] {};
+    double config[6] {0};
+    double robotSE3[16];
+    double pos[3];
+    double ori[3];
+
+    isValid = IK_InterpolatePath(currentConfig,waypoint, velocity, PATH_STEP_NUM, pathConfig);
 
 
+    for (int i = 0; i < PATH_STEP_NUM; i++) {
+        for (int j = 0; j < 6; j++) {
+            config[j] = pathConfig[i][j];
+        }
+        Matlab_getForwardKinematics(config, ROBOTEE, robotSE3, pos, ori);
+
+        for (int k = 0; k < 3; k++){
+            pathCartesian[i][k] = pos[k];
+            pathCartesian[i][k+3] = ori[k];
+        }
+
+    }
+
+
+    if (!isValid){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
+/*
+ * Interpolates between two robot configurations in configuration-space. Checks for axis limit violations and robot self
+ * collisions.
+ * Inputs:
+ *
+ * Outputs:
+ * pathConfig   - Nx6 array, robot configurations representing trajectory in configuration-space
+ * true         - bool, trajectory is valid, no axis limit violations and no self-collisions
+ * false        - bool, NOT valid trajectory, axis limit violation or self-collision
+ *
+ */
+bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity, const int step_number, double pathConfig[PATH_STEP_NUM][6]){
+    bool axisLimitsOK {true};   //default is true, if any axis is out of limits at any point - value changes to false
+    bool noCollision {true};    //default is true, if robot at any point is in collision - value changes to false
+    double config[6] {0};
+    bool isSelfColliding {false};
+    double collisionPairs[2] {0};
+
+    double delta[6] {0};
+    double distance {0};
+    for (int i = 0; i < 6; i++) {
+        delta[i] = q_end[i] - q_start[i];
+        distance += delta[i] * delta[i];  // Sum of squares for Euclidean norm
+    }
+    distance = sqrt(distance);  // Euclidean distance in joint space
+
+    double total_time = distance / velocity;
+    double time_step = total_time / (PATH_STEP_NUM - 1);
+
+    // Iterate through all steps and compute interpolation with axis limit and collision checks
+    for (int i = 0; i < PATH_STEP_NUM; i++) {
+        double alpha = (double)i / (PATH_STEP_NUM - 1);
+        for (int j = 0; j < 6; j++) {
+            pathConfig[i][j] = q_start[j] + alpha * delta[j];
+            config[j] = pathConfig[i][j];
+
+            //Check axis limits
+            if (! IK_AxisInLimits(pathConfig[i][j], j)){
+                axisLimitsOK = false;
+            }
+        }
+
+        //Check collision for each configuration
+        Matlab_checkCollision(config, &isSelfColliding,collisionPairs);
+        if (isSelfColliding){
+            noCollision = false;
+        }
+
+    }
+
+    // This is considered cerr error, because Matlab's GIK solver should have checked axisLimits and self-collisions when computing waypoints
+    if (!axisLimitsOK){
+        std::cout << "IK_InterpolatePath: axis limit violation detected" << std::endl;
+        std::cerr << "IK_InterpolatePath: axis limit violation detected" << std::endl;
+    }
+    if (!noCollision){
+        std::cout << "IK_InterpolatePath: self-collision detected" << std::endl;
+        std::cerr << "IK_InterpolatePath: self-collision detected" << std::endl;
+    }
+
+    // If no axis limit violations AND no collisions - return true
+    if (axisLimitsOK && noCollision){
+        return true;
+    } else{
+        return false;
+    }
+}
+
+
+/*
+ * Checks if axis is in its limits
+ *      Input:
+ * axisValue    -   double, axis angle value (in radians)
+ * axisNum      -   int, axis number starting from 0 to 5
+ *      Output:
+ * true     - axis is in its limits
+ * false    - axis exceeded its limits / fault, axisNum is out of bounds (0-5)
+ */
+bool IK_AxisInLimits(const double axisValue, const int axisNum){
+    // Check if axisNum is in bounds (0-5)
+    if ((axisNum > 5) || (axisNum < 0)){
+        std::cerr << "IK_AxisInLimits(): axisNum is out of bounds! Stopping axis limit check. axisNum = " << axisNum << std::endl;
+        return false;
+    }
+    const double minLimits[6] = {Transform_Deg2Rad(AXIS_MIN_A1), Transform_Deg2Rad(AXIS_MIN_A2), Transform_Deg2Rad(AXIS_MIN_A3),
+                                 Transform_Deg2Rad(AXIS_MIN_A4), Transform_Deg2Rad(AXIS_MIN_A5), Transform_Deg2Rad(AXIS_MIN_A6)};
+    const double maxLimits[6] = {Transform_Deg2Rad(AXIS_MAX_A1), Transform_Deg2Rad(AXIS_MAX_A2), Transform_Deg2Rad(AXIS_MAX_A3),
+                                 Transform_Deg2Rad(AXIS_MAX_A4), Transform_Deg2Rad(AXIS_MAX_A5), Transform_Deg2Rad(AXIS_MAX_A6)};
+    if (axisValue < minLimits[axisNum] || axisValue > maxLimits[axisNum]){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
 
 
 /*
@@ -73,9 +209,6 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
 }
 
 
-
-
-
 // Prints to console values in qWaypoints[18]. There are 3 rows and 6 columns.
 void IK_PrintWaypoints(const double qWaypoints[18]){
     std::cout << std::fixed;
@@ -92,6 +225,7 @@ void IK_PrintWaypoints(const double qWaypoints[18]){
 }
 
 
+// Prints to console values in sortedList.
 void IK_PrintSortedPointList(coder::array<double, 2U> *sortedList){
     const int rows = sortedList->size(0);
     const int cols = sortedList->size(1);
@@ -107,7 +241,7 @@ void IK_PrintSortedPointList(coder::array<double, 2U> *sortedList){
 }
 
 
-// ToDo: potentially static
+// Initializes GIK solver parameter values
 void IK_InitSolverParameters(struct0_T *solverParameters){
     solverParameters->maxIterations          = SOLVER_MAX_ITERATIONS;
     solverParameters->maxTime                = SOLVER_MAXTIME;

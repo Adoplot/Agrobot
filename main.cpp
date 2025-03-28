@@ -2,6 +2,8 @@
 #include "connection_handler.h"
 #include "compv_handler.h"
 #include "robot_api.h"
+#include <iomanip>
+#include "ik_wrapper.h"
 
 using std::cout;
 using std::cerr;
@@ -25,6 +27,14 @@ using std::endl;
 
 int main(void)
 {
+    TEST_handleSetPositionRequest();
+
+    //Cartesian_Pos_t *test{};
+    //std::cout << RobotAPI_TargetIsReachable(test) << endl;
+
+
+
+
     CompV_Init();
     Connection_Init();
 

@@ -276,6 +276,13 @@ static void handleSetPositionRequest(const json& json) {
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
 */
+    // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
+    // + convert them from camFrame to worldFrame
+    // + get sortedList
+    // + receive currentConfig from hyundai
+    // + loop through sortedList with getGikFull and output qWaypoints or send failMessage
+    // + get pathApr from IK_getTrajectory
+    // o save pathApr for further onltrack increment calculations
 
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
@@ -357,14 +364,57 @@ static void handleSetPositionRequest(const json& json) {
 
     IK_PrintWaypoints(qWaypoints);
 
-    //ToDo: ADOPLOT
-    // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
-    // + convert them from camFrame to worldFrame
-    // + get sortedList
-    // + receive currentConfig from hyundai
-    // + loop through sortedList with getGikFull and output qWaypoints or send failMessage
-    // - get pathApr from Transform_getTrajectory
-    // save pathApr for further onltrack increment calculations
+    // Choose 2nd row of qWaypoints[18] for Approach sequence
+    double waypointApr[6] {0};
+    waypointApr[0] = qWaypoints[1];
+    waypointApr[1] = qWaypoints[4];
+    waypointApr[2] = qWaypoints[7];
+    waypointApr[3] = qWaypoints[10];
+    waypointApr[4] = qWaypoints[13];
+    waypointApr[5] = qWaypoints[16];
+
+    cout << "Choosing 2nd row of qWaypoints:" << endl;
+    for(int i=0; i<6; i++){
+        cout << waypointApr[i] << "  ";
+    }
+    cout << endl;
+
+
+    // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
+    bool pathAprIsValid {false};
+    double pathCartesian[PATH_STEP_NUM][6] {0};
+
+    pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, pathCartesian);
+
+    if (pathAprIsValid){
+        cout << "Path is valid" << endl;
+    } else{
+        cout << "Path is NOT valid" << endl;
+    }
+
+    cout << "pathCartesian:" << endl;
+    std::cout << std::fixed;
+    std::cout << std::setprecision(5);
+    for (int i=0; i<6; i++){
+        cout << pathCartesian[0][i] << "  ";
+    }
+    cout << endl;
+    for (int i=0; i<6; i++){
+        cout << pathCartesian[1][i] << "  ";
+    }
+    cout << endl;
+    for (int i=0; i<6; i++){
+        cout << pathCartesian[2][i] << "  ";
+    }
+    cout << endl;
+    for (int i=0; i<6; i++){
+        cout << pathCartesian[PATH_STEP_NUM-2][i] << "  ";
+    }
+    cout << endl;
+    for (int i=0; i<6; i++){
+        cout << pathCartesian[PATH_STEP_NUM-1][i] << "  ";
+    }
+    cout << endl;
 
 
     //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
