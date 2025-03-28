@@ -483,3 +483,14 @@ bool Transform_CompareOrientations(double precision,
 
     return directComparison || oppositeComparison;
 }
+
+
+double Transform_Deg2Rad(const double value){
+    double rad = (value*M_PI)/180;
+    return rad;
+}
+
+double Transform_Rad2Deg(const double value){
+    double deg = (value*180)/M_PI;
+    return deg;
+}

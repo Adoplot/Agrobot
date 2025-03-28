@@ -47,6 +47,7 @@ bool Transform_CompareOrientations(double precision,
                                     const Hyundai_Data_t *eePos_worldFrame,
                                     const Cartesian_Pos_t *targetPos_worldFrame);
 
-
+double Transform_Deg2Rad(const double value);
+double Transform_Rad2Deg(const double value);
 
 #endif //ROBOTARM_MATHS_H
