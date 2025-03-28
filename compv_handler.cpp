@@ -276,6 +276,7 @@ static void handleSetPositionRequest(const json& json) {
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
 */
+
     // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
     // + convert them from camFrame to worldFrame
     // + get sortedList
@@ -289,6 +290,7 @@ static void handleSetPositionRequest(const json& json) {
 
     //=========TEST PARAMETERS========================
     //Todo: PASHA - get targetParameters (as func input or otherwise)
+    //In camera frame
     Target_Parameters_t targetParameters {-0.7675,1.0335,-0.0085,0.0325,1.0335,-0.2085};
     //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
     double currentConfig[6] {0,1.5708,0,0,0,0};
@@ -362,6 +364,7 @@ static void handleSetPositionRequest(const json& json) {
     // Get waypoints and success/fail code
     IK_getWaypointsForApproach(branchStart, branchDir, eeCoords_worldFrame, currentConfig, &code, qWaypoints);
 
+    //Print for debug
     IK_PrintWaypoints(qWaypoints);
 
     // Choose 2nd row of qWaypoints[18] for Approach sequence
@@ -372,14 +375,15 @@ static void handleSetPositionRequest(const json& json) {
     waypointApr[3] = qWaypoints[10];
     waypointApr[4] = qWaypoints[13];
     waypointApr[5] = qWaypoints[16];
-
     cout << "Choosing 2nd row of qWaypoints:" << endl;
     for(int i=0; i<6; i++){
         cout << waypointApr[i] << "  ";
     }
     cout << endl;
 
-
+    //------------------------------------------------------------
+    //Calculating trajectory for Approach sequence
+    //------------------------------------------------------------
     // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
     bool pathAprIsValid {false};
     double pathCartesian[PATH_STEP_NUM][6] {0};
@@ -392,30 +396,32 @@ static void handleSetPositionRequest(const json& json) {
         cout << "Path is NOT valid" << endl;
     }
 
-    cout << "pathCartesian:" << endl;
-    std::cout << std::fixed;
-    std::cout << std::setprecision(5);
-    for (int i=0; i<6; i++){
-        cout << pathCartesian[0][i] << "  ";
+    //Print for debug
+    {
+        cout << "pathCartesian:" << endl;
+        std::cout << std::fixed;
+        std::cout << std::setprecision(5);
+        for (int i = 0; i < 6; i++) {
+            cout << pathCartesian[0][i] << "  ";
+        }
+        cout << endl;
+        for (int i = 0; i < 6; i++) {
+            cout << pathCartesian[1][i] << "  ";
+        }
+        cout << endl;
+        for (int i = 0; i < 6; i++) {
+            cout << pathCartesian[2][i] << "  ";
+        }
+        cout << endl;
+        for (int i = 0; i < 6; i++) {
+            cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
+        }
+        cout << endl;
+        for (int i = 0; i < 6; i++) {
+            cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
+        }
+        cout << endl;
     }
-    cout << endl;
-    for (int i=0; i<6; i++){
-        cout << pathCartesian[1][i] << "  ";
-    }
-    cout << endl;
-    for (int i=0; i<6; i++){
-        cout << pathCartesian[2][i] << "  ";
-    }
-    cout << endl;
-    for (int i=0; i<6; i++){
-        cout << pathCartesian[PATH_STEP_NUM-2][i] << "  ";
-    }
-    cout << endl;
-    for (int i=0; i<6; i++){
-        cout << pathCartesian[PATH_STEP_NUM-1][i] << "  ";
-    }
-    cout << endl;
-
 
     //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
     //      terminate called after throwing an instance of 'std::bad_function_call'

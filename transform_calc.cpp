@@ -2,12 +2,10 @@
 #include <Dense>
 #include <cmath>
 #include <iomanip>
-
 #include "transform_calc.h"
-
 #include <fstream>
-
 #include "connection_handler.h"
+#include "ik_wrapper.h"
 
 using Eigen::Quaterniond;
 using Eigen::Matrix4d;
@@ -19,8 +17,57 @@ using std::cerr;
 using std::endl;
 
 static Quaterniond quat_conjugate(const Quaterniond q);
-static Quaterniond convertEuler2Quat(const double rotZ, const double rotY, const double rotX);
-static Cartesian_Pos_t convertQuat2Euler(Quaterniond q);
+
+/*
+ * Calculates increments for specified step in Cartesian trajectory. Increment = target_coords - current_coords
+ * Input:
+ * pathCartesian    - Nx6 array, trajectory of the robot end-effector, where every row is a Cartesian coordinate [xyzABC]
+ * step             - int, step number in pathCartesian to calculate increments for
+ * eePos_worldFrame - struct, current robotEE position in world frame
+ * Output:
+ * increment    - 1x6 array, holds increments to send to Hyundai controller. Has a form [xyzABC], where xyz is position
+ *                increments (in meters) and ABC are rotations around XYZ (in radians)
+ * true         - step value is in bounds
+ * false        - error, step value is out of bounds, causing array index overflow
+ */
+bool Transform_getIncrements(const double pathCartesian[PATH_STEP_NUM][6], const int step,
+                             const Hyundai_Data_t *eePos_worldFrame, double increment[6]){
+    // + Calc quats [XYZw] from Euler [rotx,roty,rotz] for path and for current ori
+    // + Pos increments = difference between path pos [xyz] and current pos [xyz]
+    // + Ori increments = difference between path ori [XYZw] and current ori [XYZw]
+    // + Convert ori increments from quat [XYZw] to euler [rotx,roty,rotz]
+
+    if ((step > (PATH_STEP_NUM-1)) || (step < 0)){
+        cerr << "Transform_getIncrements: pathCartesian array index overflow, step value is out of bounds" << endl;
+        return false;
+    }
+    else{
+        //Euler -> quaternions. Caution! zyx order in inputs!
+        Quaterniond oriTarget = Transform_ConvertEuler2Quat(pathCartesian[step][5], pathCartesian[step][4],pathCartesian[step][3]);
+        Quaterniond oriCurrent = Transform_ConvertEuler2Quat(eePos_worldFrame->coord[5], eePos_worldFrame->coord[4],eePos_worldFrame->coord[3]);
+
+        // Position increment calculation
+        increment[0] = pathCartesian[step][0] - eePos_worldFrame->coord[0];
+        increment[1] = pathCartesian[step][1] - eePos_worldFrame->coord[1];
+        increment[2] = pathCartesian[step][2] - eePos_worldFrame->coord[2];
+
+        // Orientation increment calculation
+        if (oriCurrent.dot(oriTarget) < 0.0) {
+            oriTarget = quat_conjugate(oriTarget);
+            oriTarget.normalize();
+            cout << "Transform_getIncrements: quats' dot product is < 0, conjugating quats to choose shortest path" << endl;
+        }
+        Quaterniond oriIncr = oriTarget * oriCurrent.inverse();   // calculate difference between qin and qres (increment)
+        oriIncr.normalize();
+        Cartesian_Pos_t oriEulIncr = Transform_ConvertQuat2Euler(oriIncr);   //convert increment quat to inc euler
+
+        increment[3] = oriEulIncr.rotx;
+        increment[4] = oriEulIncr.roty;
+        increment[5] = oriEulIncr.rotz;
+
+        return true;
+    }
+}
 
 
 /*
@@ -306,6 +353,7 @@ Cartesian_Pos_t convertFrameCam2World(const Hyundai_Data_t* eePos_worldFrame,
 }
 
 
+// Todo: delete
 // Calculates position increments to get from current position to the target pos. Uses lerp().
 // Returns: increment of Euler angles
 Cartesian_Pos_t Transform_CalculatePositionIncrements(const Hyundai_Data_t *eePos_worldFrame,
@@ -346,7 +394,7 @@ Cartesian_Pos_t Transform_CalculatePositionIncrements(const Hyundai_Data_t *eePo
     return increments;
 }
 
-
+// ToDo: delete
 // Calculates orientation increments to get from current orientation to the target ori. Uses slerp() with quaternions.
 // Returns: increment of Euler angles
 Cartesian_Pos_t Transform_CalculateOrientationIncrements(const Hyundai_Data_t *eePos_worldFrame,
@@ -358,9 +406,9 @@ Cartesian_Pos_t Transform_CalculateOrientationIncrements(const Hyundai_Data_t *e
     Cartesian_Pos_t camPos_worldFrame = convertFrameCam2World(eePos_worldFrame,SCISSORS_LENGTH);
 
     // Convert Euler angles to start and finish quaternions
-    qin = convertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
-    qout = convertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
-                              targetPos_worldFrame->rotx);
+    qin = Transform_ConvertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
+    qout = Transform_ConvertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
+                                       targetPos_worldFrame->rotx);
 
     // Check if quat chose the shortest path. If not, change quat to shortest.
     if (qin.dot(qout) < 0.0) {
@@ -374,7 +422,7 @@ Cartesian_Pos_t Transform_CalculateOrientationIncrements(const Hyundai_Data_t *e
     qincr = qres * qin.inverse();   // calculate difference between qin and qres (increment)
     qincr.normalize();
 
-    Cartesian_Pos_t eul_incr = convertQuat2Euler(qincr);   //convert increment quat to inc euler
+    Cartesian_Pos_t eul_incr = Transform_ConvertQuat2Euler(qincr);   //convert increment quat to inc euler
 
 #ifdef DEBUG_QUATERNIONS
     //std::cout << "targ RotX = " << recvRobotDataTCPframed->rotX << " \ttarg RotY = " << recvRobotDataTCPframed->rotY << "\ttarg RotZ = " << recvRobotDataTCPframed->rotZ << std::endl;
@@ -410,7 +458,7 @@ Quaterniond quat_conjugate(const Quaterniond q){
 
 // Converts Euler ZYX to quaternion, angles should be in RADIANS
 // Returns: quaternion
-Quaterniond convertEuler2Quat(const double rotZ, const double rotY, const double rotX) {
+Quaterniond Transform_ConvertEuler2Quat(const double rotZ, const double rotY, const double rotX) {
     Matrix3d m;
     Quaterniond q;
     m =     AngleAxisd(rotZ, Vector3d::UnitZ())
@@ -424,7 +472,7 @@ Quaterniond convertEuler2Quat(const double rotZ, const double rotY, const double
 
 // Converts quaternion Euler ZYX, output angles are in RADIANS
 // Returns: Euler angles
-Cartesian_Pos_t convertQuat2Euler(Quaterniond q) {
+Cartesian_Pos_t Transform_ConvertQuat2Euler(Quaterniond q) {
     Cartesian_Pos_t eul;
     Matrix3d mat;
     //q.normalize();
@@ -458,9 +506,9 @@ bool Transform_CompareOrientations(double precision,
                                     const Cartesian_Pos_t *targetPos_worldFrame) {
 
     Cartesian_Pos_t camPos_worldFrame = convertFrameCam2World(eePos_worldFrame,SCISSORS_LENGTH);
-    Quaterniond q1 = convertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
-    Quaterniond q2 = convertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
-                                                                    targetPos_worldFrame->rotx);
+    Quaterniond q1 = Transform_ConvertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
+    Quaterniond q2 = Transform_ConvertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
+                                                 targetPos_worldFrame->rotx);
     double w1 = q1.w();
     double x1 = q1.x();
     double y1 = q1.y();

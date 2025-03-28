@@ -4,6 +4,7 @@
 #include <Dense>
 
 #include "onltrack_handler.h"
+#include "ik_wrapper.h"
 
 // robot parameters
 #define LERP_INTERP_FACTOR 0.01     // changes interpolation resolution (can try also 0.005)
@@ -23,6 +24,10 @@
 // Circle point list parameters
 #define CIRCLE_RADIUS       0.3
 #define CIRCLE_POINT_NUM    10
+
+
+bool Transform_getIncrements(const double pathCartesian[PATH_STEP_NUM][6], const int step,
+                             const Hyundai_Data_t *eePos_worldFrame, double increment[6]);
 
 Hyundai_Data_t Transform_ConvertFrameRobotEE2ToolEE(const Hyundai_Data_t* eePos_worldFrame);
 
@@ -49,5 +54,9 @@ bool Transform_CompareOrientations(double precision,
 
 double Transform_Deg2Rad(const double value);
 double Transform_Rad2Deg(const double value);
+
+Eigen::Quaterniond Transform_ConvertEuler2Quat(const double rotZ, const double rotY, const double rotX);
+
+Cartesian_Pos_t Transform_ConvertQuat2Euler(Eigen::Quaterniond q);
 
 #endif //ROBOTARM_MATHS_H
