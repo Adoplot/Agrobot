@@ -12,8 +12,6 @@ typedef struct{
 
 
 typedef struct {
-    int id              {0};
-    bool isReachable    {false};
     double x            {0};
     double y            {0};
     double z            {0};
@@ -24,13 +22,15 @@ typedef struct {
 
 
 typedef struct{
+    int id              {0};
+    bool isReachable    {false};
     double x1  {0};
     double y1  {0};
     double z1  {0};
     double x2  {0};
     double y2  {0};
     double z2  {0};
-}Target_Parameters_t;   //ToDo: PASHA - this is temporary struct, keep the name, keep x1,y1,z1,x2,y2,z2.
+} Target_Parameters_t;   //ToDo: PASHA - this is temporary struct, keep the name, keep x1,y1,z1,x2,y2,z2.
 
 
 void Onltrack_AnswerHandle(const Hyundai_Data_t* eePos_worldFrame, long buflen);

@@ -14,6 +14,8 @@ using std::endl;
 static int sockfd_enet1;
 static sockaddr_in sockaddr_enet1;
 
+static double currentRobotConfig[6];
+
 static RobotSequenceCallback stateCallback = nullptr;
 
 static RobotSequenceCallback robotSequenceCallback = nullptr;
@@ -44,18 +46,19 @@ static void resetSequenceState(){
 //               Input - *eePos_worldFrame
 // Todo: PASHA - get currentConfig from Hyundai
 // Todo: ADOPLOT get branchStart and branchDir from targetParameters_worldFrame
-bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
+bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetParameters_worldFrame){
     //TEST DEFINITIONS - have to be inputs in the RobotAPI_TargetIsReachable()
-    double branchStart[3]       {0.6,0.8,0};
-    double branchDir[3]         {0.4,0,0};
+    double branchStart[3]       {targetParameters_worldFrame->x1,targetParameters_worldFrame->y1,targetParameters_worldFrame->z1};
+    double branchDir[3]         {targetParameters_worldFrame->x2,targetParameters_worldFrame->y2,targetParameters_worldFrame->z2};
+
     Hyundai_Data_t eeCoords_worldFrame{};
+
     eeCoords_worldFrame.coord[0] = 0.5715;
     eeCoords_worldFrame.coord[1] = 0;
     eeCoords_worldFrame.coord[2] = 0.931;
     eeCoords_worldFrame.coord[3] = 0;
     eeCoords_worldFrame.coord[4] = 1.5708;
     eeCoords_worldFrame.coord[5] = 0;
-    double currentConfig[6]     {0,1.5708,0,0,0,0};
     //TEST DEFINITIONS END
 
     // Declare outputs
@@ -63,7 +66,7 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
     double qWaypoints[18];
 
     // Get waypoints and success/fail code
-    IK_getWaypointsForApproach(branchStart, branchDir, &eeCoords_worldFrame, currentConfig, &code, qWaypoints);
+    IK_getWaypointsForApproach(branchStart, branchDir, &eeCoords_worldFrame, RobotAPI_GetCurrentConfig(), &code, qWaypoints);
 
     if (code == 1){
         return true;
@@ -74,15 +77,8 @@ bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetParameters_worldFrame){
 
 }
 
-static bool withinRobotsKinematics(Cartesian_Pos_t *targetWorldFrame){
-    //todo: integrate check of inverse kinematics
-
-    return true;
-}
-
-static bool withinRobotsWorkspace(Cartesian_Pos_t *targetWorldFrame){
-    //todo: integrate check of the workspace violations
-    return true;
+double* RobotAPI_GetCurrentConfig(){
+    return currentRobotConfig;
 }
 
 static void sendRobotCommand(int command, const std::string& action_name) {

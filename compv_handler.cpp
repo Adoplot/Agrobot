@@ -32,6 +32,7 @@ constexpr const char* COMPV_ANSW_REQUESTED = "REQUESTED";
 constexpr const char* COMPV_REQUEST_SYNC_TARGETS = "SYNC_TARGETS";
 constexpr const char* COMPV_REQUEST_SET_POSITION = "SET_POS";
 constexpr const char* COMPV_REQUEST_CUT = "CUT";
+constexpr const char* COMPV_REQUEST_FINAL_APPROACH = "FINAL_APPROACH";
 
 static int sockfd_compv;
 
@@ -42,15 +43,17 @@ static Tcp_Data_t tcp_data_state = TCP_DATA_NOT_AVAILABLE;  // tracks if new cmd
 
 static json jsonParse(const std::string* data);
 static CompV_Request_t getJsonRequest(const json* json);
-static Cartesian_Pos_t getJsonPos(const json* json);
-static std::vector<Cartesian_Pos_t> getJsonPositions(const json* json);
+static Target_Parameters_t getTargetParametersFromJsonEntry(const json* json);
+static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohmann::json* json);
+
+static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos);
 
 static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state);
 
 static void sendUnreachableResponse();
 static void sendCompleteResponse();
 static void sendInProgressResponse();
-static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions);
+static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> positions);
 static void sendStatusResponse(const char* request, const char* status);
 
 static void handleSyncTargetsRequest(const json& json);
@@ -203,57 +206,53 @@ static void handleSyncTargetsRequest(const json& json){
     cout    << "Received Sync Targets request\n"
             << "Checking if targets are reachable" << endl;
 
-    std::vector<Cartesian_Pos_t> positions = getJsonPositions(&json); //cam frame
+    std::vector<Target_Parameters_t> targetParameters = getTargetParametersFromJson(&json); //cam frame
     Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
 
-    for (auto& pos : positions) {
-        Cartesian_Pos_t targetWorldFrame = Transform_ConvertFrameTarget2World(&pos,
-                                                                              eePos_worldFrame,
-                                                                              SCISSORS_LENGTH);
-        if(RobotAPI_TargetIsReachable(&pos)){
-            cout << "Target ID: " << pos.id << "is reachable\n"
+    for (auto& target : targetParameters) {
+        if(RobotAPI_IsTargetReachable(&target)){
+            cout << "Target ID: " << target.id << "is reachable\n"
                 << "Coordinates:\n"
-                << "x: " << pos.x << "\n"
-                << "y: " << pos.y << "\n"
-                << "z: " << pos.z << "\n" << endl;
+                << "x1: " << target.x1 << "\n"
+                << "y1: " << target.y1 << "\n"
+                << "z1: " << target.z1 << "\n" << endl;
 
-            pos.isReachable = true;
+            target.isReachable = true;
         } else {
-            cout << "Target ID: " << pos.id << "is NOT reachable\n"
+            cout << "Target ID: " << target.id << "is NOT reachable\n"
                  << "Coordinates:\n"
-                 << "x: " << pos.x << "\n"
-                 << "y: " << pos.y << "\n"
-                 << "z: " << pos.z << "\n" << endl;
+                 << "x1: " << target.x1 << "\n"
+                 << "y1: " << target.y1 << "\n"
+                 << "z1: " << target.z1 << "\n" << endl;
 
-            pos.isReachable = false;
+            target.isReachable = false;
         }
     }
 
-    sendSyncTargetsResponse(positions);
+    sendSyncTargetsResponse(targetParameters);
 }
 
-static void positionToJson(json& j, const Cartesian_Pos_t& pos) {
+static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos) {
     j = json{
             {"id", pos.id},
             {"isReachable", pos.isReachable},
-            {"x", pos.x},
-            {"y", pos.y},
-            {"z", pos.z},
-            {"rotx", pos.rotx},
-            {"roty", pos.roty},
-            {"rotz", pos.rotz}
+            {"x1", pos.x1},
+            {"y1", pos.y1},
+            {"z1", pos.z1},
+            {"x2", pos.x2},
+            {"y2", pos.y2},
+            {"z2", pos.z2}
     };
 }
 
-static void sendSyncTargetsResponse(std::vector<Cartesian_Pos_t> positions){
+static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> targets){
     cout << "Answer to CompV: Reachable targets JSON" << endl;
     json json_send;
 
-    // Serialize vector of Cartesian_Pos_t using positionToJson()
     json json_positions = json::array();
-    for (const auto& pos : positions) {
+    for (const auto& target : targets) {
         json j;
-        positionToJson(j, pos);
+        convertTargetParameterToJson(j, target);
         json_positions.push_back(j);
     }
     json_send["request"] = COMPV_REQUEST_SYNC_TARGETS;
@@ -288,20 +287,18 @@ static void handleSetPositionRequest(const json& json) {
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
-    //=========TEST PARAMETERS========================
-    //Todo: PASHA - get targetParameters (as func input or otherwise)
     //In camera frame
-    Target_Parameters_t targetParameters {-0.7675,1.0335,-0.0085,0.0325,1.0335,-0.2085};
-    //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
-    double currentConfig[6] {0,1.5708,0,0,0,0};
+    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json); //Todo: PASHA - get targetParameters (as func input or otherwise)
+    Target_Parameters_t target;
 
-    eeCoords_worldFrame->coord[0] = 0.5715;
-    eeCoords_worldFrame->coord[1] = 0;
-    eeCoords_worldFrame->coord[2] = 0.931;
-    eeCoords_worldFrame->coord[3] = 0;
-    eeCoords_worldFrame->coord[4] = 1.5708;
-    eeCoords_worldFrame->coord[5] = 0;
-    //=========TEST PARAMETERS END====================
+    if (!targetParametersVector.empty()) {
+        target = targetParametersVector[0];
+    } else {
+        std::cerr << "No targets received from JSON." << std::endl;
+        //todo: handle
+    }
+
+    double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
@@ -310,13 +307,13 @@ static void handleSetPositionRequest(const json& json) {
 
     // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
-    targetStart_camFrame.x = targetParameters.x1;
-    targetStart_camFrame.y = targetParameters.y1;
-    targetStart_camFrame.z = targetParameters.z1;
+    targetStart_camFrame.x = target.x1;
+    targetStart_camFrame.y = target.y1;
+    targetStart_camFrame.z = target.z1;
 
-    targetDir_camFrame.x = targetParameters.x2;
-    targetDir_camFrame.y = targetParameters.y2;
-    targetDir_camFrame.z = targetParameters.z2;
+    targetDir_camFrame.x = target.x2;
+    targetDir_camFrame.y = target.y2;
+    targetDir_camFrame.z = target.z2;
 
     //Transform targetParameters to worldFrame
     targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
@@ -366,7 +363,7 @@ static void handleSetPositionRequest(const json& json) {
 
     if (code != 1){
         cout << "IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
-        // Todo: PASHA - handle the Approach sequence FAIL_PATH
+        sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -397,8 +394,14 @@ static void handleSetPositionRequest(const json& json) {
 
         if (pathAprIsValid){
             cout << "Path is valid" << endl;
+            //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
+            //      terminate called after throwing an instance of 'std::bad_function_call'
+            //      what():  bad_function_call
+            sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_REQUESTED);
+            //RobotAPI_StartApproachSequence(); //TODO: uncomment
         } else{
             cout << "Path is NOT valid" << endl;
+            sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_UNREACHABLE);
         }
 
         //Print for debug
@@ -427,21 +430,8 @@ static void handleSetPositionRequest(const json& json) {
             }
             cout << endl;
         }
-
-        //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
-        //      terminate called after throwing an instance of 'std::bad_function_call'
-        //      what():  bad_function_call
-        //RobotAPI_StartApproachSequence();
     }
 }
-
-
-//Todo: delete
-void TEST_handleSetPositionRequest(){
-    json blankjson;
-    handleSetPositionRequest(blankjson);
-}
-
 
 static void handleFinalApproachRequest(const json& json) {
     cout << "Initiating <Final Approach> sequence" << endl;
@@ -460,20 +450,17 @@ static void handleFinalApproachRequest(const json& json) {
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
-    //=========TEST PARAMETERS========================
-    //Todo: PASHA - get targetParameters (as func input or otherwise)
-    //In camera frame
-    Target_Parameters_t targetParameters {0.0366,0.1056,0.5187,0,0,0};
-    //Todo: PAHSA - get currentConfig from Hyundai
-    double currentConfig[6] {1.0724,0.3256,1.2271,-0.233,-1.4176,-1.3642};
+    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json); //Todo: PASHA - get targetParameters (as func input or otherwise)
+    Target_Parameters_t target;
 
-    eeCoords_worldFrame->coord[0] = 0.4566;
-    eeCoords_worldFrame->coord[1] = 0.7977;
-    eeCoords_worldFrame->coord[2] = 0.5369;
-    eeCoords_worldFrame->coord[3] = 3.0584;
-    eeCoords_worldFrame->coord[4] = 0.2555;
-    eeCoords_worldFrame->coord[5] = 2.8592;
-    //=========TEST PARAMETERS END====================
+    if (!targetParametersVector.empty()) {
+        target = targetParametersVector[0];
+    } else {
+        std::cerr << "No targets received from JSON." << std::endl;
+        //todo: handle
+    }
+
+    double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
@@ -482,9 +469,9 @@ static void handleFinalApproachRequest(const json& json) {
 
     // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
-    targetStart_camFrame.x = targetParameters.x1;
-    targetStart_camFrame.y = targetParameters.y1;
-    targetStart_camFrame.z = targetParameters.z1;
+    targetStart_camFrame.x = target.x1;
+    targetStart_camFrame.y = target.y1;
+    targetStart_camFrame.z = target.z1;
 
     //Transform targetParameters to worldFrame
     targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
@@ -535,7 +522,7 @@ static void handleFinalApproachRequest(const json& json) {
 
     if (code != 1){
         cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
-        // Todo: PASHA - handle the FinalApproach sequence FAIL_PATH
+        sendStatusResponse(COMPV_REQUEST_FINAL_APPROACH, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -559,8 +546,15 @@ static void handleFinalApproachRequest(const json& json) {
 
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
-        } else{
+        } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
+
+            sendStatusResponse(COMPV_REQUEST_FINAL_APPROACH, COMPV_ANSW_REQUESTED);
+            //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
+            //      terminate called after throwing an instance of 'std::bad_function_call'
+            //      what():  bad_function_call
+            //RobotAPI_StartFinalApproachSequence(); //TODO: uncomment
+
         }
 
         //Print for debug
@@ -589,23 +583,9 @@ static void handleFinalApproachRequest(const json& json) {
             }
             cout << endl;
         }
-
-        //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
-        //      terminate called after throwing an instance of 'std::bad_function_call'
-        //      what():  bad_function_call
-        //RobotAPI_StartFinalApproachSequence();
-
     }
 
 }
-
-
-//Todo: delete
-void TEST_handleFinalApproachRequest(){
-    json blankjson;
-    handleFinalApproachRequest(blankjson);
-}
-
 
 static void sendUnreachableResponse() {
     cout << "Answer to CompV: Unreachable" << endl;
@@ -668,6 +648,9 @@ static CompV_Request_t getJsonRequest(const json* json){
 
         else if(json->at("request") == COMPV_REQUEST_SYNC_TARGETS){
             req = COMPV_REQ_SYNC_TARGETS;
+
+        } else if(json->at("request") == COMPV_REQUEST_FINAL_APPROACH){
+            req = COMPV_REQ_FINAL_APPROACH;
         }
         else
             req = COMPV_REQ_INVALID;
@@ -682,41 +665,39 @@ static CompV_Request_t getJsonRequest(const json* json){
 
 // Gets position values from JSON
 // Returns: cartesian position (x,y,z,rotx,roty,rotz)
-static Cartesian_Pos_t getJsonPos(const json* json) {
-    Cartesian_Pos_t pos{};
+static Target_Parameters_t getTargetParametersFromJsonEntry(const json* json) {
+    Target_Parameters_t pos{};
 
-    const std::vector<std::pair<std::string, double&>> jsonMappings = {
-        {"x",   pos.x},
-        {"y",   pos.y},
-        {"z",   pos.z},
-        {"rotx",pos.rotx},
-        {"roty",pos.roty},
-        {"rotz",pos.rotz}
-    };
-
-    for (const auto &[key, value]: jsonMappings) {
-        try {
-            value = json->at(key).get<double>();
-        } catch (const nlohmann::json::exception &e) {
-#ifdef DEBUG_JSON_ELEMENT
-            std::cerr << "message: " << e.what() << "; " << "exception id: " << e.id << std::endl;
-#endif
-        }
-    }
+    try { pos.id = json->at("id").get<int>(); } catch (...) {std::cerr << "Warning: 'id' missing or wrong type\n";}
+    try { pos.isReachable = json->at("isReachable").get<bool>(); } catch (...) {std::cerr << "Warning: 'isReachable' missing or wrong type\n";}
+    try { pos.x1 = json->at("x1").get<double>(); } catch (...) {std::cerr << "Warning: 'x1' missing or wrong type\n";}
+    try { pos.y1 = json->at("y1").get<double>(); } catch (...) {std::cerr << "Warning: 'y1' missing or wrong type\n";}
+    try { pos.z1 = json->at("z1").get<double>(); } catch (...) {std::cerr << "Warning: 'z1' missing or wrong type\n";}
+    try { pos.x2 = json->at("x2").get<double>(); } catch (...) {std::cerr << "Warning: 'x2' missing or wrong type\n";}
+    try { pos.y2 = json->at("y2").get<double>(); } catch (...) {std::cerr << "Warning: 'y2' missing or wrong type\n";}
+    try { pos.z2 = json->at("z2").get<double>(); } catch (...) {std::cerr << "Warning: 'z2' missing or wrong type\n";}
 
     return pos;
 }
 
-static std::vector<Cartesian_Pos_t> getJsonPositions(const nlohmann::json* json) {
-    std::vector<Cartesian_Pos_t> positions;
+static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohmann::json* json) {
+    std::vector<Target_Parameters_t> positions;
 
     try {
-        for (const auto& item : json->at("positions")) {
-            positions.push_back(getJsonPos(&item));
+        const auto& json_positions = json->at("positions");
+        if (!json_positions.is_array()) {
+            std::cerr << "Error: 'positions' is not an array\n";
+            return positions;
         }
+
+        for (const auto& item : json_positions) {
+            Target_Parameters_t pos = getTargetParametersFromJsonEntry(&item);
+            positions.push_back(pos);
+        }
+
     } catch (const nlohmann::json::exception& e) {
 #ifdef DEBUG_JSON_ELEMENT
-        std::cerr << "Error parsing positions array: " << e.what() << std::endl;
+        std::cerr << "Error parsing 'positions' array: " << e.what() << std::endl;
 #endif
     }
 

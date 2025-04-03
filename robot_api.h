@@ -35,7 +35,7 @@ using RobotSequenceCallback = std::function<void(Robot_Sequence_t, Robot_Sequenc
 
 void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback);
 
-bool RobotAPI_TargetIsReachable(Cartesian_Pos_t *targetWorldFrame);
+bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetWorldFrame);
 
 void RobotAPI_StartApproachSequence();
 void RobotAPI_StartFinalApproachSequence();
@@ -48,6 +48,8 @@ bool RobotAPI_IsApproachSequenceActive();
 bool RobotAPI_IsFinalApproachSequenceActive();
 
 void RobotAPI_EndSequence(Robot_Sequence_Result_t reason);
+
+double* RobotAPI_GetCurrentConfig();
 
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd);
 
