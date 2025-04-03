@@ -5,7 +5,7 @@
 // File: Matlab_ik.h
 //
 // MATLAB Coder version            : 24.2
-// C/C++ source code generated on  : 20-Mar-2025 13:24:41
+// C/C++ source code generated on  : 03-Apr-2025 13:21:22
 //
 
 #ifndef MATLAB_IK_H
@@ -31,7 +31,6 @@ extern void Matlab_getForwardKinematics(const double currentConfig[6],
                                         double pos[3], double ori[3]);
 
 extern void Matlab_getGikCut(const double currentConfig[6],
-                             const double target_Apr[8],
                              const double targetPos_Fin[3],
                              const struct0_T *solverParameters,
                              double *exitCode, struct1_T *solutionInfoFin,

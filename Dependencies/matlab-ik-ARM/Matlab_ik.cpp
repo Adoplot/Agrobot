@@ -5,7 +5,7 @@
 // File: Matlab_ik.cpp
 //
 // MATLAB Coder version            : 24.2
-// C/C++ source code generated on  : 20-Mar-2025 13:24:41
+// C/C++ source code generated on  : 03-Apr-2025 13:21:22
 //
 
 // Include Files
@@ -747,13 +747,14 @@ namespace coder
 }
 
 // Variable Definitions
-static coder::robotics::manip::internal::RigidBody gobj_6[40];
-static coder::rigidBodyJoint gobj_5[80];
-static coder::robotics::manip::internal::CollisionSet gobj_4[80];
+static coder::robotics::manip::internal::RigidBody gobj_6[50];
+static coder::rigidBodyJoint gobj_5[100];
+static coder::robotics::manip::internal::CollisionSet gobj_4[100];
+static coder::rigidBodyTree gobj_3[2];
 static coder::rigidBodyTree robot;
 static bool robot_not_empty;
 static unsigned int state[625];
-static coder::rigidBodyTree b_robot;
+static coder::rigidBodyTree *b_robot;
 static bool b_robot_not_empty;
 static coder::rigidBodyTree robot_rbt;
 static bool robot_rbt_not_empty;
@@ -866,7 +867,7 @@ namespace coder
     {
       static void b_mtimes(const array<double, 2U> &A, const array<double, 2U>
                            &B, array<double, 2U> &C);
-      static double b_xnrm2(int n, const double x[16], int ix0);
+      static double b_xnrm2(int n, const double x[9], int ix0);
       static void c_mtimes(const array<double, 2U> &A, const array<double, 2U>
                            &B, array<double, 2U> &C);
       static void mtimes(const array<double, 2U> &A, const array<double, 2U> &B,
@@ -886,7 +887,7 @@ namespace coder
       static void xgemv(int n, const double x[12], double beta1, double y[16],
                         int iy0);
       static double xnrm2(int n, const double x[3]);
-      static double xnrm2(int n, const double x[9], int ix0);
+      static double xnrm2(int n, const double x[16], int ix0);
       static double xnrm2(const double x[3]);
       static double xnrm2(int n, const array<double, 1U> &x, int ix0);
       static double xnrm2(int n, const array<double, 2U> &x, int ix0);
@@ -905,8 +906,8 @@ namespace coder
                          2U> &jpvt);
     }
 
-    static double maximum(const double x[4], int &idx);
     static double maximum(const array<double, 1U> &x, int &idx);
+    static double maximum(const double x[4], int &idx);
     static void merge(array<int, 1U> &idx, array<double, 1U> &x, int offset, int
                       np, int nq, array<int, 1U> &iwork, array<double, 1U>
                       &xwork);
@@ -927,9 +928,9 @@ namespace coder
     {
       static void b_rotateRight(int n, double z[16], int iz0, const double cs[6],
         int ic0, int is0);
-      static void b_xzlascl(double cfrom, double cto, int m, double A[4], int
+      static void b_xzlascl(double cfrom, double cto, double A[9]);
+      static void b_xzlascl(double cfrom, double cto, int m, double A[3], int
                             iA0);
-      static void b_xzlascl(double cfrom, double cto, double A[16]);
       static void rotateRight(int n, double z[16], int iz0, const double cs[6],
         int ic0, int is0);
       static double xdladiv(double a, double b, double c, double d, double &q);
@@ -948,18 +949,18 @@ namespace coder
       static void xzgehrd(double a[16], int ilo, int ihi, double tau[3]);
       static int xzgetrf(int m, int n, array<double, 2U> &A, int lda, array<int,
                          2U> &ipiv);
-      static double xzlangeM(const array<double, 2U> &x);
       static double xzlangeM(const double x[9]);
+      static double xzlangeM(const array<double, 2U> &x);
       static void xzlarf(int m, int n, int iv0, double tau, double C[16], int
                          ic0, double work[4]);
       static double xzlarfg(int n, double &alpha1, double x[16], int ix0);
       static double xzlarfg(int n, double &alpha1, double x[3]);
       static double xzlartg(double f, double g, double &sn, double &r);
-      static void xzlascl(double cfrom, double cto, double A[9]);
-      static void xzlascl(double cfrom, double cto, int m, double A[3], int iA0);
+      static void xzlascl(double cfrom, double cto, double A[16]);
       static void xzlascl(double cfrom, double cto, int m, int n, array<double,
                           2U> &A, int lda);
       static void xzlascl(double cfrom, double cto, int m, array<double, 1U> &A);
+      static void xzlascl(double cfrom, double cto, int m, double A[4], int iA0);
       static int xzsteqr(double d[4], double e[3], double z[16]);
       static void xzsvdc(array<double, 2U> &A, array<double, 1U> &S);
       static void xzunghr(int ilo, int ihi, double A[16], const double tau[3]);
@@ -971,8 +972,8 @@ namespace coder
       static void b_sqrt(creal_T &x);
     }
 
-    static void sort(double x[24]);
     static void sort(array<double, 1U> &x, array<int, 1U> &idx);
+    static void sort(double x[24]);
     static void sort(double x_data[], const int x_size[2]);
     static void svd(const double A[9], double U[9], double s[3], double V[9]);
   }
@@ -11937,6 +11938,58 @@ namespace coder
   }
 
   //
+  // Arguments    : void
+  // Return Type  : constraintOrientationTarget *
+  //
+  constraintOrientationTarget *constraintOrientationTarget::init()
+  {
+    constraintOrientationTarget *obj;
+    obj = this;
+    obj->ConstructorPropertyDefaultValues.f2[0] = 1.0;
+    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[3] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
+    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
+    for (int i{0}; i < 10; i++) {
+      obj->EndEffector[i] = cv3[i];
+    }
+
+    double defaultValues_f2_idx_0;
+    double defaultValues_f2_idx_1;
+    double defaultValues_f2_idx_2;
+    double defaultValues_f2_idx_3;
+    double defaultValues_f3;
+    double defaultValues_f4;
+    double normRowMatrix_idx_0;
+    double normRowMatrix_idx_1;
+    double normRowMatrix_idx_2;
+    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
+    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
+    obj->ReferenceBody.set_size(0, 0);
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[0];
+    defaultValues_f2_idx_0 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_0 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[1];
+    defaultValues_f2_idx_1 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_1 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[2];
+    defaultValues_f2_idx_2 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_2 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[3];
+    normRowMatrix_idx_0 = 1.0 / std::sqrt(((normRowMatrix_idx_0 +
+      normRowMatrix_idx_1) + normRowMatrix_idx_2) + defaultValues_f2_idx_3 *
+      defaultValues_f2_idx_3);
+    obj->TargetOrientation[0] = defaultValues_f2_idx_0 * normRowMatrix_idx_0;
+    obj->TargetOrientation[1] = defaultValues_f2_idx_1 * normRowMatrix_idx_0;
+    obj->TargetOrientation[2] = defaultValues_f2_idx_2 * normRowMatrix_idx_0;
+    obj->TargetOrientation[3] = defaultValues_f2_idx_3 * normRowMatrix_idx_0;
+    obj->OrientationTolerance = defaultValues_f3;
+    obj->Weights = defaultValues_f4;
+    return obj;
+  }
+
+  //
   // Arguments    : const char jname[14]
   // Return Type  : rigidBodyJoint *
   //
@@ -12242,58 +12295,6 @@ namespace coder
       obj->HomePositionInternal[0] = homepos_data[0];
     }
 
-    return obj;
-  }
-
-  //
-  // Arguments    : void
-  // Return Type  : constraintOrientationTarget *
-  //
-  constraintOrientationTarget *constraintOrientationTarget::init()
-  {
-    constraintOrientationTarget *obj;
-    obj = this;
-    obj->ConstructorPropertyDefaultValues.f2[0] = 1.0;
-    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[3] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
-    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
-    for (int i{0}; i < 10; i++) {
-      obj->EndEffector[i] = cv3[i];
-    }
-
-    double defaultValues_f2_idx_0;
-    double defaultValues_f2_idx_1;
-    double defaultValues_f2_idx_2;
-    double defaultValues_f2_idx_3;
-    double defaultValues_f3;
-    double defaultValues_f4;
-    double normRowMatrix_idx_0;
-    double normRowMatrix_idx_1;
-    double normRowMatrix_idx_2;
-    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
-    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
-    obj->ReferenceBody.set_size(0, 0);
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[0];
-    defaultValues_f2_idx_0 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_0 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[1];
-    defaultValues_f2_idx_1 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_1 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[2];
-    defaultValues_f2_idx_2 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_2 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[3];
-    normRowMatrix_idx_0 = 1.0 / std::sqrt(((normRowMatrix_idx_0 +
-      normRowMatrix_idx_1) + normRowMatrix_idx_2) + defaultValues_f2_idx_3 *
-      defaultValues_f2_idx_3);
-    obj->TargetOrientation[0] = defaultValues_f2_idx_0 * normRowMatrix_idx_0;
-    obj->TargetOrientation[1] = defaultValues_f2_idx_1 * normRowMatrix_idx_0;
-    obj->TargetOrientation[2] = defaultValues_f2_idx_2 * normRowMatrix_idx_0;
-    obj->TargetOrientation[3] = defaultValues_f2_idx_3 * normRowMatrix_idx_0;
-    obj->OrientationTolerance = defaultValues_f3;
-    obj->Weights = defaultValues_f4;
     return obj;
   }
 
@@ -23975,32 +23976,53 @@ static void Matlab_checkCollision_new()
 static void Matlab_getForwardKinematics_delete()
 {
   coder::robotics::manip::internal::RigidBody *obj;
-  if (!b_robot.matlabCodegenIsDeleted) {
-    b_robot.matlabCodegenIsDeleted = true;
+  if (!gobj_3[0].matlabCodegenIsDeleted) {
+    gobj_3[0].matlabCodegenIsDeleted = true;
   }
 
-  if (!b_robot._pobj1.matlabCodegenIsDeleted) {
-    b_robot._pobj1.matlabCodegenIsDeleted = true;
+  if (!gobj_3[1].matlabCodegenIsDeleted) {
+    gobj_3[1].matlabCodegenIsDeleted = true;
   }
 
-  if (!b_robot._pobj1.Base.matlabCodegenIsDeleted) {
-    b_robot._pobj1.Base.matlabCodegenIsDeleted = true;
+  if (!gobj_3[0]._pobj1.matlabCodegenIsDeleted) {
+    gobj_3[0]._pobj1.matlabCodegenIsDeleted = true;
   }
 
-  for (int i{0}; i < 12; i++) {
-    obj = &b_robot._pobj1._pobj2[i];
-    if (!obj->matlabCodegenIsDeleted) {
-      obj->matlabCodegenIsDeleted = true;
+  if (!gobj_3[1]._pobj1.matlabCodegenIsDeleted) {
+    gobj_3[1]._pobj1.matlabCodegenIsDeleted = true;
+  }
+
+  if (!gobj_3[0]._pobj1.Base.matlabCodegenIsDeleted) {
+    gobj_3[0]._pobj1.Base.matlabCodegenIsDeleted = true;
+  }
+
+  if (!gobj_3[1]._pobj1.Base.matlabCodegenIsDeleted) {
+    gobj_3[1]._pobj1.Base.matlabCodegenIsDeleted = true;
+  }
+
+  for (int i{0}; i < 2; i++) {
+    for (int i1{0}; i1 < 12; i1++) {
+      obj = &gobj_3[i]._pobj1._pobj2[i1];
+      if (!obj->matlabCodegenIsDeleted) {
+        obj->matlabCodegenIsDeleted = true;
+      }
     }
   }
 
-  b_robot._pobj0.matlabCodegenDestructor();
-  b_robot._pobj1.Base._pobj0.matlabCodegenDestructor();
-  b_robot._pobj1._pobj0[0].matlabCodegenDestructor();
-  b_robot._pobj1._pobj0[1].matlabCodegenDestructor();
-  b_robot._pobj1._pobj0[2].matlabCodegenDestructor();
-  for (int i{0}; i < 12; i++) {
-    b_robot._pobj1._pobj2[i]._pobj0.matlabCodegenDestructor();
+  gobj_3[0]._pobj0.matlabCodegenDestructor();
+  gobj_3[1]._pobj0.matlabCodegenDestructor();
+  gobj_3[0]._pobj1.Base._pobj0.matlabCodegenDestructor();
+  gobj_3[1]._pobj1.Base._pobj0.matlabCodegenDestructor();
+  for (int i{0}; i < 2; i++) {
+    gobj_3[i]._pobj1._pobj0[0].matlabCodegenDestructor();
+    gobj_3[i]._pobj1._pobj0[1].matlabCodegenDestructor();
+    gobj_3[i]._pobj1._pobj0[2].matlabCodegenDestructor();
+  }
+
+  for (int i{0}; i < 2; i++) {
+    for (int i1{0}; i1 < 12; i1++) {
+      gobj_3[i]._pobj1._pobj2[i1]._pobj0.matlabCodegenDestructor();
+    }
   }
 }
 
@@ -24019,22 +24041,34 @@ static void Matlab_getForwardKinematics_init()
 //
 static void Matlab_getForwardKinematics_new()
 {
-  for (int i{0}; i < 12; i++) {
-    b_robot._pobj1._pobj2[i]._pobj0.matlabCodegenIsDeleted = true;
+  for (int i{0}; i < 2; i++) {
+    for (int i1{0}; i1 < 12; i1++) {
+      gobj_3[i]._pobj1._pobj2[i1]._pobj0.matlabCodegenIsDeleted = true;
+    }
   }
 
-  b_robot._pobj1._pobj0[0].matlabCodegenIsDeleted = true;
-  b_robot._pobj1._pobj0[1].matlabCodegenIsDeleted = true;
-  b_robot._pobj1._pobj0[2].matlabCodegenIsDeleted = true;
-  b_robot._pobj1.Base._pobj0.matlabCodegenIsDeleted = true;
-  b_robot._pobj0.matlabCodegenIsDeleted = true;
-  for (int i{0}; i < 12; i++) {
-    b_robot._pobj1._pobj2[i].matlabCodegenIsDeleted = true;
+  for (int i{0}; i < 2; i++) {
+    gobj_3[i]._pobj1._pobj0[0].matlabCodegenIsDeleted = true;
+    gobj_3[i]._pobj1._pobj0[1].matlabCodegenIsDeleted = true;
+    gobj_3[i]._pobj1._pobj0[2].matlabCodegenIsDeleted = true;
   }
 
-  b_robot._pobj1.Base.matlabCodegenIsDeleted = true;
-  b_robot._pobj1.matlabCodegenIsDeleted = true;
-  b_robot.matlabCodegenIsDeleted = true;
+  gobj_3[0]._pobj1.Base._pobj0.matlabCodegenIsDeleted = true;
+  gobj_3[1]._pobj1.Base._pobj0.matlabCodegenIsDeleted = true;
+  gobj_3[0]._pobj0.matlabCodegenIsDeleted = true;
+  gobj_3[1]._pobj0.matlabCodegenIsDeleted = true;
+  for (int i{0}; i < 2; i++) {
+    for (int i1{0}; i1 < 12; i1++) {
+      gobj_3[i]._pobj1._pobj2[i1].matlabCodegenIsDeleted = true;
+    }
+  }
+
+  gobj_3[0]._pobj1.Base.matlabCodegenIsDeleted = true;
+  gobj_3[1]._pobj1.Base.matlabCodegenIsDeleted = true;
+  gobj_3[0]._pobj1.matlabCodegenIsDeleted = true;
+  gobj_3[1]._pobj1.matlabCodegenIsDeleted = true;
+  gobj_3[0].matlabCodegenIsDeleted = true;
+  gobj_3[1].matlabCodegenIsDeleted = true;
 }
 
 //
@@ -24132,7 +24166,7 @@ static void Matlab_getGikFull_delete()
     }
   }
 
-  for (int i{0}; i < 40; i++) {
+  for (int i{0}; i < 50; i++) {
     obj = &gobj_6[i];
     if (!obj->matlabCodegenIsDeleted) {
       obj->matlabCodegenIsDeleted = true;
@@ -24148,11 +24182,11 @@ static void Matlab_getGikFull_delete()
     b_robot_rbt._pobj1._pobj2[i]._pobj0.matlabCodegenDestructor();
   }
 
-  for (int i{0}; i < 80; i++) {
+  for (int i{0}; i < 100; i++) {
     gobj_4[i].matlabCodegenDestructor();
   }
 
-  for (int i{0}; i < 40; i++) {
+  for (int i{0}; i < 50; i++) {
     gobj_6[i]._pobj0.matlabCodegenDestructor();
   }
 }
@@ -24172,11 +24206,11 @@ static void Matlab_getGikFull_init()
 //
 static void Matlab_getGikFull_new()
 {
-  for (int i{0}; i < 40; i++) {
+  for (int i{0}; i < 50; i++) {
     gobj_6[i]._pobj0.matlabCodegenIsDeleted = true;
   }
 
-  for (int i{0}; i < 80; i++) {
+  for (int i{0}; i < 100; i++) {
     gobj_4[i].matlabCodegenIsDeleted = true;
   }
 
@@ -24189,7 +24223,7 @@ static void Matlab_getGikFull_new()
   b_robot_rbt._pobj1._pobj0[2].matlabCodegenIsDeleted = true;
   b_robot_rbt._pobj1.Base._pobj0.matlabCodegenIsDeleted = true;
   b_robot_rbt._pobj0.matlabCodegenIsDeleted = true;
-  for (int i{0}; i < 40; i++) {
+  for (int i{0}; i < 50; i++) {
     gobj_6[i].matlabCodegenIsDeleted = true;
   }
 
@@ -25298,11 +25332,11 @@ namespace coder
       if ((anrm > 0.0) && (anrm < 6.7178761075670888E-139)) {
         scalea = true;
         cscale = 6.7178761075670888E-139;
-        internal::reflapack::b_xzlascl(anrm, cscale, b_A);
+        internal::reflapack::xzlascl(anrm, cscale, b_A);
       } else if (anrm > 1.4885657073574029E+138) {
         scalea = true;
         cscale = 1.4885657073574029E+138;
-        internal::reflapack::b_xzlascl(anrm, cscale, b_A);
+        internal::reflapack::xzlascl(anrm, cscale, b_A);
       }
 
       ilo = internal::reflapack::xzgebal(b_A, ihi, scale);
@@ -25373,9 +25407,9 @@ namespace coder
               double s;
               int b_tmp;
               ihi = i << 2;
-              absxk = std::abs(internal::blas::b_xnrm2(4, vr, ihi + 1));
+              absxk = std::abs(internal::blas::xnrm2(4, vr, ihi + 1));
               b_tmp = (i + 1) << 2;
-              f1 = std::abs(internal::blas::b_xnrm2(4, vr, b_tmp + 1));
+              f1 = std::abs(internal::blas::xnrm2(4, vr, b_tmp + 1));
               if (absxk < f1) {
                 absxk /= f1;
                 absxk = f1 * std::sqrt(absxk * absxk + 1.0);
@@ -25483,7 +25517,7 @@ namespace coder
               vr[g1_tmp_tmp] = 0.0;
             } else {
               ihi = i << 2;
-              absxk = 1.0 / internal::blas::b_xnrm2(4, vr, ihi + 1);
+              absxk = 1.0 / internal::blas::xnrm2(4, vr, ihi + 1);
               g1_tmp_tmp = ihi + 4;
               for (k = ihi + 1; k <= g1_tmp_tmp; k++) {
                 vr[k - 1] *= absxk;
@@ -25527,11 +25561,11 @@ namespace coder
       }
 
       if (scalea) {
-        internal::reflapack::b_xzlascl(cscale, anrm, 4 - info, wr, info + 1);
-        internal::reflapack::b_xzlascl(cscale, anrm, 4 - info, wi, info + 1);
+        internal::reflapack::xzlascl(cscale, anrm, 4 - info, wr, info + 1);
+        internal::reflapack::xzlascl(cscale, anrm, 4 - info, wi, info + 1);
         if (info != 0) {
-          internal::reflapack::b_xzlascl(cscale, anrm, ilo - 1, wr, 1);
-          internal::reflapack::b_xzlascl(cscale, anrm, ilo - 1, wi, 1);
+          internal::reflapack::xzlascl(cscale, anrm, ilo - 1, wr, 1);
+          internal::reflapack::xzlascl(cscale, anrm, ilo - 1, wi, 1);
         }
       }
 
@@ -25799,42 +25833,34 @@ namespace coder
 
       //
       // Arguments    : int n
-      //                const double x[16]
+      //                const double x[9]
       //                int ix0
       // Return Type  : double
       //
-      static double b_xnrm2(int n, const double x[16], int ix0)
+      static double b_xnrm2(int n, const double x[9], int ix0)
       {
+        double scale;
         double y;
+        int kend;
         y = 0.0;
-        if (n >= 1) {
-          if (n == 1) {
-            y = std::abs(x[ix0 - 1]);
+        scale = 3.3121686421112381E-170;
+        kend = ix0 + n;
+        for (int k{ix0}; k < kend; k++) {
+          double absxk;
+          absxk = std::abs(x[k - 1]);
+          if (absxk > scale) {
+            double t;
+            t = scale / absxk;
+            y = y * t * t + 1.0;
+            scale = absxk;
           } else {
-            double scale;
-            int kend;
-            scale = 3.3121686421112381E-170;
-            kend = ix0 + n;
-            for (int k{ix0}; k < kend; k++) {
-              double absxk;
-              absxk = std::abs(x[k - 1]);
-              if (absxk > scale) {
-                double t;
-                t = scale / absxk;
-                y = y * t * t + 1.0;
-                scale = absxk;
-              } else {
-                double t;
-                t = absxk / scale;
-                y += t * t;
-              }
-            }
-
-            y = scale * std::sqrt(y);
+            double t;
+            t = absxk / scale;
+            y += t * t;
           }
         }
 
-        return y;
+        return scale * std::sqrt(y);
       }
 
       //
@@ -26110,31 +26136,43 @@ namespace coder
       }
 
       //
-      // Arguments    : const double x[3]
+      // Arguments    : int n
+      //                const double x[16]
+      //                int ix0
       // Return Type  : double
       //
-      static double xnrm2(const double x[3])
+      static double xnrm2(int n, const double x[16], int ix0)
       {
-        double scale;
         double y;
         y = 0.0;
-        scale = 3.3121686421112381E-170;
-        for (int k{2}; k < 4; k++) {
-          double absxk;
-          absxk = std::abs(x[k - 1]);
-          if (absxk > scale) {
-            double t;
-            t = scale / absxk;
-            y = y * t * t + 1.0;
-            scale = absxk;
+        if (n >= 1) {
+          if (n == 1) {
+            y = std::abs(x[ix0 - 1]);
           } else {
-            double t;
-            t = absxk / scale;
-            y += t * t;
+            double scale;
+            int kend;
+            scale = 3.3121686421112381E-170;
+            kend = ix0 + n;
+            for (int k{ix0}; k < kend; k++) {
+              double absxk;
+              absxk = std::abs(x[k - 1]);
+              if (absxk > scale) {
+                double t;
+                t = scale / absxk;
+                y = y * t * t + 1.0;
+                scale = absxk;
+              } else {
+                double t;
+                t = absxk / scale;
+                y += t * t;
+              }
+            }
+
+            y = scale * std::sqrt(y);
           }
         }
 
-        return scale * std::sqrt(y);
+        return y;
       }
 
       //
@@ -26221,20 +26259,16 @@ namespace coder
       }
 
       //
-      // Arguments    : int n
-      //                const double x[9]
-      //                int ix0
+      // Arguments    : const double x[3]
       // Return Type  : double
       //
-      static double xnrm2(int n, const double x[9], int ix0)
+      static double xnrm2(const double x[3])
       {
         double scale;
         double y;
-        int kend;
         y = 0.0;
         scale = 3.3121686421112381E-170;
-        kend = ix0 + n;
-        for (int k{ix0}; k < kend; k++) {
+        for (int k{2}; k < 4; k++) {
           double absxk;
           absxk = std::abs(x[k - 1]);
           if (absxk > scale) {
@@ -26899,6 +26933,66 @@ namespace coder
     }
 
     //
+    // Arguments    : int idx_data[]
+    //                double x_data[]
+    //                int offset
+    //                int np
+    //                int nq
+    //                int iwork_data[]
+    //                double xwork_data[]
+    // Return Type  : void
+    //
+    static void merge(int idx_data[], double x_data[], int offset, int np, int
+                      nq, int iwork_data[], double xwork_data[])
+    {
+      if (nq != 0) {
+        int iout;
+        int n_tmp;
+        int p;
+        int q;
+        n_tmp = np + nq;
+        for (int j{0}; j < n_tmp; j++) {
+          iout = offset + j;
+          iwork_data[j] = idx_data[iout];
+          xwork_data[j] = x_data[iout];
+        }
+
+        p = 0;
+        q = np;
+        iout = offset - 1;
+        int exitg1;
+        do {
+          exitg1 = 0;
+          iout++;
+          if (xwork_data[p] <= xwork_data[q]) {
+            idx_data[iout] = iwork_data[p];
+            x_data[iout] = xwork_data[p];
+            if (p + 1 < np) {
+              p++;
+            } else {
+              exitg1 = 1;
+            }
+          } else {
+            idx_data[iout] = iwork_data[q];
+            x_data[iout] = xwork_data[q];
+            if (q + 1 < n_tmp) {
+              q++;
+            } else {
+              q = iout - p;
+              for (int j{p + 1}; j <= np; j++) {
+                iout = q + j;
+                idx_data[iout] = iwork_data[j - 1];
+                x_data[iout] = xwork_data[j - 1];
+              }
+
+              exitg1 = 1;
+            }
+          }
+        } while (exitg1 == 0);
+      }
+    }
+
+    //
     // Arguments    : array<int, 1U> &idx
     //                array<double, 1U> &x
     //                int offset
@@ -26950,66 +27044,6 @@ namespace coder
                 iout = q + j;
                 idx[iout] = iwork[j - 1];
                 x[iout] = xwork[j - 1];
-              }
-
-              exitg1 = 1;
-            }
-          }
-        } while (exitg1 == 0);
-      }
-    }
-
-    //
-    // Arguments    : int idx_data[]
-    //                double x_data[]
-    //                int offset
-    //                int np
-    //                int nq
-    //                int iwork_data[]
-    //                double xwork_data[]
-    // Return Type  : void
-    //
-    static void merge(int idx_data[], double x_data[], int offset, int np, int
-                      nq, int iwork_data[], double xwork_data[])
-    {
-      if (nq != 0) {
-        int iout;
-        int n_tmp;
-        int p;
-        int q;
-        n_tmp = np + nq;
-        for (int j{0}; j < n_tmp; j++) {
-          iout = offset + j;
-          iwork_data[j] = idx_data[iout];
-          xwork_data[j] = x_data[iout];
-        }
-
-        p = 0;
-        q = np;
-        iout = offset - 1;
-        int exitg1;
-        do {
-          exitg1 = 0;
-          iout++;
-          if (xwork_data[p] <= xwork_data[q]) {
-            idx_data[iout] = iwork_data[p];
-            x_data[iout] = xwork_data[p];
-            if (p + 1 < np) {
-              p++;
-            } else {
-              exitg1 = 1;
-            }
-          } else {
-            idx_data[iout] = iwork_data[q];
-            x_data[iout] = xwork_data[q];
-            if (q + 1 < n_tmp) {
-              q++;
-            } else {
-              q = iout - p;
-              for (int j{p + 1}; j <= np; j++) {
-                iout = q + j;
-                idx_data[iout] = iwork_data[j - 1];
-                x_data[iout] = xwork_data[j - 1];
               }
 
               exitg1 = 1;
@@ -27591,10 +27625,10 @@ namespace coder
       //
       // Arguments    : double cfrom
       //                double cto
-      //                double A[16]
+      //                double A[9]
       // Return Type  : void
       //
-      static void b_xzlascl(double cfrom, double cto, double A[16])
+      static void b_xzlascl(double cfrom, double cto, double A[9])
       {
         double cfromc;
         double ctoc;
@@ -27619,13 +27653,12 @@ namespace coder
             notdone = false;
           }
 
-          for (int j{0}; j < 4; j++) {
+          for (int j{0}; j < 3; j++) {
             int offset;
-            offset = (j << 2) - 1;
+            offset = j * 3 - 1;
             A[offset + 1] *= mul;
             A[offset + 2] *= mul;
             A[offset + 3] *= mul;
-            A[offset + 4] *= mul;
           }
         }
       }
@@ -27634,11 +27667,11 @@ namespace coder
       // Arguments    : double cfrom
       //                double cto
       //                int m
-      //                double A[4]
+      //                double A[3]
       //                int iA0
       // Return Type  : void
       //
-      static void b_xzlascl(double cfrom, double cto, int m, double A[4], int
+      static void b_xzlascl(double cfrom, double cto, int m, double A[3], int
                             iA0)
       {
         double cfromc;
@@ -29363,7 +29396,7 @@ namespace coder
                 double t;
                 kend = (ihi - ilo) + 1;
                 ix = i << 2;
-                c = blas::b_xnrm2(kend, A, ix + ilo);
+                c = blas::xnrm2(kend, A, ix + ilo);
                 ix0_tmp = ((ilo - 1) << 2) + i;
                 r = 0.0;
                 if (kend >= 1) {
@@ -30029,7 +30062,7 @@ namespace coder
         tau = 0.0;
         if (n > 0) {
           double xnorm;
-          xnorm = blas::b_xnrm2(n - 1, x, ix0);
+          xnorm = blas::xnrm2(n - 1, x, ix0);
           if (xnorm != 0.0) {
             double a_tmp;
             a_tmp = std::abs(alpha1);
@@ -30066,7 +30099,7 @@ namespace coder
               } while ((std::abs(xnorm) < 1.0020841800044864E-292) && (knt < 20));
 
               a_tmp = std::abs(alpha1);
-              xnorm = std::abs(blas::b_xnrm2(n - 1, x, ix0));
+              xnorm = std::abs(blas::xnrm2(n - 1, x, ix0));
               if (a_tmp < xnorm) {
                 a_tmp /= xnorm;
                 xnorm *= std::sqrt(a_tmp * a_tmp + 1.0);
@@ -30215,11 +30248,11 @@ namespace coder
       // Arguments    : double cfrom
       //                double cto
       //                int m
-      //                double A[3]
+      //                double A[4]
       //                int iA0
       // Return Type  : void
       //
-      static void xzlascl(double cfrom, double cto, int m, double A[3], int iA0)
+      static void xzlascl(double cfrom, double cto, int m, double A[4], int iA0)
       {
         double cfromc;
         double ctoc;
@@ -30248,6 +30281,48 @@ namespace coder
             int b_i;
             b_i = (iA0 + i) - 1;
             A[b_i] *= mul;
+          }
+        }
+      }
+
+      //
+      // Arguments    : double cfrom
+      //                double cto
+      //                double A[16]
+      // Return Type  : void
+      //
+      static void xzlascl(double cfrom, double cto, double A[16])
+      {
+        double cfromc;
+        double ctoc;
+        bool notdone;
+        cfromc = cfrom;
+        ctoc = cto;
+        notdone = true;
+        while (notdone) {
+          double cfrom1;
+          double cto1;
+          double mul;
+          cfrom1 = cfromc * 2.0041683600089728E-292;
+          cto1 = ctoc / 4.9896007738368E+291;
+          if ((std::abs(cfrom1) > std::abs(ctoc)) && (ctoc != 0.0)) {
+            mul = 2.0041683600089728E-292;
+            cfromc = cfrom1;
+          } else if (std::abs(cto1) > std::abs(cfromc)) {
+            mul = 4.9896007738368E+291;
+            ctoc = cto1;
+          } else {
+            mul = ctoc / cfromc;
+            notdone = false;
+          }
+
+          for (int j{0}; j < 4; j++) {
+            int offset;
+            offset = (j << 2) - 1;
+            A[offset + 1] *= mul;
+            A[offset + 2] *= mul;
+            A[offset + 3] *= mul;
+            A[offset + 4] *= mul;
           }
         }
       }
@@ -30286,47 +30361,6 @@ namespace coder
 
           for (int i{0}; i < m; i++) {
             A[i] = A[i] * mul;
-          }
-        }
-      }
-
-      //
-      // Arguments    : double cfrom
-      //                double cto
-      //                double A[9]
-      // Return Type  : void
-      //
-      static void xzlascl(double cfrom, double cto, double A[9])
-      {
-        double cfromc;
-        double ctoc;
-        bool notdone;
-        cfromc = cfrom;
-        ctoc = cto;
-        notdone = true;
-        while (notdone) {
-          double cfrom1;
-          double cto1;
-          double mul;
-          cfrom1 = cfromc * 2.0041683600089728E-292;
-          cto1 = ctoc / 4.9896007738368E+291;
-          if ((std::abs(cfrom1) > std::abs(ctoc)) && (ctoc != 0.0)) {
-            mul = 2.0041683600089728E-292;
-            cfromc = cfrom1;
-          } else if (std::abs(cto1) > std::abs(cfromc)) {
-            mul = 4.9896007738368E+291;
-            ctoc = cto1;
-          } else {
-            mul = ctoc / cfromc;
-            notdone = false;
-          }
-
-          for (int j{0}; j < 3; j++) {
-            int offset;
-            offset = j * 3 - 1;
-            A[offset + 1] *= mul;
-            A[offset + 2] *= mul;
-            A[offset + 3] *= mul;
           }
         }
       }
@@ -30476,12 +30510,12 @@ namespace coder
                 } else {
                   if (anorm > 2.2346346549904327E+153) {
                     iscale = 1;
-                    b_xzlascl(anorm, 2.2346346549904327E+153, ix, d, l + 1);
-                    xzlascl(anorm, 2.2346346549904327E+153, ix - 1, e, l + 1);
+                    xzlascl(anorm, 2.2346346549904327E+153, ix, d, l + 1);
+                    b_xzlascl(anorm, 2.2346346549904327E+153, ix - 1, e, l + 1);
                   } else if (anorm < 3.02546243347603E-123) {
                     iscale = 2;
-                    b_xzlascl(anorm, 3.02546243347603E-123, ix, d, l + 1);
-                    xzlascl(anorm, 3.02546243347603E-123, ix - 1, e, l + 1);
+                    xzlascl(anorm, 3.02546243347603E-123, ix, d, l + 1);
+                    b_xzlascl(anorm, 3.02546243347603E-123, ix - 1, e, l + 1);
                   }
 
                   if (std::abs(d[m - 1]) < std::abs(d[l])) {
@@ -30677,12 +30711,12 @@ namespace coder
 
                   if (iscale == 1) {
                     ix = lendsv - lsv;
-                    b_xzlascl(2.2346346549904327E+153, anorm, ix + 1, d, lsv);
-                    xzlascl(2.2346346549904327E+153, anorm, ix, e, lsv);
+                    xzlascl(2.2346346549904327E+153, anorm, ix + 1, d, lsv);
+                    b_xzlascl(2.2346346549904327E+153, anorm, ix, e, lsv);
                   } else if (iscale == 2) {
                     ix = lendsv - lsv;
-                    b_xzlascl(3.02546243347603E-123, anorm, ix + 1, d, lsv);
-                    xzlascl(3.02546243347603E-123, anorm, ix, e, lsv);
+                    xzlascl(3.02546243347603E-123, anorm, ix + 1, d, lsv);
+                    b_xzlascl(3.02546243347603E-123, anorm, ix, e, lsv);
                   }
 
                   if (jtot >= 120) {
@@ -31367,12 +31401,257 @@ namespace coder
       }
 
       //
-      // Arguments    : array<double, 1U> &x
-      //                array<int, 1U> &idx
+      // Arguments    : double x_data[]
+      //                const int x_size[2]
       // Return Type  : void
       //
     }
 
+    static void sort(double x_data[], const int x_size[2])
+    {
+      int idx_data[26];
+      int loop_ub;
+      loop_ub = x_size[1];
+      if (loop_ub - 1 >= 0) {
+        std::memset(&idx_data[0], 0, static_cast<unsigned int>(loop_ub) * sizeof
+                    (int));
+      }
+
+      if (x_size[1] != 0) {
+        double xwork_data[26];
+        double x4[4];
+        int iwork_data[26];
+        int i;
+        int i1;
+        int i2;
+        int i3;
+        int i4;
+        int ib;
+        int nNaNs;
+        int quartetOffset;
+        int wOffset_tmp;
+        signed char idx4[4];
+        x4[0] = 0.0;
+        idx4[0] = 0;
+        x4[1] = 0.0;
+        idx4[1] = 0;
+        x4[2] = 0.0;
+        idx4[2] = 0;
+        x4[3] = 0.0;
+        idx4[3] = 0;
+        nNaNs = 0;
+        ib = 0;
+        for (int k{0}; k < loop_ub; k++) {
+          iwork_data[k] = 0;
+          if (std::isnan(x_data[k])) {
+            i4 = (loop_ub - nNaNs) - 1;
+            idx_data[i4] = k + 1;
+            xwork_data[i4] = x_data[k];
+            nNaNs++;
+          } else {
+            ib++;
+            idx4[ib - 1] = static_cast<signed char>(k + 1);
+            x4[ib - 1] = x_data[k];
+            if (ib == 4) {
+              double d;
+              double d1;
+              quartetOffset = k - nNaNs;
+              if (x4[0] <= x4[1]) {
+                ib = 1;
+                i2 = 2;
+              } else {
+                ib = 2;
+                i2 = 1;
+              }
+
+              if (x4[2] <= x4[3]) {
+                i3 = 3;
+                i4 = 4;
+              } else {
+                i3 = 4;
+                i4 = 3;
+              }
+
+              d = x4[ib - 1];
+              d1 = x4[i3 - 1];
+              if (d <= d1) {
+                d = x4[i2 - 1];
+                if (d <= d1) {
+                  i = ib;
+                  i1 = i2;
+                  ib = i3;
+                  i2 = i4;
+                } else if (d <= x4[i4 - 1]) {
+                  i = ib;
+                  i1 = i3;
+                  ib = i2;
+                  i2 = i4;
+                } else {
+                  i = ib;
+                  i1 = i3;
+                  ib = i4;
+                }
+              } else {
+                d1 = x4[i4 - 1];
+                if (d <= d1) {
+                  if (x4[i2 - 1] <= d1) {
+                    i = i3;
+                    i1 = ib;
+                    ib = i2;
+                    i2 = i4;
+                  } else {
+                    i = i3;
+                    i1 = ib;
+                    ib = i4;
+                  }
+                } else {
+                  i = i3;
+                  i1 = i4;
+                }
+              }
+
+              idx_data[quartetOffset - 3] = idx4[i - 1];
+              idx_data[quartetOffset - 2] = idx4[i1 - 1];
+              idx_data[quartetOffset - 1] = idx4[ib - 1];
+              idx_data[quartetOffset] = idx4[i2 - 1];
+              x_data[quartetOffset - 3] = x4[i - 1];
+              x_data[quartetOffset - 2] = x4[i1 - 1];
+              x_data[quartetOffset - 1] = x4[ib - 1];
+              x_data[quartetOffset] = x4[i2 - 1];
+              ib = 0;
+            }
+          }
+        }
+
+        wOffset_tmp = x_size[1] - nNaNs;
+        if (ib > 0) {
+          signed char perm[4];
+          perm[1] = 0;
+          perm[2] = 0;
+          perm[3] = 0;
+          if (ib == 1) {
+            perm[0] = 1;
+          } else if (ib == 2) {
+            if (x4[0] <= x4[1]) {
+              perm[0] = 1;
+              perm[1] = 2;
+            } else {
+              perm[0] = 2;
+              perm[1] = 1;
+            }
+          } else if (x4[0] <= x4[1]) {
+            if (x4[1] <= x4[2]) {
+              perm[0] = 1;
+              perm[1] = 2;
+              perm[2] = 3;
+            } else if (x4[0] <= x4[2]) {
+              perm[0] = 1;
+              perm[1] = 3;
+              perm[2] = 2;
+            } else {
+              perm[0] = 3;
+              perm[1] = 1;
+              perm[2] = 2;
+            }
+          } else if (x4[0] <= x4[2]) {
+            perm[0] = 2;
+            perm[1] = 1;
+            perm[2] = 3;
+          } else if (x4[1] <= x4[2]) {
+            perm[0] = 2;
+            perm[1] = 3;
+            perm[2] = 1;
+          } else {
+            perm[0] = 3;
+            perm[1] = 2;
+            perm[2] = 1;
+          }
+
+          i = static_cast<unsigned char>(ib);
+          for (int k{0}; k < i; k++) {
+            i4 = (wOffset_tmp - ib) + k;
+            i1 = perm[k];
+            idx_data[i4] = idx4[i1 - 1];
+            x_data[i4] = x4[i1 - 1];
+          }
+        }
+
+        i2 = nNaNs >> 1;
+        for (int k{0}; k < i2; k++) {
+          quartetOffset = wOffset_tmp + k;
+          i3 = idx_data[quartetOffset];
+          i4 = (loop_ub - k) - 1;
+          idx_data[quartetOffset] = idx_data[i4];
+          idx_data[i4] = i3;
+          x_data[quartetOffset] = xwork_data[i4];
+          x_data[i4] = xwork_data[quartetOffset];
+        }
+
+        if ((static_cast<unsigned int>(nNaNs) & 1U) != 0U) {
+          i = wOffset_tmp + i2;
+          x_data[i] = xwork_data[i];
+        }
+
+        if (wOffset_tmp > 1) {
+          i3 = wOffset_tmp >> 2;
+          quartetOffset = 4;
+          while (i3 > 1) {
+            if ((static_cast<unsigned int>(i3) & 1U) != 0U) {
+              i3--;
+              ib = quartetOffset * i3;
+              i2 = wOffset_tmp - ib;
+              if (i2 > quartetOffset) {
+                merge(idx_data, x_data, ib, quartetOffset, i2 - quartetOffset,
+                      iwork_data, xwork_data);
+              }
+            }
+
+            ib = quartetOffset << 1;
+            i3 >>= 1;
+            for (int k{0}; k < i3; k++) {
+              merge(idx_data, x_data, k * ib, quartetOffset, quartetOffset,
+                    iwork_data, xwork_data);
+            }
+
+            quartetOffset = ib;
+          }
+
+          if (wOffset_tmp > quartetOffset) {
+            merge(idx_data, x_data, 0, quartetOffset, wOffset_tmp -
+                  quartetOffset, iwork_data, xwork_data);
+          }
+        }
+      }
+    }
+
+    //
+    // Arguments    : double x[24]
+    // Return Type  : void
+    //
+    static void sort(double x[24])
+    {
+      for (int j{0}; j < 12; j++) {
+        double vwork_idx_0;
+        double vwork_idx_1;
+        vwork_idx_0 = x[j];
+        vwork_idx_1 = x[j + 12];
+        if ((!(vwork_idx_0 <= vwork_idx_1)) && (!std::isnan(vwork_idx_1))) {
+          double tmp;
+          tmp = vwork_idx_0;
+          vwork_idx_0 = vwork_idx_1;
+          vwork_idx_1 = tmp;
+        }
+
+        x[j] = vwork_idx_0;
+        x[j + 12] = vwork_idx_1;
+      }
+    }
+
+    //
+    // Arguments    : array<double, 1U> &x
+    //                array<int, 1U> &idx
+    // Return Type  : void
+    //
     static void sort(array<double, 1U> &x, array<int, 1U> &idx)
     {
       array<double, 1U> vwork;
@@ -31673,251 +31952,6 @@ namespace coder
     }
 
     //
-    // Arguments    : double x_data[]
-    //                const int x_size[2]
-    // Return Type  : void
-    //
-    static void sort(double x_data[], const int x_size[2])
-    {
-      int idx_data[26];
-      int loop_ub;
-      loop_ub = x_size[1];
-      if (loop_ub - 1 >= 0) {
-        std::memset(&idx_data[0], 0, static_cast<unsigned int>(loop_ub) * sizeof
-                    (int));
-      }
-
-      if (x_size[1] != 0) {
-        double xwork_data[26];
-        double x4[4];
-        int iwork_data[26];
-        int i;
-        int i1;
-        int i2;
-        int i3;
-        int i4;
-        int ib;
-        int nNaNs;
-        int quartetOffset;
-        int wOffset_tmp;
-        signed char idx4[4];
-        x4[0] = 0.0;
-        idx4[0] = 0;
-        x4[1] = 0.0;
-        idx4[1] = 0;
-        x4[2] = 0.0;
-        idx4[2] = 0;
-        x4[3] = 0.0;
-        idx4[3] = 0;
-        nNaNs = 0;
-        ib = 0;
-        for (int k{0}; k < loop_ub; k++) {
-          iwork_data[k] = 0;
-          if (std::isnan(x_data[k])) {
-            i4 = (loop_ub - nNaNs) - 1;
-            idx_data[i4] = k + 1;
-            xwork_data[i4] = x_data[k];
-            nNaNs++;
-          } else {
-            ib++;
-            idx4[ib - 1] = static_cast<signed char>(k + 1);
-            x4[ib - 1] = x_data[k];
-            if (ib == 4) {
-              double d;
-              double d1;
-              quartetOffset = k - nNaNs;
-              if (x4[0] <= x4[1]) {
-                ib = 1;
-                i2 = 2;
-              } else {
-                ib = 2;
-                i2 = 1;
-              }
-
-              if (x4[2] <= x4[3]) {
-                i3 = 3;
-                i4 = 4;
-              } else {
-                i3 = 4;
-                i4 = 3;
-              }
-
-              d = x4[ib - 1];
-              d1 = x4[i3 - 1];
-              if (d <= d1) {
-                d = x4[i2 - 1];
-                if (d <= d1) {
-                  i = ib;
-                  i1 = i2;
-                  ib = i3;
-                  i2 = i4;
-                } else if (d <= x4[i4 - 1]) {
-                  i = ib;
-                  i1 = i3;
-                  ib = i2;
-                  i2 = i4;
-                } else {
-                  i = ib;
-                  i1 = i3;
-                  ib = i4;
-                }
-              } else {
-                d1 = x4[i4 - 1];
-                if (d <= d1) {
-                  if (x4[i2 - 1] <= d1) {
-                    i = i3;
-                    i1 = ib;
-                    ib = i2;
-                    i2 = i4;
-                  } else {
-                    i = i3;
-                    i1 = ib;
-                    ib = i4;
-                  }
-                } else {
-                  i = i3;
-                  i1 = i4;
-                }
-              }
-
-              idx_data[quartetOffset - 3] = idx4[i - 1];
-              idx_data[quartetOffset - 2] = idx4[i1 - 1];
-              idx_data[quartetOffset - 1] = idx4[ib - 1];
-              idx_data[quartetOffset] = idx4[i2 - 1];
-              x_data[quartetOffset - 3] = x4[i - 1];
-              x_data[quartetOffset - 2] = x4[i1 - 1];
-              x_data[quartetOffset - 1] = x4[ib - 1];
-              x_data[quartetOffset] = x4[i2 - 1];
-              ib = 0;
-            }
-          }
-        }
-
-        wOffset_tmp = x_size[1] - nNaNs;
-        if (ib > 0) {
-          signed char perm[4];
-          perm[1] = 0;
-          perm[2] = 0;
-          perm[3] = 0;
-          if (ib == 1) {
-            perm[0] = 1;
-          } else if (ib == 2) {
-            if (x4[0] <= x4[1]) {
-              perm[0] = 1;
-              perm[1] = 2;
-            } else {
-              perm[0] = 2;
-              perm[1] = 1;
-            }
-          } else if (x4[0] <= x4[1]) {
-            if (x4[1] <= x4[2]) {
-              perm[0] = 1;
-              perm[1] = 2;
-              perm[2] = 3;
-            } else if (x4[0] <= x4[2]) {
-              perm[0] = 1;
-              perm[1] = 3;
-              perm[2] = 2;
-            } else {
-              perm[0] = 3;
-              perm[1] = 1;
-              perm[2] = 2;
-            }
-          } else if (x4[0] <= x4[2]) {
-            perm[0] = 2;
-            perm[1] = 1;
-            perm[2] = 3;
-          } else if (x4[1] <= x4[2]) {
-            perm[0] = 2;
-            perm[1] = 3;
-            perm[2] = 1;
-          } else {
-            perm[0] = 3;
-            perm[1] = 2;
-            perm[2] = 1;
-          }
-
-          i = static_cast<unsigned char>(ib);
-          for (int k{0}; k < i; k++) {
-            i4 = (wOffset_tmp - ib) + k;
-            i1 = perm[k];
-            idx_data[i4] = idx4[i1 - 1];
-            x_data[i4] = x4[i1 - 1];
-          }
-        }
-
-        i2 = nNaNs >> 1;
-        for (int k{0}; k < i2; k++) {
-          quartetOffset = wOffset_tmp + k;
-          i3 = idx_data[quartetOffset];
-          i4 = (loop_ub - k) - 1;
-          idx_data[quartetOffset] = idx_data[i4];
-          idx_data[i4] = i3;
-          x_data[quartetOffset] = xwork_data[i4];
-          x_data[i4] = xwork_data[quartetOffset];
-        }
-
-        if ((static_cast<unsigned int>(nNaNs) & 1U) != 0U) {
-          i = wOffset_tmp + i2;
-          x_data[i] = xwork_data[i];
-        }
-
-        if (wOffset_tmp > 1) {
-          i3 = wOffset_tmp >> 2;
-          quartetOffset = 4;
-          while (i3 > 1) {
-            if ((static_cast<unsigned int>(i3) & 1U) != 0U) {
-              i3--;
-              ib = quartetOffset * i3;
-              i2 = wOffset_tmp - ib;
-              if (i2 > quartetOffset) {
-                merge(idx_data, x_data, ib, quartetOffset, i2 - quartetOffset,
-                      iwork_data, xwork_data);
-              }
-            }
-
-            ib = quartetOffset << 1;
-            i3 >>= 1;
-            for (int k{0}; k < i3; k++) {
-              merge(idx_data, x_data, k * ib, quartetOffset, quartetOffset,
-                    iwork_data, xwork_data);
-            }
-
-            quartetOffset = ib;
-          }
-
-          if (wOffset_tmp > quartetOffset) {
-            merge(idx_data, x_data, 0, quartetOffset, wOffset_tmp -
-                  quartetOffset, iwork_data, xwork_data);
-          }
-        }
-      }
-    }
-
-    //
-    // Arguments    : double x[24]
-    // Return Type  : void
-    //
-    static void sort(double x[24])
-    {
-      for (int j{0}; j < 12; j++) {
-        double vwork_idx_0;
-        double vwork_idx_1;
-        vwork_idx_0 = x[j];
-        vwork_idx_1 = x[j + 12];
-        if ((!(vwork_idx_0 <= vwork_idx_1)) && (!std::isnan(vwork_idx_1))) {
-          double tmp;
-          tmp = vwork_idx_0;
-          vwork_idx_0 = vwork_idx_1;
-          vwork_idx_1 = tmp;
-        }
-
-        x[j] = vwork_idx_0;
-        x[j + 12] = vwork_idx_1;
-      }
-    }
-
-    //
     // Arguments    : const double A[9]
     //                double U[9]
     //                double s[3]
@@ -31964,11 +31998,11 @@ namespace coder
       if ((anrm > 0.0) && (anrm < 6.7178761075670888E-139)) {
         doscale = true;
         cscale = 6.7178761075670888E-139;
-        reflapack::xzlascl(anrm, cscale, b_A);
+        reflapack::b_xzlascl(anrm, cscale, b_A);
       } else if (anrm > 1.4885657073574029E+138) {
         doscale = true;
         cscale = 1.4885657073574029E+138;
-        reflapack::xzlascl(anrm, cscale, b_A);
+        reflapack::b_xzlascl(anrm, cscale, b_A);
       }
 
       for (int q{0}; q < 2; q++) {
@@ -31977,7 +32011,7 @@ namespace coder
         qq_tmp = q + 3 * q;
         qq = qq_tmp + 1;
         apply_transform = false;
-        nrm = blas::xnrm2(3 - q, b_A, qq_tmp + 1);
+        nrm = blas::b_xnrm2(3 - q, b_A, qq_tmp + 1);
         if (nrm > 0.0) {
           apply_transform = true;
           if (b_A[qq_tmp] < 0.0) {
@@ -32325,7 +32359,7 @@ namespace coder
       }
 
       if (doscale) {
-        reflapack::xzlascl(cscale, anrm, 3, s, 1);
+        reflapack::b_xzlascl(cscale, anrm, 3, s, 1);
       }
     }
 
@@ -32608,6 +32642,18 @@ namespace coder
   }
 
   //
+  // Arguments    : double r[4]
+  // Return Type  : void
+  //
+  static void randn(double r[4])
+  {
+    r[0] = internal::randfun::b_eml_rand_mt19937ar(state);
+    r[1] = internal::randfun::b_eml_rand_mt19937ar(state);
+    r[2] = internal::randfun::b_eml_rand_mt19937ar(state);
+    r[3] = internal::randfun::b_eml_rand_mt19937ar(state);
+  }
+
+  //
   // Arguments    : const double varargin_1[2]
   //                double r_data[]
   // Return Type  : int
@@ -32623,18 +32669,6 @@ namespace coder
     }
 
     return r_size;
-  }
-
-  //
-  // Arguments    : double r[4]
-  // Return Type  : void
-  //
-  static void randn(double r[4])
-  {
-    r[0] = internal::randfun::b_eml_rand_mt19937ar(state);
-    r[1] = internal::randfun::b_eml_rand_mt19937ar(state);
-    r[2] = internal::randfun::b_eml_rand_mt19937ar(state);
-    r[3] = internal::randfun::b_eml_rand_mt19937ar(state);
   }
 
   //
@@ -33099,11 +33133,11 @@ namespace coder
           if ((K24 > 0.0) && (K24 < 1.0010415475915505E-146)) {
             iscale = true;
             K24 = 1.0010415475915505E-146 / K24;
-            internal::reflapack::b_xzlascl(1.0, K24, A);
+            internal::reflapack::xzlascl(1.0, K24, A);
           } else if (K24 > 9.9895953610111751E+145) {
             iscale = true;
             K24 = 9.9895953610111751E+145 / K24;
-            internal::reflapack::b_xzlascl(1.0, K24, A);
+            internal::reflapack::xzlascl(1.0, K24, A);
           }
 
           for (b_i = 0; b_i < 3; b_i++) {
@@ -34268,7 +34302,7 @@ namespace coder
   // Arguments    : void
   // Return Type  : void
   //
-  generalizedInverseKinematics::~generalizedInverseKinematics()
+  collisionCapsule::~collisionCapsule()
   {
     matlabCodegenDestructor();
   }
@@ -34286,7 +34320,7 @@ namespace coder
   // Arguments    : void
   // Return Type  : void
   //
-  collisionCapsule::~collisionCapsule()
+  rigidBody::~rigidBody()
   {
     matlabCodegenDestructor();
   }
@@ -34295,7 +34329,7 @@ namespace coder
   // Arguments    : void
   // Return Type  : void
   //
-  rigidBody::~rigidBody()
+  generalizedInverseKinematics::~generalizedInverseKinematics()
   {
     matlabCodegenDestructor();
   }
@@ -34326,7 +34360,7 @@ namespace coder
 
         //
         // Arguments    : void
-        // Return Type  : b_RigidBodyTree
+        // Return Type  : b_RigidBody
         //
       }
     }
@@ -34335,6 +34369,24 @@ namespace coder
     {
       namespace internal
       {
+        b_RigidBody::b_RigidBody()
+        {
+          matlabCodegenIsDeleted = true;
+        }
+
+        //
+        // Arguments    : void
+        // Return Type  : RigidBodyTree
+        //
+        RigidBodyTree::RigidBodyTree()
+        {
+          matlabCodegenIsDeleted = true;
+        }
+
+        //
+        // Arguments    : void
+        // Return Type  : b_RigidBodyTree
+        //
         b_RigidBodyTree::b_RigidBodyTree()
         {
           matlabCodegenIsDeleted = true;
@@ -34360,18 +34412,9 @@ namespace coder
 
         //
         // Arguments    : void
-        // Return Type  : b_RigidBody
+        // Return Type  : RigidBody
         //
-        b_RigidBody::b_RigidBody()
-        {
-          matlabCodegenIsDeleted = true;
-        }
-
-        //
-        // Arguments    : void
-        // Return Type  : RigidBodyTree
-        //
-        RigidBodyTree::RigidBodyTree()
+        RigidBody::RigidBody()
         {
           matlabCodegenIsDeleted = true;
         }
@@ -34381,15 +34424,6 @@ namespace coder
         // Return Type  : PositionTarget
         //
         PositionTarget::PositionTarget()
-        {
-          matlabCodegenIsDeleted = true;
-        }
-
-        //
-        // Arguments    : void
-        // Return Type  : RigidBody
-        //
-        RigidBody::RigidBody()
         {
           matlabCodegenIsDeleted = true;
         }
@@ -34600,17 +34634,17 @@ void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
   //          bodyEE in bodyBase frame in form of Euler angles (in radians)
   //          using ZYX intrinsic convention
   if (!b_robot_not_empty) {
-    rbtForCodegen(gobj_4[20], gobj_5[20], gobj_6[10], b_robot);
+    b_robot = rbtForCodegen(gobj_4[20], gobj_5[20], gobj_6[10], gobj_3[0]);
     b_robot_not_empty = true;
   }
 
   //  Choose between bodyEE and bodyToolEE
   if (whichEE == 0) {
-    b_robot.getTransform(currentConfig, robotSE3);
+    b_robot->getTransform(currentConfig, robotSE3);
 
     //  disp("bodyEE");
   } else {
-    b_robot.b_getTransform(currentConfig, robotSE3);
+    b_robot->b_getTransform(currentConfig, robotSE3);
 
     //  disp("bodyToolEE");
   }
@@ -34647,7 +34681,6 @@ void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
 // Import Agrobot rbt model available for codegen
 //
 // Arguments    : const double currentConfig[6]
-//                const double target_Apr[8]
 //                const double targetPos_Fin[3]
 //                const struct0_T *solverParameters
 //                double *exitCode
@@ -34655,10 +34688,9 @@ void Matlab_getForwardKinematics(const double currentConfig[6], int whichEE,
 //                double qWaypoint[6]
 // Return Type  : void
 //
-void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
-                      const double targetPos_Fin[3], const struct0_T
-                      *solverParameters, double *exitCode, struct1_T
-                      *solutionInfoFin, double qWaypoint[6])
+void Matlab_getGikCut(const double currentConfig[6], const double targetPos_Fin
+                      [3], const struct0_T *solverParameters, double *exitCode,
+                      struct1_T *solutionInfoFin, double qWaypoint[6])
 {
   static coder::generalizedInverseKinematics gik;
   static coder::rigidBodyJoint lobj_6[27];
@@ -34672,15 +34704,15 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   coder::robotics::manip::internal::RigidBodyTree lobj_5;
   coder::robotics::manip::internal::b_RigidBodyTree lobj_9;
   coder::se3 targetFin_SE3;
-  double dv[9];
-  double t4_GradientTolerance;
-  double t4_MaxIterations;
-  double t4_MaxTime;
-  double t4_SolutionTolerance;
-  double t4_StepTolerance;
-  int b_exitCode;
-  bool t4_AllowRandomRestart;
-  bool t4_EnforceJointLimits;
+  double robotSE3[16];
+  double targetFin_Rotm[9];
+  double t5_GradientTolerance;
+  double t5_MaxTime;
+  double t5_SolutionTolerance;
+  double t5_StepTolerance;
+  int targetFin_Rotm_tmp;
+  bool t5_AllowRandomRestart;
+  bool t5_EnforceJointLimits;
   if (!isInitialized_Matlab_ik) {
     Matlab_ik_initialize();
   }
@@ -34783,7 +34815,7 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   //  0 - GIK fail
   //  1 - GIK success
   if (!robot_rbt_not_empty) {
-    rbtForCodegen(gobj_4[40], gobj_5[40], gobj_6[20], robot_rbt);
+    rbtForCodegen(gobj_4[60], gobj_5[60], gobj_6[30], robot_rbt);
     robot_rbt_not_empty = true;
   }
 
@@ -34793,10 +34825,52 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   //  Define waypoint array
   // qWaypoint = currentConfig;
   //  Define parameters of target bodies
-  // targetApr_Pos = target_Apr(1:3);
-  // targetApr_SE3 = se3(targetApr_Rotm, targetApr_Pos);
-  coder::robotics::internal::quat2rotm(&target_Apr[3], dv);
-  targetFin_SE3.init(dv, targetPos_Fin);
+  //  targetApr_Quat = target_Apr(4:7);
+  //  %targetApr_Pos = target_Apr(1:3);
+  //  targetApr_Rotm = quat2rotm(targetApr_Quat);
+  //  %targetApr_SE3 = se3(targetApr_Rotm, targetApr_Pos);
+  //  Import Agrobot rbt model available for codegen
+  //  Calculates bodyEE position and orientation in bodyBase frame for current robot configuration.
+  //  Input:
+  //  currentConfig - 1x6 array of robot configuration (axis angles in radians)
+  //  whichEE       - integer (enum) representing what robot body to solve
+  //                  FK for: 0 - bodyEE, 1 - bodyToolEE
+  //  Output:
+  //  se3   - 4x4 array representing homogeneous transformation matrix (SE3)
+  //          between bodyEE and bodyBase
+  //  pos   - 1x3 array representing x,y,z position of bodyEE in bodyBase
+  //          frame
+  //  ori   - 1x3 array [X Y Z] representing orientation of
+  //          bodyEE in bodyBase frame in form of Euler angles (in radians)
+  //          using ZYX intrinsic convention
+  if (!b_robot_not_empty) {
+    b_robot = rbtForCodegen(gobj_4[40], gobj_5[40], gobj_6[20], gobj_3[1]);
+    b_robot_not_empty = true;
+  }
+
+  //  Choose between bodyEE and bodyToolEE
+  b_robot->b_getTransform(currentConfig, robotSE3);
+
+  //  disp("bodyToolEE");
+  //  Get pos and ori
+  //  first angle is around Z, then around Y and X - oriZYX = [Z Y X]
+  //  To be consistent throughout the program, we rearrange [Z Y X] array into
+  //  [X Y Z] array, but leaving ZYX Euler convention
+  //  define variable for codegen
+  //  ax=show(robot,currentConfig,"Collisions","on",PreservePlot=false,FastUpdate=true);
+  //  rbtpatches=findobj(ax.Children,'Type','patch','-regexp','DisplayName','_mesh');
+  //  set(rbtpatches,'FaceAlpha',0.2);
+  //  hold on
+  //  show(robot,currentConfig, "Collisions","off");
+  for (int i{0}; i < 3; i++) {
+    targetFin_Rotm_tmp = i << 2;
+    targetFin_Rotm[3 * i] = robotSE3[targetFin_Rotm_tmp];
+    targetFin_Rotm[3 * i + 1] = robotSE3[targetFin_Rotm_tmp + 1];
+    targetFin_Rotm[3 * i + 2] = robotSE3[targetFin_Rotm_tmp + 2];
+  }
+
+  double t5_MaxIterations;
+  targetFin_SE3.init(targetFin_Rotm, targetPos_Fin);
   targetFin.k_init(lobj_5, lobj_8[25], lobj_6[24], lobj_7[12]);
   b_value = targetFin.BodyInternal->JointInternal;
   b_value->setFixedTransform(targetFin_SE3.M);
@@ -34806,35 +34880,35 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
   gik.init(c_robot);
 
   //  Define solver parameters
-  gik.get_SolverParameters(t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  gik.set_SolverParameters(solverParameters->maxIterations, t4_MaxTime,
-    t4_GradientTolerance, t4_SolutionTolerance, t4_EnforceJointLimits,
-    t4_AllowRandomRestart, t4_StepTolerance);
-  t4_MaxIterations = gik.get_SolverParameters(t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  gik.set_SolverParameters(t4_MaxIterations, solverParameters->maxTime,
-    t4_GradientTolerance, t4_SolutionTolerance, t4_EnforceJointLimits,
-    t4_AllowRandomRestart, t4_StepTolerance);
-  t4_MaxIterations = gik.get_SolverParameters(t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  gik.set_SolverParameters(t4_MaxIterations, t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, solverParameters->enforceJointLimits,
-    t4_AllowRandomRestart, t4_StepTolerance);
-  t4_MaxIterations = gik.get_SolverParameters(t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  gik.set_SolverParameters(t4_MaxIterations, t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  t4_MaxIterations = gik.get_SolverParameters(t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
-    t4_StepTolerance);
-  gik.set_SolverParameters(t4_MaxIterations, t4_MaxTime, t4_GradientTolerance,
-    t4_SolutionTolerance, t4_EnforceJointLimits, t4_AllowRandomRestart,
+  gik.get_SolverParameters(t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  gik.set_SolverParameters(solverParameters->maxIterations, t5_MaxTime,
+    t5_GradientTolerance, t5_SolutionTolerance, t5_EnforceJointLimits,
+    t5_AllowRandomRestart, t5_StepTolerance);
+  t5_MaxIterations = gik.get_SolverParameters(t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  gik.set_SolverParameters(t5_MaxIterations, solverParameters->maxTime,
+    t5_GradientTolerance, t5_SolutionTolerance, t5_EnforceJointLimits,
+    t5_AllowRandomRestart, t5_StepTolerance);
+  t5_MaxIterations = gik.get_SolverParameters(t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  gik.set_SolverParameters(t5_MaxIterations, t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, solverParameters->enforceJointLimits,
+    t5_AllowRandomRestart, t5_StepTolerance);
+  t5_MaxIterations = gik.get_SolverParameters(t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  gik.set_SolverParameters(t5_MaxIterations, t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  t5_MaxIterations = gik.get_SolverParameters(t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
+    t5_StepTolerance);
+  gik.set_SolverParameters(t5_MaxIterations, t5_MaxTime, t5_GradientTolerance,
+    t5_SolutionTolerance, t5_EnforceJointLimits, t5_AllowRandomRestart,
     solverParameters->stepTolerance);
 
   //  Distance constraint (position of the target relative to ee)
@@ -34847,13 +34921,15 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
     distanceFromTarget.ReferenceBody[i] = cv3[i];
   }
 
+  double dv[4];
   distanceFromTarget.PositionTolerance = 0.02;
   distanceFromTarget.Weights = 1.0;
 
   //  Orientation constraint (ee is oriented perpendicular to the branch)
   orientToTarget.init();
   orientToTarget.ReferenceBody.set_size(1, 0);
-  orientToTarget.set_TargetOrientation(&target_Apr[3]);
+  coder::rotm2quat(targetFin_Rotm, dv);
+  orientToTarget.set_TargetOrientation(dv);
   orientToTarget.OrientationTolerance = 0.1;
   orientToTarget.Weights = 1.0;
 
@@ -34864,9 +34940,9 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
     solutionInfoFin->NumRandomRestarts, solutionInfoFin->ExitFlag);
   if (coder::string::eq(solutionInfoFin->Status.data,
                         solutionInfoFin->Status.size)) {
-    b_exitCode = 1;
+    targetFin_Rotm_tmp = 1;
   } else {
-    b_exitCode = 0;
+    targetFin_Rotm_tmp = 0;
     for (int i{0}; i < 6; i++) {
       qWaypoint[i] = currentConfig[i];
     }
@@ -34951,7 +35027,7 @@ void Matlab_getGikCut(const double currentConfig[6], const double target_Apr[8],
     lobj_9._pobj2[i]._pobj0.matlabCodegenDestructor();
   }
 
-  *exitCode = b_exitCode;
+  *exitCode = targetFin_Rotm_tmp;
 }
 
 //
@@ -35108,7 +35184,7 @@ void Matlab_getGikFull(const double currentConfig[6], const double target_Apr[8]
   //  1 - GIK success
   //  2 - GIK final approach fail
   if (!b_robot_rbt_not_empty) {
-    rbtForCodegen(gobj_4[60], gobj_5[60], gobj_6[30], b_robot_rbt);
+    rbtForCodegen(gobj_4[80], gobj_5[80], gobj_6[40], b_robot_rbt);
     b_robot_rbt_not_empty = true;
   }
 
