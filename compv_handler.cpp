@@ -445,7 +445,8 @@ void TEST_handleSetPositionRequest(){
 
 static void handleFinalApproachRequest(const json& json) {
     cout << "Initiating <Final Approach> sequence" << endl;
-
+/*
+ * OLD CODE
     Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
 
     tcp_data_state = TCP_DATA_NEW_AVAILABLE;
@@ -453,10 +454,158 @@ static void handleFinalApproachRequest(const json& json) {
     targetPos_worldFrame = Transform_ConvertFrameTarget2World(&targetPos_camFrame,
                                                               eePos_worldFrame,
                                                               SCISSORS_LENGTH);
+ * OLD CODE END
+*/
+
+    //Get current robot EE coords
+    Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
+
+    //=========TEST PARAMETERS========================
+    //Todo: PASHA - get targetParameters (as func input or otherwise)
+    //In camera frame
+    Target_Parameters_t targetParameters {0.0366,0.1056,0.5187,0,0,0};
+    //Todo: PAHSA - get currentConfig from Hyundai
+    double currentConfig[6] {1.0724,0.3256,1.2271,-0.233,-1.4176,-1.3642};
+
+    eeCoords_worldFrame->coord[0] = 0.4566;
+    eeCoords_worldFrame->coord[1] = 0.7977;
+    eeCoords_worldFrame->coord[2] = 0.5369;
+    eeCoords_worldFrame->coord[3] = 3.0584;
+    eeCoords_worldFrame->coord[4] = 0.2555;
+    eeCoords_worldFrame->coord[5] = 2.8592;
+    //=========TEST PARAMETERS END====================
+
+    Cartesian_Pos_t targetStart_camFrame{};
+    Cartesian_Pos_t targetDir_camFrame{};
+    Cartesian_Pos_t targetStart_worldFrame{};
+    Cartesian_Pos_t targetDir_worldFrame{};
+
+    // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
+    //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
+    targetStart_camFrame.x = targetParameters.x1;
+    targetStart_camFrame.y = targetParameters.y1;
+    targetStart_camFrame.z = targetParameters.z1;
+
+    //Transform targetParameters to worldFrame
+    targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
+    targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
+
+    //Show targetStart_worldFrame coords
+    std::cout << std::fixed << std::showpoint;
+    std::cout << std::setprecision(3);
+    std::cout << "targetStart \t";
+    std::cout << "x=" << targetStart_worldFrame.x;
+    std::cout << " y=" << targetStart_worldFrame.y;
+    std::cout << " z=" << targetStart_worldFrame.z;
+    std::cout << " rotX=" << targetStart_worldFrame.rotx;
+    std::cout << " rotY=" << targetStart_worldFrame.roty;
+    std::cout << " rotZ=" << targetStart_worldFrame.rotz;
+    cout << endl;
+    std::cout << std::fixed << std::showpoint;
+    std::cout << std::setprecision(3);
+    std::cout << "targetDir \t";
+    std::cout << "x=" << targetDir_worldFrame.x;
+    std::cout << " y=" << targetDir_worldFrame.y;
+    std::cout << " z=" << targetDir_worldFrame.z;
+    std::cout << " rotX=" << targetDir_worldFrame.rotx;
+    std::cout << " rotY=" << targetDir_worldFrame.roty;
+    std::cout << " rotZ=" << targetDir_worldFrame.rotz;
+    cout << endl;
+
+    double branchStart[3] {0};
+    double branchDir[3] {0};
+    branchStart[0] = targetStart_worldFrame.x;
+    branchStart[1] = targetStart_worldFrame.y;
+    branchStart[2] = targetStart_worldFrame.z;
+    branchDir[0] = targetDir_worldFrame.x;
+    branchDir[1] = targetDir_worldFrame.y;
+    branchDir[2] = targetDir_worldFrame.z;
+
+    // Declare outputs
+    int code;
+    double exitCode;
+    double qWaypointCut[6];
+    struct1_T solutionInfoApr {}; //only for debug
+    //Initialize solver parameters
+    struct0_T solverParameters {};
+    IK_InitSolverParameters(&solverParameters);
+
+    Matlab_getGikCut(currentConfig,branchStart,&solverParameters,&exitCode,&solutionInfoApr,qWaypointCut);
+    code = static_cast<int>(exitCode+0.1);
+
+    if (code != 1){
+        cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
+        // Todo: PASHA - handle the FinalApproach sequence FAIL_PATH
+    }
+    else{
+        //Print for debug
+        cout << "qWaypointCut: ";
+        cout << std::fixed;
+        cout << std::setprecision(4);
+        for (int i=0;i<6;i++){
+            cout << qWaypointCut[i] << "  ";
+        }
+        cout << endl;
 
 
-    RobotAPI_StartFinalApproachSequence();
+        //------------------------------------------------------------
+        //Calculating trajectory for Approach sequence
+        //------------------------------------------------------------
+        // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
+        bool pathFinal_IsValid {false};
+        double pathCartesian[PATH_STEP_NUM][6] {0};
+
+        pathFinal_IsValid = IK_getTrajectory(currentConfig, qWaypointCut, PATH_VELOCITY, pathCartesian);
+
+        if (pathFinal_IsValid){
+            cout << "FinalApproach: Path is valid" << endl;
+        } else{
+            cout << "FinalApproach: Path is NOT valid" << endl;
+        }
+
+        //Print for debug
+        {
+            cout << "pathCartesian:" << endl;
+            std::cout << std::fixed;
+            std::cout << std::setprecision(5);
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[0][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[1][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[2][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
+            }
+            cout << endl;
+        }
+
+        //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
+        //      terminate called after throwing an instance of 'std::bad_function_call'
+        //      what():  bad_function_call
+        //RobotAPI_StartFinalApproachSequence();
+
+    }
+
 }
+
+
+//Todo: delete
+void TEST_handleFinalApproachRequest(){
+    json blankjson;
+    handleFinalApproachRequest(blankjson);
+}
+
 
 static void sendUnreachableResponse() {
     cout << "Answer to CompV: Unreachable" << endl;
