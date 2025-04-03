@@ -364,78 +364,84 @@ static void handleSetPositionRequest(const json& json) {
     // Get waypoints and success/fail code
     IK_getWaypointsForApproach(branchStart, branchDir, eeCoords_worldFrame, currentConfig, &code, qWaypoints);
 
-    //Print for debug
-    IK_PrintWaypoints(qWaypoints);
-
-    // Choose 2nd row of qWaypoints[18] for Approach sequence
-    double waypointApr[6] {0};
-    waypointApr[0] = qWaypoints[1];
-    waypointApr[1] = qWaypoints[4];
-    waypointApr[2] = qWaypoints[7];
-    waypointApr[3] = qWaypoints[10];
-    waypointApr[4] = qWaypoints[13];
-    waypointApr[5] = qWaypoints[16];
-    cout << "Choosing 2nd row of qWaypoints:" << endl;
-    for(int i=0; i<6; i++){
-        cout << waypointApr[i] << "  ";
+    if (code != 1){
+        cout << "IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
+        // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
-    cout << endl;
+    else{
+        //Print for debug
+        IK_PrintWaypoints(qWaypoints);
 
-    //------------------------------------------------------------
-    //Calculating trajectory for Approach sequence
-    //------------------------------------------------------------
-    // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
-    bool pathAprIsValid {false};
-    double pathCartesian[PATH_STEP_NUM][6] {0};
+        // Choose 2nd row of qWaypoints[18] for Approach sequence
+        double waypointApr[6] {0};
+        waypointApr[0] = qWaypoints[1];
+        waypointApr[1] = qWaypoints[4];
+        waypointApr[2] = qWaypoints[7];
+        waypointApr[3] = qWaypoints[10];
+        waypointApr[4] = qWaypoints[13];
+        waypointApr[5] = qWaypoints[16];
+        cout << "Choosing 2nd row of qWaypoints:" << endl;
+        for(int i=0; i<6; i++){
+            cout << waypointApr[i] << "  ";
+        }
+        cout << endl;
 
-    pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, pathCartesian);
+        //------------------------------------------------------------
+        //Calculating trajectory for Approach sequence
+        //------------------------------------------------------------
+        // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
+        bool pathAprIsValid {false};
+        double pathCartesian[PATH_STEP_NUM][6] {0};
 
-    if (pathAprIsValid){
-        cout << "Path is valid" << endl;
-    } else{
-        cout << "Path is NOT valid" << endl;
+        pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, pathCartesian);
+
+        if (pathAprIsValid){
+            cout << "Path is valid" << endl;
+        } else{
+            cout << "Path is NOT valid" << endl;
+        }
+
+        //Print for debug
+        {
+            cout << "pathCartesian:" << endl;
+            std::cout << std::fixed;
+            std::cout << std::setprecision(5);
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[0][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[1][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[2][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
+            }
+            cout << endl;
+            for (int i = 0; i < 6; i++) {
+                cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
+            }
+            cout << endl;
+        }
+
+        //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
+        //      terminate called after throwing an instance of 'std::bad_function_call'
+        //      what():  bad_function_call
+        //RobotAPI_StartApproachSequence();
     }
-
-    //Print for debug
-    {
-        cout << "pathCartesian:" << endl;
-        std::cout << std::fixed;
-        std::cout << std::setprecision(5);
-        for (int i = 0; i < 6; i++) {
-            cout << pathCartesian[0][i] << "  ";
-        }
-        cout << endl;
-        for (int i = 0; i < 6; i++) {
-            cout << pathCartesian[1][i] << "  ";
-        }
-        cout << endl;
-        for (int i = 0; i < 6; i++) {
-            cout << pathCartesian[2][i] << "  ";
-        }
-        cout << endl;
-        for (int i = 0; i < 6; i++) {
-            cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
-        }
-        cout << endl;
-        for (int i = 0; i < 6; i++) {
-            cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
-        }
-        cout << endl;
-    }
-
-    //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
-    //      terminate called after throwing an instance of 'std::bad_function_call'
-    //      what():  bad_function_call
-    //RobotAPI_StartApproachSequence();
 }
+
 
 //Todo: delete
 void TEST_handleSetPositionRequest(){
     json blankjson;
-
     handleSetPositionRequest(blankjson);
-
 }
+
 
 static void handleFinalApproachRequest(const json& json) {
     cout << "Initiating <Final Approach> sequence" << endl;
