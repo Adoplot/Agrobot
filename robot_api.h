@@ -5,9 +5,6 @@
 #include "Matlab_ik_types.h"
 #include <functional>
 
-
-
-
 enum class Robot_Sequence_t {
     IDLE,
     APPROACH,
@@ -35,8 +32,6 @@ using RobotSequenceCallback = std::function<void(Robot_Sequence_t, Robot_Sequenc
 
 void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback);
 
-bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetWorldFrame);
-
 void RobotAPI_StartApproachSequence();
 void RobotAPI_StartFinalApproachSequence();
 void RobotAPI_StartCutSequence();
@@ -46,6 +41,7 @@ void RobotAPI_StartSwitchBaseSequence();
 
 bool RobotAPI_IsApproachSequenceActive();
 bool RobotAPI_IsFinalApproachSequenceActive();
+bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetParameters_worldFrame, Hyundai_Data_t *eePos_worldFrame);
 
 void RobotAPI_EndSequence(Robot_Sequence_Result_t reason);
 
