@@ -16,6 +16,8 @@ using std::endl;
 using nlohmann::json;
 
 constexpr const char* NONE_STR = "IDLE";
+constexpr const char* SYNC_TARGETS_STR = "SYNC_TARGETS";
+constexpr const char* SET_POSITION_STR = "SET_POS";
 constexpr const char* APPROACH_STR = "APPROACH";
 constexpr const char* FINAL_APPROACH_STR = "FINAL_APPROACH";
 constexpr const char* CUT_STR = "CUT";
@@ -28,11 +30,6 @@ constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
 constexpr const char* COMPV_ANSW_IN_PROGRESS = "IN_PROGRESS";
 constexpr const char* COMPV_ANSW_FAIL = "FAIL";
 constexpr const char* COMPV_ANSW_REQUESTED = "REQUESTED";
-
-constexpr const char* COMPV_REQUEST_SYNC_TARGETS = "SYNC_TARGETS";
-constexpr const char* COMPV_REQUEST_SET_POSITION = "SET_POS";
-constexpr const char* COMPV_REQUEST_CUT = "CUT";
-constexpr const char* COMPV_REQUEST_FINAL_APPROACH = "FINAL_APPROACH";
 
 static int sockfd_compv;
 
@@ -164,14 +161,17 @@ void Compv_HandleCmd(const std::string* data) {
 }
 
 static void handleReturnToBaseRequest(){
+    sendStatusResponse(RETURN_TO_BASE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartReturnToBaseSequence();
 }
 
 static void handleSwitchBaseRequest(){
+    sendStatusResponse(SWITCH_BASE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartSwitchBaseSequence();
 }
 
 static void handleStoreRequest(){
+    sendStatusResponse(STORE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartStoreSequence();
 }
 
@@ -190,6 +190,7 @@ static json jsonParse(const std::string* data) {
 }
 
 static void handleCutRequest(){
+    sendStatusResponse(CUT_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartCutSequence();
 }
 
@@ -210,7 +211,7 @@ static void handleSyncTargetsRequest(const json& json){
     Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
 
     for (auto& target : targetParameters) {
-        if(RobotAPI_IsTargetReachable(&target)){
+        if(RobotAPI_IsTargetReachable(&target, eePos_worldFrame)){
             cout << "Target ID: " << target.id << "is reachable\n"
                 << "Coordinates:\n"
                 << "x1: " << target.x1 << "\n"
@@ -255,7 +256,7 @@ static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> targets){
         convertTargetParameterToJson(j, target);
         json_positions.push_back(j);
     }
-    json_send["request"] = COMPV_REQUEST_SYNC_TARGETS;
+    json_send["request"] = SYNC_TARGETS_STR;
     json_send["status"] = COMPV_ANSW_COMPLETE;
     json_send["positions"] = json_positions;
 
@@ -363,7 +364,7 @@ static void handleSetPositionRequest(const json& json) {
 
     if (code != 1){
         cout << "IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
-        sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
+        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -397,11 +398,11 @@ static void handleSetPositionRequest(const json& json) {
             //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
-            sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_REQUESTED);
+            sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_REQUESTED);
             //RobotAPI_StartApproachSequence(); //TODO: uncomment
         } else{
             cout << "Path is NOT valid" << endl;
-            sendStatusResponse(COMPV_REQUEST_SET_POSITION, COMPV_ANSW_UNREACHABLE);
+            sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_UNREACHABLE);
         }
 
         //Print for debug
@@ -522,7 +523,7 @@ static void handleFinalApproachRequest(const json& json) {
 
     if (code != 1){
         cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
-        sendStatusResponse(COMPV_REQUEST_FINAL_APPROACH, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
+        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -549,7 +550,7 @@ static void handleFinalApproachRequest(const json& json) {
         } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
 
-            sendStatusResponse(COMPV_REQUEST_FINAL_APPROACH, COMPV_ANSW_REQUESTED);
+            sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_REQUESTED);
             //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
@@ -590,7 +591,7 @@ static void handleFinalApproachRequest(const json& json) {
 static void sendUnreachableResponse() {
     cout << "Answer to CompV: Unreachable" << endl;
     json json_send;
-    json_send["request"] = COMPV_REQUEST_SET_POSITION;
+    json_send["request"] = SET_POSITION_STR;
     json_send["status"] = COMPV_ANSW_UNREACHABLE;
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
@@ -599,7 +600,7 @@ static void sendUnreachableResponse() {
 static void sendCompleteResponse() {
     cout << "Answer to CompV: Complete" << endl;
     json json_send;
-    json_send["request"] = COMPV_REQUEST_SET_POSITION;
+    json_send["request"] = SET_POSITION_STR;
     json_send["status"] = COMPV_ANSW_COMPLETE;
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
@@ -608,7 +609,7 @@ static void sendCompleteResponse() {
 static void sendInProgressResponse() {
     cout << "Answer to CompV: In Progress" << endl;
     json json_send;
-    json_send["request"] = COMPV_REQUEST_SET_POSITION;
+    json_send["request"] = SET_POSITION_STR;
     json_send["status"] = COMPV_ANSW_IN_PROGRESS;
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
@@ -617,7 +618,7 @@ static void sendInProgressResponse() {
 static void sendCutSequenceResponse(){
     cout << "Answer to CompV: In Progress" << endl;
     json json_send;
-    json_send["request"] = COMPV_REQUEST_CUT;
+    json_send["request"] = CUT_STR;
     json_send["status"] = COMPV_ANSW_IN_PROGRESS;
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
@@ -630,26 +631,26 @@ static CompV_Request_t getJsonRequest(const json* json){
     try {
         // recv xyz, immediately sends IN_PROGRESS if not at target pos,or COMPLETE if is at target pos.
         // Then convert frames, then calc incr, then rewrites global variable with incr to be sent to OnLTrack
-        if (json->at("request") == COMPV_REQUEST_SET_POSITION)
+        if (json->at("request") == SET_POSITION_STR)
             req = COMPV_REQ_SET_POS;
 
         // send ENET1 command to robot, robot turns off Onltrack, executes ptp motion to home pos
         // and sends complete via ENET1
-        else if (json->at("request") == "RETURN_TO_BASE")
+        else if (json->at("request") == RETURN_TO_BASE_STR)
             req = COMPV_REQ_RETURN_TO_BASE;
 
         // same but closes gripper instead of ptp motion
-        else if (json->at("request") == "CUT")
+        else if (json->at("request") == CUT_STR)
             req = COMPV_REQ_CUT;
 
         // same but uses ptp motion position to the storing position
-        else if (json->at("request") == "STORE")
+        else if (json->at("request") == STORE_STR)
             req = COMPV_REQ_STORE;
 
-        else if(json->at("request") == COMPV_REQUEST_SYNC_TARGETS){
+        else if(json->at("request") == SYNC_TARGETS_STR){
             req = COMPV_REQ_SYNC_TARGETS;
 
-        } else if(json->at("request") == COMPV_REQUEST_FINAL_APPROACH){
+        } else if(json->at("request") == FINAL_APPROACH_STR){
             req = COMPV_REQ_FINAL_APPROACH;
         }
         else
