@@ -1,7 +1,7 @@
 #ifndef ROBOTARM_ONLTRACK_HANDLER_H
 #define ROBOTARM_ONLTRACK_HANDLER_H
 
-typedef struct{
+typedef struct {
     char Command;
     char char_dummy[3];
     int State;
@@ -11,7 +11,7 @@ typedef struct{
 } Hyundai_Data_t;         //ToDo: rename?
 
 
-typedef struct {
+typedef struct Cartesian_Pos_t{
     double x            {0};
     double y            {0};
     double z            {0};
@@ -21,7 +21,7 @@ typedef struct {
 } Cartesian_Pos_t;
 
 
-typedef struct{
+typedef struct Target_Parameters_t{
     int id              {0};
     bool isReachable    {false};
     double x1  {0};
