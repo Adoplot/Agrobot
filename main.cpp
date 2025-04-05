@@ -27,13 +27,8 @@ using std::endl;
 
 int main(void)
 {
-    TEST_handleSetPositionRequest();
-
     //Cartesian_Pos_t *test{};
     //std::cout << RobotAPI_TargetIsReachable(test) << endl;
-
-
-
 
     CompV_Init();
     Connection_Init();
