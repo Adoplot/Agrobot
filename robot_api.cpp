@@ -31,7 +31,12 @@ static void resetSequenceState();
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState) {
     currentSequenceType = newType;
     currentSequenceState = newState;
-    stateCallback(newType, newState);
+
+    if (stateCallback == nullptr) {
+        LOCAL_LOG_ERR("State callback is not initialized\n\tWill not send state change notifications");
+    } else {
+        stateCallback(newType, newState);
+    }
 }
 
 static void resetSequenceState(){
