@@ -9,7 +9,10 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#define ROBOTAPI_LOG(msg) std::cout << "[RobotAPI]: " << msg << std::endl
+#define LOCAL_LOG_PREFIX "[RobotAPI]: "
+
+#define LOCAL_LOG_INFO(msg) std::cout << LOCAL_LOG_PREFIX << msg << std::endl
+#define LOCAL_LOG_ERR(msg) std::cerr << LOCAL_LOG_PREFIX << msg << std::endl
 
 static int sockfd_enet1;
 static sockaddr_in sockaddr_enet1;
@@ -36,7 +39,7 @@ static void resetSequenceState(){
     currentSequenceType = Robot_Sequence_t::IDLE;
     currentSequenceState = Robot_Sequence_State_t::INIT;
 
-    ROBOTAPI_LOG("Reset sequence to idle state");
+    LOCAL_LOG_INFO("Reset sequence to idle state");
 }
 
 // Todo: PASHA - targetParameters_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
@@ -72,7 +75,7 @@ static void sendRobotCommand(int command, const std::string& action_name) {
     sockfd_enet1 = Connection_GetSockfd(SOCKTYPE_ENET1);
     sockaddr_enet1 = Connection_GetSockAddr(SOCKTYPE_ENET1);
 
-    ROBOTAPI_LOG("Initiating <" << action_name << "> sequence");
+    LOCAL_LOG_INFO("Initiating <" << action_name << "> sequence");
 
     char buf_cmd[2]{};
     snprintf(buf_cmd, sizeof(buf_cmd), "%d", command);
@@ -81,7 +84,7 @@ static void sendRobotCommand(int command, const std::string& action_name) {
 
 void RobotAPI_StartApproachSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
-        ROBOTAPI_LOG("Robot API is busy, cant start approach sequence");
+        LOCAL_LOG_INFO("Robot API is busy, cant start approach sequence");
         setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::FAIL);
 
         return;
