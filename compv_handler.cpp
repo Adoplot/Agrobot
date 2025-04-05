@@ -400,8 +400,9 @@ static void handleSetPositionRequest(const json& json) {
             //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
+            //  PASHA FIXED
             sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_REQUESTED);
-            //RobotAPI_StartApproachSequence(); //TODO: uncomment
+            RobotAPI_StartApproachSequence();
         } else{
             cout << "Path is NOT valid" << endl;
             sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_UNREACHABLE);
@@ -558,8 +559,9 @@ static void handleFinalApproachRequest(const json& json) {
             //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
-            //RobotAPI_StartFinalApproachSequence(); //TODO: uncomment
+            // PASHA FIXED
 
+            RobotAPI_StartFinalApproachSequence();
         }
 
         //Print for debug
