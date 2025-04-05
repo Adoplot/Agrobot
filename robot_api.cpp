@@ -22,8 +22,6 @@ static RobotSequenceCallback robotSequenceCallback = nullptr;
 static Robot_Sequence_t currentSequenceType = Robot_Sequence_t::IDLE;
 static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INIT;
 
-static bool withinRobotsKinematics(Cartesian_Pos_t *targetWorldFrame);
-static bool withinRobotsWorkspace(Cartesian_Pos_t *targetWorldFrame);
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState);
 static void sendRobotCommand(int command, const std::string& action_name);
 static void resetSequenceState();
