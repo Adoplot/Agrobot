@@ -295,8 +295,10 @@ static void handleSetPositionRequest(const json& json) {
     if (!targetParametersVector.empty()) {
         target = targetParametersVector[0];
     } else {
-        std::cerr << "No targets received from JSON." << std::endl;
-        //todo: handle
+        std::cerr << "No targets received from JSON\n\tAborting sequence" << std::endl;
+
+        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL);
+        return;
     }
 
     double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
@@ -457,8 +459,10 @@ static void handleFinalApproachRequest(const json& json) {
     if (!targetParametersVector.empty()) {
         target = targetParametersVector[0];
     } else {
-        std::cerr << "No targets received from JSON." << std::endl;
-        //todo: handle
+        std::cerr << "No targets received from JSON\n\tAborting sequence" << std::endl;
+
+        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_FAIL);
+        return;
     }
 
     double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
