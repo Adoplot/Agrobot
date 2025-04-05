@@ -21,7 +21,6 @@ static double currentRobotConfig[6];
 
 static RobotSequenceCallback stateCallback = nullptr;
 
-static RobotSequenceCallback robotSequenceCallback = nullptr;
 static Robot_Sequence_t currentSequenceType = Robot_Sequence_t::IDLE;
 static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INIT;
 
