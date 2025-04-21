@@ -161,17 +161,14 @@ void Compv_HandleCmd(const std::string* data) {
 }
 
 static void handleReturnToBaseRequest(){
-    sendStatusResponse(RETURN_TO_BASE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartReturnToBaseSequence();
 }
 
 static void handleSwitchBaseRequest(){
-    sendStatusResponse(SWITCH_BASE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartSwitchBaseSequence();
 }
 
 static void handleStoreRequest(){
-    sendStatusResponse(STORE_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartStoreSequence();
 }
 
@@ -401,7 +398,6 @@ static void handleSetPositionRequest(const json& json) {
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
             //  PASHA FIXED
-            sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_REQUESTED);
             RobotAPI_StartApproachSequence();
         } else{
             cout << "Path is NOT valid" << endl;
