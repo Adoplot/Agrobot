@@ -118,6 +118,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     bool orientation_reached = Transform_CompareOrientations(ORIENTATION_ACCURACY, eePos_worldFrame, targetPos_worldFrame);
 
     if ((distance2target <= POSITIONING_ACCURACY) && orientation_reached) {
+        cout << "Target reached\n" << endl;
         RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
     } else {
         // Send increments to hyundai
