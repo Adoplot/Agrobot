@@ -104,9 +104,9 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     //printOnltrackData(eePos_worldFrame, PRINT_RECV);
 
     // Send zero increments while zeros are received from Compv, so robot does not move
-    if (((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) ||
-            !RobotAPI_IsApproachSequenceActive() ||
-            !RobotAPI_IsFinalApproachSequenceActive()) {
+    if (((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) && (
+            !RobotAPI_IsApproachSequenceActive() &&
+            !RobotAPI_IsFinalApproachSequenceActive())) {
 
         zeroingPosIncrements(&sendIncrements);
     }
