@@ -548,6 +548,7 @@ static void handleFinalApproachRequest(const json& json) {
 
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
+            RobotAPI_StartFinalApproachSequence();
         } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
 
@@ -557,7 +558,6 @@ static void handleFinalApproachRequest(const json& json) {
             //      what():  bad_function_call
             // PASHA FIXED
 
-            RobotAPI_StartFinalApproachSequence();
         }
 
         //Print for debug
