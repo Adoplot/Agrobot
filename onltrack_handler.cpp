@@ -102,6 +102,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     Cartesian_Pos_t* targetPos_worldFrame = Compv_GetTargetPosWorldFrame();
 
     //printOnltrackData(eePos_worldFrame, PRINT_RECV);
+    auto robotPath = RobotAPI_GetPathCopy();
 
     // Send zero increments while zeros are received from Compv, so robot does not move
     if (((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) && (

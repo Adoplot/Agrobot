@@ -398,6 +398,7 @@ static void handleSetPositionRequest(const json& json) {
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
             //  PASHA FIXED
+            RobotAPI_SetPath(pathCartesian);
             RobotAPI_StartApproachSequence();
         } else{
             cout << "Path is NOT valid" << endl;
@@ -548,6 +549,7 @@ static void handleFinalApproachRequest(const json& json) {
 
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
+            RobotAPI_SetPath(pathCartesian);
             RobotAPI_StartFinalApproachSequence();
         } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
