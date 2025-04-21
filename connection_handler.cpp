@@ -54,7 +54,7 @@ static int initializeSocket(int port, bool socktype);
 static int listenForClients(const int sockfd);
 
 
-// Interface to get pointer to eePos_worldFrame
+// Interface to get pointer to eePos_worldFrame //todo move to RobotAPI
 Hyundai_Data_t* Connection_GetEePosWorldFrame() {
     return &eePos_worldFrame;
 }

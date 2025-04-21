@@ -110,7 +110,8 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         zeroingPosIncrements(&sendIncrements);
     }
     else {
-        pos_increments = Transform_CalculatePositionIncrements(eePos_worldFrame, targetPos_worldFrame);
+        //TODO: adoplot new implementation with robotPath variable
+        //pos_increments = Transform_CalculatePositionIncrements(eePos_worldFrame, targetPos_worldFrame);
     }
 
     double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);

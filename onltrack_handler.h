@@ -32,7 +32,6 @@ typedef struct Target_Parameters_t{
     double z2  {0};
 } Target_Parameters_t;   //ToDo: PASHA - this is temporary struct, keep the name, keep x1,y1,z1,x2,y2,z2.
 
-
 void Onltrack_AnswerHandle(const Hyundai_Data_t* eePos_worldFrame, long buflen);
 
 #endif //ROBOTARM_ONLTRACK_HANDLER_H
