@@ -98,16 +98,14 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     Cartesian_Pos_t pos_increments{0,0,0,0,0,0};
     Cartesian_Pos_t ori_increments{0,0,0,0,0,0};
 
-    Cartesian_Pos_t* targetPos_camFrame = Compv_GetTargetPosCamFrame();
     Cartesian_Pos_t* targetPos_worldFrame = Compv_GetTargetPosWorldFrame();
 
     //printOnltrackData(eePos_worldFrame, PRINT_RECV);
     auto robotPath = RobotAPI_GetPathCopy();
 
-    // Send zero increments while zeros are received from Compv, so robot does not move
-    if (((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) && (
-            !RobotAPI_IsApproachSequenceActive() &&
-            !RobotAPI_IsFinalApproachSequenceActive())) {
+    // Send zero increments while robot is not performing approach or final approach
+    if (    !RobotAPI_IsApproachSequenceActive() &&
+            !RobotAPI_IsFinalApproachSequenceActive()) {
 
         zeroingPosIncrements(&sendIncrements);
     }
