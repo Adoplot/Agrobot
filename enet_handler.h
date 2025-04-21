@@ -16,7 +16,8 @@ typedef enum {
     ENET_CUT_COMPLETE,
     ENET_STORE_COMPLETE,
     ENET_SWITCH_BASE,
-    ENET_SWITCH_BASE_COMPLETE
+    ENET_SWITCH_BASE_COMPLETE,
+    ENET_ROBOT_CONFIGURATION ///< Received robot axis configuration
 } Enet_Cmd_t;
 
 
@@ -26,6 +27,7 @@ typedef struct Enet_RecvStr_t {
     char cut[14] = "cut_complete\012";
     char store[16] = "store_complete\012";
     char switch_base[22] = "switch_base_complete\012";
+    char robot_configuration[20] = "robot_configuration"; //do not use \012 here
 } Enet_RecvStr_t;
 
 void Enet1_HandleCmd(char* buffer, long buf_len);

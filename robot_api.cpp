@@ -4,6 +4,7 @@
 #include "Matlab_ik.h"
 #include "Matlab_ik_types.h"
 #include "ik_wrapper.h"
+#include <sstream>
 
 using std::cout;
 using std::cerr;
@@ -27,6 +28,7 @@ static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INI
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState);
 static void sendRobotCommand(int command, const std::string& action_name);
 static void resetSequenceState();
+static void setRobotConfig(double a1, double a2, double a3, double a4, double a5, double a6);
 
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState) {
     currentSequenceType = newType;
@@ -69,6 +71,23 @@ bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetParameters_worldFrame
         return false;
     }
 
+}
+
+static void setRobotConfig(double a1, double a2, double a3, double a4, double a5, double a6){
+    currentRobotConfig[0] = a1;
+    currentRobotConfig[1] = a2;
+    currentRobotConfig[2] = a3;
+    currentRobotConfig[3] = a4;
+    currentRobotConfig[4] = a5;
+    currentRobotConfig[5] = a6;
+
+    std::stringstream ss;
+    ss << "Set Robot config: ";
+    for (int i = 0; i < 6; ++i) {
+        ss << currentRobotConfig[i];
+        if (i < 5) ss << ", ";
+    }
+    LOCAL_LOG_INFO(ss.str());
 }
 
 double* RobotAPI_GetCurrentConfig(){
@@ -160,7 +179,15 @@ void RobotAPI_StartSwitchBaseSequence(){
     setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::REQUESTED);
 }
 
-void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd){
+void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
+    Enet_RecvStr_t enet_str;
+    size_t prefix_len;
+    const char* data_start;
+    double values[6];
+    int i = 0;
+    char temp[128];
+    char* token;
+
     switch(cmd){
         case ENET_UNDEFINED: {
             cerr << "ENET_UNDEFINED: can't recognise received ENET1 cmd" << endl;
@@ -174,26 +201,89 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd){
         }
         case ENET_RETURN_TO_BASE_COMPLETE: {
             cout << "ENET1 received <return_to_base_complete>" << endl;
-            setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::COMPLETE);
+            if(currentSequenceType == Robot_Sequence_t::RETURN_TO_BASE){
+                setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::COMPLETE);
+            } else {
+                LOCAL_LOG_ERR("Sequence type does not match");
+            }
+
             break;
         }
 
         case ENET_CUT_COMPLETE:
             cout << "ENET1 received <cut_complete>" << endl;
-            setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::COMPLETE);
+
+            if(currentSequenceType == Robot_Sequence_t::CUT){
+                setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::COMPLETE);
+            } else {
+                LOCAL_LOG_ERR("Sequence type does not match");
+            }
+
             break;
 
         case ENET_STORE_COMPLETE:
             cout << "ENET1 received <store_complete>" << endl;
-            setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::COMPLETE);
+
+            if(currentSequenceType == Robot_Sequence_t::STORE){
+                setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::COMPLETE);
+            } else {
+                LOCAL_LOG_ERR("Sequence type does not match");
+            }
             break;
 
         case ENET_SWITCH_BASE_COMPLETE:
             cout << "ENET1 received <switch_base_complete>" << endl;
-            setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE);
+
+            if(currentSequenceType == Robot_Sequence_t::SWITCH_BASE){
+                setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE);
+            } else {
+                LOCAL_LOG_ERR("Sequence type does not match");
+            }
+
             break;
 
-        default:
+        case ENET_ROBOT_CONFIGURATION:
+            cout << "ENET1 received <robot_configuration>" << endl;
+
+            if (buf_len == 0 || buffer[buf_len - 1] != '\n') {
+                LOCAL_LOG_ERR("Message incomplete (missing \\012)");
+                return;
+            }
+
+            // Strip newline for clean processing
+            buffer[buf_len - 1] = '\0';
+
+            // Step 2: Check prefix
+            prefix_len = strlen(enet_str.robot_configuration);
+
+            if (strncmp(buffer, enet_str.robot_configuration, prefix_len) != 0) {
+                LOCAL_LOG_ERR("Message does not start with 'robot_configuration'");
+                return;
+            }
+
+            // Step 3: Move past the prefix and whitespace
+            data_start = buffer + prefix_len;
+            while (*data_start == ' ') data_start++;
+
+            // Make a copy since strtok modifies the string
+            strncpy(temp, data_start, sizeof(temp));
+            temp[sizeof(temp) - 1] = '\0';
+
+            token = strtok(temp, ",");
+            while (token && i < 6) {
+                values[i++] = strtod(token, NULL);
+                token = strtok(NULL, ",");
+            }
+
+            if (i != 6) {
+                LOCAL_LOG_ERR("Invalid number of values (expected 6)");
+                return ;
+            }
+
+            setRobotConfig(values[0], values[1], values[2], values[3], values[4], values[5]);
+            break;
+
+            default:
             cerr << "enet1Cmd: unexpected enet1Cmd value" << endl;
             break;
     }

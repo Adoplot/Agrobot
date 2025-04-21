@@ -47,7 +47,7 @@ void RobotAPI_EndSequence(Robot_Sequence_Result_t reason);
 
 double* RobotAPI_GetCurrentConfig();
 
-void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd);
+void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len);
 
 void RobotAPI_ProcessAction();
 

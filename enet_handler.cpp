@@ -38,21 +38,19 @@ static Enet_Cmd_t getEnet1CmdType(char* buffer, long buf_len){
         return ENET_STORE_COMPLETE;
     }
 
+    if(strncmp(buffer, enet_recv_str.robot_configuration, strlen(enet_recv_str.robot_configuration)) == 0){
+        return ENET_ROBOT_CONFIGURATION;
+    }
+
     return ENET_UNDEFINED;
 }
 
 
 // Handles cmd received from Hyundai controller
 void Enet1_HandleCmd(char* buffer, long buf_len){
-    // Get socket data for Compv
-    int sockfd_compv = Connection_GetSockfd(SOCKTYPE_COMPV);
-    sockaddr_in sockaddr_compv = Connection_GetSockAddr(SOCKTYPE_COMPV);
-
-    // Declare jsons and strings to send
-    nlohmann::json json_send{};
     std::string string_send{};
 
     Enet_Cmd_t enet1Cmd = getEnet1CmdType(buffer, buf_len);
 
-    RobotAPI_HandleEnetResponse(enet1Cmd);
+    RobotAPI_HandleEnetResponse(enet1Cmd, buffer, buf_len);
 }
