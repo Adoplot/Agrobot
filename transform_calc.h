@@ -25,6 +25,10 @@
 #define CIRCLE_RADIUS       0.3
 #define CIRCLE_POINT_NUM    10
 
+double Transform_getDistanceBetweenPositions(const Hyundai_Data_t *eePos_worldFrame, const std::array<double, 6> target);
+
+int Transform_getClosestPathPoint(const std::vector<std::array<double, 6>> &robotPath,
+                                  const Hyundai_Data_t *eePos_worldFrame, const int pathLength);
 
 bool Transform_getIncrements(const double pathCartesian[PATH_STEP_NUM][6], const int step,
                              const Hyundai_Data_t *eePos_worldFrame, double increment[6]);

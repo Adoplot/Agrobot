@@ -6,6 +6,7 @@
 #include <fstream>
 #include "connection_handler.h"
 #include "ik_wrapper.h"
+#include <vector>
 
 using Eigen::Quaterniond;
 using Eigen::Matrix4d;
@@ -17,6 +18,45 @@ using std::cerr;
 using std::endl;
 
 static Quaterniond quat_conjugate(const Quaterniond q);
+
+
+// Calculates distance between two points in 3D space
+// Returns: distance in meters
+double Transform_getDistanceBetweenPositions(const Hyundai_Data_t *eePos_worldFrame, const std::array<double, 6> target){
+    double x1,x2,y1,y2,z1,z2;
+    x1 = eePos_worldFrame->coord[0];
+    y1 = eePos_worldFrame->coord[1];
+    z1 = eePos_worldFrame->coord[2];
+    x2 = target.at(0);
+    y2 = target.at(1);
+    z2 = target.at(2);
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2));
+}
+
+
+int Transform_getClosestPathPoint(const std::vector<std::array<double, 6>> &robotPath, const Hyundai_Data_t *eePos_worldFrame,
+                                  const int pathLength){
+    int closestIndex = -1;
+    double minDistance = 100000;
+
+    for (int i = 0; i < pathLength; ++i) {
+        double dist = Transform_getDistanceBetweenPositions(eePos_worldFrame, robotPath[i]);
+        if (dist < minDistance) {
+            minDistance = dist;
+            closestIndex = i;
+        }
+    }
+
+    if (minDistance >= 0){
+        return closestIndex;
+    }
+    else{
+        std::cerr << "Transform_getDistanceBetweenPositions: fault when calculating distance" << std::endl;
+        return -1;
+    }
+}
+
+
 
 /*
  * Calculates increments for specified step in Cartesian trajectory. Increment = target_coords - current_coords
@@ -484,7 +524,7 @@ Cartesian_Pos_t Transform_ConvertQuat2Euler(Quaterniond q) {
     return eul;
 }
 
-
+// Todo: delete and replace with newer version
 // Calculates distance between two points in 3D space
 // Returns: distance in meters
 double Transform_CalcDistanceBetweenPoints(const Hyundai_Data_t *eePos_worldFrame, const Cartesian_Pos_t *targetPos_worldFrame){
