@@ -95,6 +95,8 @@ static void handleOnltrackStartCmd(const Hyundai_Data_t *eePos_worldFrame){
 static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     int sockfd_onltrack = Connection_GetSockfd(SOCKTYPE_ONLTRACK);
     sockaddr_in sockaddr_onltrack = Connection_GetSockAddr(SOCKTYPE_ONLTRACK);
+    double increments[6] {};
+    bool incrementsIsValid {false};
     Cartesian_Pos_t pos_increments{0,0,0,0,0,0};
     Cartesian_Pos_t ori_increments{0,0,0,0,0,0};
 
@@ -110,8 +112,18 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         zeroingPosIncrements(&sendIncrements);
     }
     else {
-        //TODO: adoplot new implementation with robotPath variable
-        //pos_increments = Transform_CalculatePositionIncrements(eePos_worldFrame, targetPos_worldFrame);
+        //find closest path point to current robot position
+        int pathClosestIndex = Transform_getClosestPathPoint(robotPath, eePos_worldFrame, PATH_STEP_NUM);
+        //calculate increments
+        incrementsIsValid = Transform_getIncrements(robotPath,PATH_STEP_NUM,
+                                                    pathClosestIndex, eePos_worldFrame,increments);
+        //TODO: PASHA combine pos_incr and ori_incr in one increment
+        pos_increments.x = increments[0];
+        pos_increments.y = increments[1];
+        pos_increments.z = increments[2];
+        ori_increments.rotx = increments[3];
+        ori_increments.roty = increments[4];
+        ori_increments.rotz = increments[5];
     }
 
     double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);
@@ -122,7 +134,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
     } else {
         // Send increments to hyundai
-
+        // TODO: PASHA maybe check if incrementsIsValid ?
         sendIncrements.coord[0] = pos_increments.x;
         sendIncrements.coord[1] = pos_increments.y;
         sendIncrements.coord[2] = pos_increments.z;
