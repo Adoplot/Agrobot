@@ -81,7 +81,7 @@ static void setRobotConfig(double a1, double a2, double a3, double a4, double a5
     currentRobotConfig[3] = a4;
     currentRobotConfig[4] = a5;
     currentRobotConfig[5] = a6;
-
+/*
     std::stringstream ss;
     ss << "Set Robot config: ";
     for (int i = 0; i < 6; ++i) {
@@ -89,6 +89,7 @@ static void setRobotConfig(double a1, double a2, double a3, double a4, double a5
         if (i < 5) ss << ", ";
     }
     LOCAL_LOG_INFO(ss.str());
+    */
 }
 
 double* RobotAPI_GetCurrentConfig(){
@@ -244,7 +245,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             break;
 
         case ENET_ROBOT_CONFIGURATION:
-            cout << "ENET1 received <robot_configuration>" << endl;
+            //cout << "ENET1 received <robot_configuration>" << endl;
 
             if (buf_len == 0 || buffer[buf_len - 2] != '\n') {
                 LOCAL_LOG_ERR("Message incomplete (missing \\012)");
