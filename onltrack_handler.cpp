@@ -6,6 +6,8 @@
 #include "connection_handler.h"
 #include "transform_calc.h"
 #include "robot_api.h"
+#include <fstream>
+#include <iomanip>  // std::setprecision()
 
 using std::cout;
 using std::cerr;
@@ -17,6 +19,8 @@ typedef enum {
     ONLTRACK_CMD_PLAY = 'P',
     ONLTRACK_CMD_END = 'F'
 } Onltrack_Cmd_t;
+
+std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
 static Hyundai_Data_t sendIncrements{};
 
@@ -142,6 +146,20 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         sendIncrements.coord[4] = ori_increments.roty;
         sendIncrements.coord[5] = ori_increments.rotz;
 
+
+        if(!fs){
+            std::cerr<<"Cannot open the output file."<<std::endl;
+        }else {
+            fs << std::fixed << std::setprecision(6) << endl;
+            fs << sendIncrements.coord[0] << "\t";
+            fs << sendIncrements.coord[1] << "\t";
+            fs << sendIncrements.coord[2] << "\t";
+            fs << sendIncrements.coord[3] << "\t";
+            fs << sendIncrements.coord[4] << "\t";
+            fs << sendIncrements.coord[5];
+            fs << std::endl;
+        }
+
         sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
         Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
@@ -167,6 +185,9 @@ static void handleOnltrackEndCmd(){
     CompV_SetTargetPosWorldFrame(zeros);
 
     Connection_SetOnltrackState(ONLTRACK_OFF);
+
+    // Close log_increments.txt
+    fs.close();
 }
 
 
