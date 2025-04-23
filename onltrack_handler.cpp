@@ -20,6 +20,8 @@ typedef enum {
     ONLTRACK_CMD_END = 'F'
 } Onltrack_Cmd_t;
 
+static int pathIndexCounter {0};
+
 std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
 static Hyundai_Data_t sendIncrements{};
@@ -117,10 +119,12 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     }
     else {
         //find closest path point to current robot position
-        int pathClosestIndex = Transform_getClosestPathPoint(robotPath, eePos_worldFrame, PATH_STEP_NUM);
+        //int pathClosestIndex = Transform_getClosestPathPoint(robotPath, eePos_worldFrame, PATH_STEP_NUM);
         //calculate increments
-        incrementsIsValid = Transform_getIncrements(robotPath,PATH_STEP_NUM,
-                                                    pathClosestIndex, eePos_worldFrame,increments);
+
+        incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
+                                                    pathIndexCounter, eePos_worldFrame, increments);
+
         //TODO: PASHA combine pos_incr and ori_incr in one increment
         pos_increments.x = increments[0];
         pos_increments.y = increments[1];
@@ -128,6 +132,15 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         ori_increments.rotx = increments[3];
         ori_increments.roty = increments[4];
         ori_increments.rotz = increments[5];
+
+        if (pathIndexCounter < PATH_STEP_NUM-1){
+            pathIndexCounter++;
+        }
+        else{
+            zeroingPosIncrements(&sendIncrements);
+            zeroingOriIncrements(&sendIncrements);
+
+        }
     }
 
     double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);
