@@ -246,7 +246,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
         case ENET_ROBOT_CONFIGURATION:
             cout << "ENET1 received <robot_configuration>" << endl;
 
-            if (buf_len == 0 || buffer[buf_len - 1] != '\n') {
+            if (buf_len == 0 || buffer[buf_len - 2] != '\n') {
                 LOCAL_LOG_ERR("Message incomplete (missing \\012)");
                 return;
             }
@@ -270,10 +270,10 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             strncpy(temp, data_start, sizeof(temp));
             temp[sizeof(temp) - 1] = '\0';
 
-            token = strtok(temp, ",");
+            token = strtok(temp, " ");
             while (token && i < 6) {
-                values[i++] = strtod(token, NULL);
-                token = strtok(NULL, ",");
+                values[i++] = Transform_Deg2Rad(strtod(token, NULL));
+                token = strtok(NULL, " ");
             }
 
             if (i != 6) {
