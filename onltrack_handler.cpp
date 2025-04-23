@@ -125,6 +125,9 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
                                                     pathIndexCounter, eePos_worldFrame, increments);
 
+        //TODO: add Axis limit check
+        //TODO: add collision check
+
         //TODO: PASHA combine pos_incr and ori_incr in one increment
         pos_increments.x = increments[0];
         pos_increments.y = increments[1];
@@ -139,19 +142,21 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         else{
             zeroingPosIncrements(&sendIncrements);
             zeroingOriIncrements(&sendIncrements);
-
         }
     }
 
     double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);
     bool orientation_reached = Transform_CompareOrientations(ORIENTATION_ACCURACY, eePos_worldFrame, targetPos_worldFrame);
 
+    //TODO: Pasha - distance2target and orientation_reached could not work correctly.
+    //              Make SUCCESS based on the fact that robot executed last path's point.
     if ((distance2target <= POSITIONING_ACCURACY) && orientation_reached) {
         cout << "Target reached\n" << endl;
         RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
     } else {
         // Send increments to hyundai
-        // TODO: PASHA maybe check if incrementsIsValid ?
+        // TODO: PASHA - maybe check if increments are valid?
+        //               (correct Transform_getIncrements output, axis limits, collision check)
         sendIncrements.coord[0] = pos_increments.x;
         sendIncrements.coord[1] = pos_increments.y;
         sendIncrements.coord[2] = pos_increments.z;
@@ -159,7 +164,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         sendIncrements.coord[4] = ori_increments.roty;
         sendIncrements.coord[5] = ori_increments.rotz;
 
-
+        //Logging into log_increments.txt
         if(!fs){
             std::cerr<<"Cannot open the output file."<<std::endl;
         }else {

@@ -6,6 +6,8 @@
 #include <iomanip>
 #include "ik_wrapper.h"
 
+//TODO: Adoplot - add cartesian constraint for both GIKs (to not collide with robot's platform)
+//TODO: Adoplot - make path generation with controlled speed (variable-length path vector)
 
 /*
  * Calculates Cartesian trajectory from one config to another, based on speed and number of steps
