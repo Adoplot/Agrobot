@@ -20,7 +20,7 @@ typedef enum {
     ONLTRACK_CMD_END = 'F'
 } Onltrack_Cmd_t;
 
-static int pathIndexCounter {0};
+static int pathIndexCounter {0}; //todo: implement reset before starting new sequence
 
 std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
@@ -104,7 +104,8 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     double increments[6] {};
     bool incrementsIsValid {false};
     Cartesian_Pos_t pos_increments{0,0,0,0,0,0};
-    Cartesian_Pos_t ori_increments{0,0,0,0,0,0};
+    bool pathEndReached = false;
+    bool collisionDetected = false;
 
     Cartesian_Pos_t* targetPos_worldFrame = Compv_GetTargetPosWorldFrame();
 
@@ -116,75 +117,101 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
             !RobotAPI_IsFinalApproachSequenceActive()) {
 
         zeroingPosIncrements(&sendIncrements);
-    }
-    else {
+    } else {
         //find closest path point to current robot position
         //int pathClosestIndex = Transform_getClosestPathPoint(robotPath, eePos_worldFrame, PATH_STEP_NUM);
         //calculate increments
 
-        incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
-                                                    pathIndexCounter, eePos_worldFrame, increments);
+        if (pathIndexCounter < PATH_STEP_NUM) {
+            incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
+                                                        pathIndexCounter, eePos_worldFrame, increments);
 
-        //TODO: add Axis limit check
-        //TODO: add collision check
+            //TODO: add Axis limit check
+            //TODO: add collision check
 
-        //TODO: PASHA combine pos_incr and ori_incr in one increment
-        pos_increments.x = increments[0];
-        pos_increments.y = increments[1];
-        pos_increments.z = increments[2];
-        ori_increments.rotx = increments[3];
-        ori_increments.roty = increments[4];
-        ori_increments.rotz = increments[5];
+            for (int i = 0; i < 6; i++) { // each axis
 
-        if (pathIndexCounter < PATH_STEP_NUM-1){
+                if (collisionDetected(axis[i])) {
+                    cerr << "Axis [" << i << "] collision detected" << endl;
+                    collisionDetected = true;
+                }
+            }
+
+            for (int i = 0; i < 6; i++) { // each increment???
+
+                if (collisionDetected(increments[i])) {
+                    cerr << "Self collision detected" << endl;
+                    collisionDetected = true;
+                }
+            }
+
+            if (collisionDetected || !incrementsIsValid) {
+                zeroingPosIncrements(&sendIncrements);
+                zeroingOriIncrements(&sendIncrements);
+
+            } else {
+
+                //TODO: PASHA combine pos_incr and ori_incr in one increment  - done
+                pos_increments.x = increments[0];
+                pos_increments.y = increments[1];
+                pos_increments.z = increments[2];
+                pos_increments.rotx = increments[3];
+                pos_increments.roty = increments[4];
+                pos_increments.rotz = increments[5];
+
+            }
+
             pathIndexCounter++;
-        }
-        else{
+
+        } else {
+            pathEndReached = true;
             zeroingPosIncrements(&sendIncrements);
             zeroingOriIncrements(&sendIncrements);
         }
     }
 
-    double distance2target = Transform_CalcDistanceBetweenPoints(eePos_worldFrame, targetPos_worldFrame);
-    bool orientation_reached = Transform_CompareOrientations(ORIENTATION_ACCURACY, eePos_worldFrame, targetPos_worldFrame);
+    // Send increments to hyundai
+    // TODO: PASHA - maybe check if increments are valid? - done
+    //               (correct Transform_getIncrements output, axis limits, collision check)
+    sendIncrements.coord[0] = pos_increments.x;
+    sendIncrements.coord[1] = pos_increments.y;
+    sendIncrements.coord[2] = pos_increments.z;
+    sendIncrements.coord[3] = pos_increments.rotx;
+    sendIncrements.coord[4] = pos_increments.roty;
+    sendIncrements.coord[5] = pos_increments.rotz;
 
-    //TODO: Pasha - distance2target and orientation_reached could not work correctly.
-    //              Make SUCCESS based on the fact that robot executed last path's point.
-    if ((distance2target <= POSITIONING_ACCURACY) && orientation_reached) {
-        cout << "Target reached\n" << endl;
-        RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
+    //Logging into log_increments.txt
+    if (!fs) {
+        std::cerr << "Cannot open the output file." << std::endl;
     } else {
-        // Send increments to hyundai
-        // TODO: PASHA - maybe check if increments are valid?
-        //               (correct Transform_getIncrements output, axis limits, collision check)
-        sendIncrements.coord[0] = pos_increments.x;
-        sendIncrements.coord[1] = pos_increments.y;
-        sendIncrements.coord[2] = pos_increments.z;
-        sendIncrements.coord[3] = ori_increments.rotx;
-        sendIncrements.coord[4] = ori_increments.roty;
-        sendIncrements.coord[5] = ori_increments.rotz;
-
-        //Logging into log_increments.txt
-        if(!fs){
-            std::cerr<<"Cannot open the output file."<<std::endl;
-        }else {
-            fs << std::fixed << std::setprecision(6) << endl;
-            fs << sendIncrements.coord[0] << "\t";
-            fs << sendIncrements.coord[1] << "\t";
-            fs << sendIncrements.coord[2] << "\t";
-            fs << sendIncrements.coord[3] << "\t";
-            fs << sendIncrements.coord[4] << "\t";
-            fs << sendIncrements.coord[5];
-            fs << std::endl;
-        }
-
-        sendIncrements.Command = ONLTRACK_CMD_PLAY;
-
-        Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
+        fs << std::fixed << std::setprecision(6) << endl;
+        fs << sendIncrements.coord[0] << "\t";
+        fs << sendIncrements.coord[1] << "\t";
+        fs << sendIncrements.coord[2] << "\t";
+        fs << sendIncrements.coord[3] << "\t";
+        fs << sendIncrements.coord[4] << "\t";
+        fs << sendIncrements.coord[5];
+        fs << std::endl;
     }
 
-    for(int i = 0; i < 3; i++){
-        if(sendIncrements.coord[i] > 0.5){
+    if (pathEndReached) {
+        cout << "Target reached\n" << endl;
+        pathIndexCounter = 0;
+        RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
+
+    } else if (collisionDetected || !incrementsIsValid) {
+        cout << "Target unreachable, ending sequence\n" << endl;
+        pathIndexCounter = 0;
+        RobotAPI_EndSequence(Robot_Sequence_Result_t::UNREACHABLE);
+    }
+
+    sendIncrements.Command = ONLTRACK_CMD_PLAY;
+
+    Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
+
+
+    for (int i = 0; i < 3; i++) {
+        if (sendIncrements.coord[i] > 0.5) {
             printOnltrackData(&sendIncrements, PRINT_SEND);
         }
     }
