@@ -187,15 +187,15 @@ static json jsonParse(const std::string* data) {
 }
 
 static void handleCutRequest(){
-    sendStatusResponse(CUT_STR, COMPV_ANSW_REQUESTED);
     RobotAPI_StartCutSequence();
 }
 
-static void sendStatusResponse(const char* request, const char* status){
+static void sendStatusResponse(const char* request, const char* status, const char* result){
     cout << "Answer to CompV: status response" << endl; //todo elaborate
     json json_send;
     json_send["request"] = request;
     json_send["status"] = status;
+    json_send["result"] = result;
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
 }
