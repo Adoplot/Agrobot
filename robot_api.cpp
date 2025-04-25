@@ -26,19 +26,19 @@ static RobotSequenceCallback stateCallback = nullptr;
 static Robot_Sequence_t currentSequenceType = Robot_Sequence_t::IDLE;
 static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INIT;
 
-static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState);
+static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result);
 static void sendRobotCommand(int command, const std::string& action_name);
 static void resetSequenceState();
 static void setRobotConfig(double a1, double a2, double a3, double a4, double a5, double a6);
 
-static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState) {
+static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result) {
     currentSequenceType = newType;
     currentSequenceState = newState;
 
     if (stateCallback == nullptr) {
         LOCAL_LOG_ERR("State callback is not initialized\n\tWill not send state change notifications");
     } else {
-        stateCallback(newType, newState);
+        stateCallback(newType, newState, result);
     }
 }
 
@@ -110,75 +110,75 @@ static void sendRobotCommand(int command, const std::string& action_name) {
 void RobotAPI_StartApproachSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         LOCAL_LOG_INFO("Robot API is busy, cant start approach sequence");
-        setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     // coordinates are handled in handleOnltrackPlayCmd()
-    setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_StartFinalApproachSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start approach sequence" << endl; //todo: enhance
 
-        setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     // coordinates are handled in handleOnltrackPlayCmd()
-    setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_StartCutSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE) {
         cout << "Robot API is busy, cant start cut sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     sendRobotCommand(ENET_CUT, "Cut");
-    setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 
 }
 
 void RobotAPI_StartStoreSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start store sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     sendRobotCommand(ENET_STORE, "Store");
-    setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_StartReturnToBaseSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start return to base sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     sendRobotCommand(ENET_RETURN_TO_BASE, "Return To Base");
-    setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_StartSwitchBaseSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start switch base sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::FAIL);
+        setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
         return;
     }
 
     sendRobotCommand(ENET_SWITCH_BASE, "Switch Base");
-    setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::REQUESTED);
+    setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
@@ -204,7 +204,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
         case ENET_RETURN_TO_BASE_COMPLETE: {
             cout << "ENET1 received <return_to_base_complete>" << endl;
             if(currentSequenceType == Robot_Sequence_t::RETURN_TO_BASE){
-                setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::COMPLETE);
+                setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
             } else {
                 LOCAL_LOG_ERR("Sequence type does not match");
             }
@@ -216,7 +216,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             cout << "ENET1 received <cut_complete>" << endl;
 
             if(currentSequenceType == Robot_Sequence_t::CUT){
-                setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::COMPLETE);
+                setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
             } else {
                 LOCAL_LOG_ERR("Sequence type does not match");
             }
@@ -227,7 +227,17 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             cout << "ENET1 received <store_complete>" << endl;
 
             if(currentSequenceType == Robot_Sequence_t::STORE){
-                setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::COMPLETE);
+                setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
+            } else {
+                LOCAL_LOG_ERR("Sequence type does not match");
+            }
+            break;
+
+        case ENET_SWITCH_BASE_NO_BASE_LEFT:
+            cout << "ENET1 received <ENET_SWITCH_BASE_NO_BASE_LEFT>" << endl;
+
+            if(currentSequenceType == Robot_Sequence_t::SWITCH_BASE){
+                setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::BASE_END);
             } else {
                 LOCAL_LOG_ERR("Sequence type does not match");
             }
@@ -237,7 +247,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             cout << "ENET1 received <switch_base_complete>" << endl;
 
             if(currentSequenceType == Robot_Sequence_t::SWITCH_BASE){
-                setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE);
+                setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
             } else {
                 LOCAL_LOG_ERR("Sequence type does not match");
             }
@@ -304,11 +314,7 @@ void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback){
 }
 
 void RobotAPI_EndSequence(Robot_Sequence_Result_t reason){
-    if(reason != Robot_Sequence_Result_t::SUCCESS){
-        setSequenceState(currentSequenceType, Robot_Sequence_State_t::FAIL);
-    } else {
-        setSequenceState(currentSequenceType, Robot_Sequence_State_t::COMPLETE);
-    }
+    setSequenceState(currentSequenceType, Robot_Sequence_State_t::COMPLETE, reason);
 }
 
 void RobotAPI_ProcessAction(){
