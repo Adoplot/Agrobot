@@ -133,7 +133,7 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
 bool IK_AxisInLimits(const double axisValue, const int axisNum){
     // Check if axisNum is in bounds (0-5)
     if ((axisNum > 5) || (axisNum < 0)){
-        std::cerr << "IK_AxisInLimits(): axisNum is out of bounds! Stopping axis limit check. axisNum = " << axisNum << std::endl;
+        std::cerr << "IK_AxisInLimits(): axisNum is out of bounds! axisNum = " << axisNum+1 << std::endl;
         return false;
     }
     const double minLimits[6] = {Transform_Deg2Rad(AXIS_MIN_A1), Transform_Deg2Rad(AXIS_MIN_A2), Transform_Deg2Rad(AXIS_MIN_A3),

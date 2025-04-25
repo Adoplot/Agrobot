@@ -8,6 +8,7 @@
 #include "robot_api.h"
 #include <fstream>
 #include <iomanip>  // std::setprecision()
+#include "Matlab_ik.h"
 
 using std::cout;
 using std::cerr;
@@ -118,47 +119,43 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
 
         zeroingPosIncrements(&sendIncrements);
     } else {
-        //find closest path point to current robot position
-        //int pathClosestIndex = Transform_getClosestPathPoint(robotPath, eePos_worldFrame, PATH_STEP_NUM);
-        //calculate increments
 
         if (pathIndexCounter < PATH_STEP_NUM) {
             incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
                                                         pathIndexCounter, eePos_worldFrame, increments);
 
-            //TODO: add Axis limit check
-            //TODO: add collision check
+            //Get latest robot configuration
+            double *robotConfig = RobotAPI_GetCurrentConfig();
 
-            for (int i = 0; i < 6; i++) { // each axis
-
-                if (collisionDetected(axis[i])) {
-                    cerr << "Axis [" << i << "] collision detected" << endl;
+            //Check for axis limits
+            for (int i = 0; i < 6; i++) {
+                if (!IK_AxisInLimits(robotConfig[i], i)) {
+                    cerr << "Axis [" << i+1 << "] collision detected" << endl;
                     collisionDetected = true;
                 }
             }
 
-            for (int i = 0; i < 6; i++) { // each increment???
-
-                if (collisionDetected(increments[i])) {
-                    cerr << "Self collision detected" << endl;
-                    collisionDetected = true;
-                }
+            //Check for self-collision
+            bool isSelfColliding;
+            double collPairs[2];
+            Matlab_checkCollision(robotConfig, &isSelfColliding, collPairs);
+            if (isSelfColliding) {
+                cerr << "Self collision detected between axis " << collPairs[0] << " and " << collPairs[1] << endl;
+                collisionDetected = true;
             }
 
+            // If something wrong - stop the motion
             if (collisionDetected || !incrementsIsValid) {
                 zeroingPosIncrements(&sendIncrements);
                 zeroingOriIncrements(&sendIncrements);
 
             } else {
-
-                //TODO: PASHA combine pos_incr and ori_incr in one increment  - done
                 pos_increments.x = increments[0];
                 pos_increments.y = increments[1];
                 pos_increments.z = increments[2];
                 pos_increments.rotx = increments[3];
                 pos_increments.roty = increments[4];
                 pos_increments.rotz = increments[5];
-
             }
 
             pathIndexCounter++;
@@ -171,8 +168,6 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     }
 
     // Send increments to hyundai
-    // TODO: PASHA - maybe check if increments are valid? - done
-    //               (correct Transform_getIncrements output, axis limits, collision check)
     sendIncrements.coord[0] = pos_increments.x;
     sendIncrements.coord[1] = pos_increments.y;
     sendIncrements.coord[2] = pos_increments.z;
@@ -208,7 +203,6 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
     Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
-
 
     for (int i = 0; i < 3; i++) {
         if (sendIncrements.coord[i] > 0.5) {
