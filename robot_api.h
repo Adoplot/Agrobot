@@ -23,12 +23,13 @@ enum class Robot_Sequence_State_t {
 };
 
 enum class Robot_Sequence_Result_t {
-    UNREACHABLE,
-    FAILED,
-    SUCCESS
+    BUSY, ///< Robot is busy
+    UNREACHABLE, ///< Target is unreachable
+    BASE_END, ///< No more bases available
+    SUCCESS ///< Finished successfully
 };
 
-using RobotSequenceCallback = std::function<void(Robot_Sequence_t, Robot_Sequence_State_t)>;
+using RobotSequenceCallback = std::function<void(Robot_Sequence_t, Robot_Sequence_State_t, Robot_Sequence_Result_t)>;
 
 void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback);
 

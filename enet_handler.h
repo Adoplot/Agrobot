@@ -17,6 +17,7 @@ typedef enum {
     ENET_STORE_COMPLETE,
     ENET_SWITCH_BASE,
     ENET_SWITCH_BASE_COMPLETE,
+    ENET_SWITCH_BASE_NO_BASE_LEFT,
     ENET_ROBOT_CONFIGURATION ///< Received robot axis configuration
 } Enet_Cmd_t;
 

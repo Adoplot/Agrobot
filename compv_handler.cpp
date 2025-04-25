@@ -25,11 +25,16 @@ constexpr const char* STORE_STR = "STORE";
 constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
 constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE";
 
-constexpr const char* COMPV_ANSW_UNREACHABLE = "UNREACHABLE";
 constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
 constexpr const char* COMPV_ANSW_IN_PROGRESS = "IN_PROGRESS";
 constexpr const char* COMPV_ANSW_FAIL = "FAIL";
 constexpr const char* COMPV_ANSW_REQUESTED = "REQUESTED";
+
+constexpr const char* COMPV_REASON_UNREACHABLE = "UNREACHABLE";
+constexpr const char* COMPV_REASON_BASE_END = "BASE_END";
+constexpr const char* COMPV_REASON_BUSY = "BUSY";
+constexpr const char* COMPV_REASON_SUCCESS = "SUCCESS";
+constexpr const char* COMPV_REASON_JSON_ERR = "JSON_ERROR";
 
 static int sockfd_compv;
 
@@ -45,10 +50,10 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
 
 static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos);
 
-static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state);
+static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state, Robot_Sequence_Result_t result);
 
 static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> positions);
-static void sendStatusResponse(const char* request, const char* status);
+static void sendStatusResponse(const char* request, const char* status, const char* result);
 
 static void handleSyncTargetsRequest(const json& json);
 static void handleSetPositionRequest(const json& json);
@@ -60,6 +65,7 @@ static void handleSwitchBaseRequest();
 
 static const char* sequenceToString(Robot_Sequence_t sequence);
 static const char* sequenceStepToString(Robot_Sequence_State_t state);
+static const char* sequenceResultToString(Robot_Sequence_Result_t result);
 
 static const char* sequenceToString(Robot_Sequence_t sequence) {
     switch (sequence) {
@@ -80,6 +86,17 @@ static const char* sequenceStepToString(Robot_Sequence_State_t state) {
         case Robot_Sequence_State_t::REQUESTED: return COMPV_ANSW_REQUESTED;
         case Robot_Sequence_State_t::COMPLETE: return COMPV_ANSW_COMPLETE;
         case Robot_Sequence_State_t::FAIL: return COMPV_ANSW_FAIL;
+        default: return "UNKNOWN";
+    }
+}
+
+static const char* sequenceResultToString(Robot_Sequence_Result_t result){
+    switch(result){
+        case Robot_Sequence_Result_t::BUSY: return COMPV_REASON_BUSY;
+        case Robot_Sequence_Result_t::BASE_END: return COMPV_REASON_BASE_END;
+        case Robot_Sequence_Result_t::SUCCESS: return COMPV_REASON_SUCCESS;
+        case Robot_Sequence_Result_t::UNREACHABLE: return COMPV_REASON_UNREACHABLE;
+
         default: return "UNKNOWN";
     }
 }
@@ -252,6 +269,8 @@ static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> targets){
     }
     json_send["request"] = SYNC_TARGETS_STR;
     json_send["status"] = COMPV_ANSW_COMPLETE;
+    json_send["reason"] = COMPV_REASON_SUCCESS; ///< TODO: Add error handling
+
     json_send["positions"] = json_positions;
 
     std::string string_send = json_send.dump();
@@ -291,7 +310,7 @@ static void handleSetPositionRequest(const json& json) {
     } else {
         std::cerr << "No targets received from JSON\n\tAborting sequence" << std::endl;
 
-        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL);
+        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL, COMPV_REASON_JSON_ERR);
         return;
     }
 
@@ -360,7 +379,7 @@ static void handleSetPositionRequest(const json& json) {
 
     if (code != 1){
         cout << "IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
-        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
+        sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL, COMPV_REASON_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -399,7 +418,7 @@ static void handleSetPositionRequest(const json& json) {
             RobotAPI_StartApproachSequence();
         } else{
             cout << "Path is NOT valid" << endl;
-            sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_UNREACHABLE);
+            sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL,COMPV_REASON_UNREACHABLE);
         }
 
         //Print for debug
@@ -456,7 +475,7 @@ static void handleFinalApproachRequest(const json& json) {
     } else {
         std::cerr << "No targets received from JSON\n\tAborting sequence" << std::endl;
 
-        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_FAIL);
+        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_FAIL, COMPV_REASON_JSON_ERR);
         return;
     }
 
@@ -522,7 +541,7 @@ static void handleFinalApproachRequest(const json& json) {
 
     if (code != 1){
         cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
-        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
+        sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_FAIL, COMPV_REASON_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
         //Print for debug
@@ -551,7 +570,7 @@ static void handleFinalApproachRequest(const json& json) {
         } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
 
-            sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_REQUESTED);
+            sendStatusResponse(FINAL_APPROACH_STR, COMPV_ANSW_FAIL, COMPV_REASON_UNREACHABLE);
             //Todo: PASHA - when call RobotAPI_StartFinalApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
@@ -670,11 +689,12 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
     return positions;
 }
 
-static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state) {
+static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state, Robot_Sequence_Result_t result) {
     const char* sequenceName = sequenceToString(sequence);
     const char* currentSequenceState = sequenceStepToString(state);
+    const char* currentSequenceResult = sequenceResultToString(result);
 
-    sendStatusResponse(sequenceName, currentSequenceState);
+    sendStatusResponse(sequenceName, currentSequenceState, currentSequenceResult);
 }
 
 void CompV_Init(){
