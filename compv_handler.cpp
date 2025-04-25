@@ -47,9 +47,6 @@ static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos
 
 static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state);
 
-static void sendUnreachableResponse();
-static void sendCompleteResponse();
-static void sendInProgressResponse();
 static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> positions);
 static void sendStatusResponse(const char* request, const char* status);
 
@@ -590,42 +587,6 @@ static void handleFinalApproachRequest(const json& json) {
         }
     }
 
-}
-
-static void sendUnreachableResponse() {
-    cout << "Answer to CompV: Unreachable" << endl;
-    json json_send;
-    json_send["request"] = SET_POSITION_STR;
-    json_send["status"] = COMPV_ANSW_UNREACHABLE;
-    std::string string_send = json_send.dump();
-    Connection_SendTcp(sockfd_compv, &string_send);
-}
-
-static void sendCompleteResponse() {
-    cout << "Answer to CompV: Complete" << endl;
-    json json_send;
-    json_send["request"] = SET_POSITION_STR;
-    json_send["status"] = COMPV_ANSW_COMPLETE;
-    std::string string_send = json_send.dump();
-    Connection_SendTcp(sockfd_compv, &string_send);
-}
-
-static void sendInProgressResponse() {
-    cout << "Answer to CompV: In Progress" << endl;
-    json json_send;
-    json_send["request"] = SET_POSITION_STR;
-    json_send["status"] = COMPV_ANSW_IN_PROGRESS;
-    std::string string_send = json_send.dump();
-    Connection_SendTcp(sockfd_compv, &string_send);
-}
-
-static void sendCutSequenceResponse(){
-    cout << "Answer to CompV: In Progress" << endl;
-    json json_send;
-    json_send["request"] = CUT_STR;
-    json_send["status"] = COMPV_ANSW_IN_PROGRESS;
-    std::string string_send = json_send.dump();
-    Connection_SendTcp(sockfd_compv, &string_send);
 }
 
 // Gets request type from parsed JSON.
