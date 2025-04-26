@@ -131,6 +131,7 @@ Cartesian_Pos_t* Compv_GetTargetPosWorldFrame() {
 
 // Reads received message, parses json to request, handles the request
 void Compv_HandleCmd(const std::string* data) {
+    printf("[CompV]: Reqeusted to handle cmd\n");
     // Get socket data
     sockfd_compv = Connection_GetSockfd(SOCKTYPE_COMPV);
 
@@ -140,7 +141,7 @@ void Compv_HandleCmd(const std::string* data) {
 
     switch (request) {
         case COMPV_REQ_INVALID:
-            std::cerr << "CompV_HandleCmd(): Cmd is not valid" << endl;
+            std::cerr << "[CompV]: Cmd is not valid" << endl;
             break;
 
         case COMPV_REQ_SYNC_TARGETS:
@@ -182,18 +183,22 @@ void Compv_HandleCmd(const std::string* data) {
 }
 
 static void handleReturnToBaseRequest(){
+    cout << "[CompV]: Received Return to base request" << endl;
     RobotAPI_StartReturnToBaseSequence();
 }
 
 static void handleSwitchBaseRequest(){
+    cout << "[CompV]: Received Switch base request" << endl;
     RobotAPI_StartSwitchBaseSequence();
 }
 
 static void handleGoHomeRequest(){
+    cout << "[CompV]: Received Go Home request" << endl;
     RobotAPI_StartGoHomeSequence();
 }
 
 static void handleStoreRequest(){
+    cout << "[CompV]: Received Store request" << endl;
     RobotAPI_StartStoreSequence();
 }
 
@@ -309,7 +314,7 @@ static void handleSetPositionRequest(const json& json) {
     // + get pathApr from IK_getTrajectory
     // o save pathApr for further onltrack increment calculations
 
-    cout << "[CompV]: Received Set Position request" << endl;
+    cout << "[CompV]: Received Final Approach request" << endl;
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
