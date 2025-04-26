@@ -12,7 +12,8 @@ enum class Robot_Sequence_t {
     CUT,
     STORE,
     RETURN_TO_BASE,
-    SWITCH_BASE
+    SWITCH_BASE,
+    GO_HOME
 };
 
 enum class Robot_Sequence_State_t {
@@ -39,6 +40,7 @@ void RobotAPI_StartCutSequence();
 void RobotAPI_StartStoreSequence();
 void RobotAPI_StartReturnToBaseSequence();
 void RobotAPI_StartSwitchBaseSequence();
+void RobotAPI_StartGoHomeSequence();
 
 bool RobotAPI_IsApproachSequenceActive();
 bool RobotAPI_IsFinalApproachSequenceActive();

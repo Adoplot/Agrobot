@@ -177,8 +177,20 @@ void RobotAPI_StartSwitchBaseSequence(){
         return;
     }
 
-    sendRobotCommand(ENET_SWITCH_BASE, "Switch Base");
+    sendRobotCommand(ENET_SWITCH_BASE_NEXT, "Switch Base");
     setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+}
+
+void RobotAPI_StartGoHomeSequence(){
+    if(currentSequenceType != Robot_Sequence_t::IDLE){
+        cout << "Robot API is busy, cant start go home sequence" << endl; //todo: enhance
+        setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
+
+        return;
+    }
+
+    sendRobotCommand(ENET_SWITCH_BASE_HOME, "Go Home");
+    setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
@@ -243,8 +255,8 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             }
             break;
 
-        case ENET_SWITCH_BASE_COMPLETE:
-            cout << "ENET1 received <switch_base_complete>" << endl;
+        case ENET_SWITCH_BASE_NEXT_COMPLETE:
+            cout << "ENET1 received <switch_base_next_success>" << endl;
 
             if(currentSequenceType == Robot_Sequence_t::SWITCH_BASE){
                 setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
@@ -252,6 +264,11 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
                 LOCAL_LOG_ERR("Sequence type does not match");
             }
 
+            break;
+
+        case ENET_SWITCH_BASE_HOME_COMPLETE:
+            cout << "ENET1 received <switch_base_home_success>" << endl;
+            setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
             break;
 
         case ENET_ROBOT_CONFIGURATION:

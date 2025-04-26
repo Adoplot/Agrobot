@@ -33,9 +33,14 @@ static Enet_Cmd_t getEnet1CmdType(char* buffer, long buf_len){
     if (strncmp(buffer, enet_recv_str.store, buf_len) == 0) {
         return ENET_STORE_COMPLETE;
     }
-
-    if (strncmp(buffer, enet_recv_str.switch_base, buf_len) == 0) {
-        return ENET_STORE_COMPLETE;
+    if (strncmp(buffer, enet_recv_str.switch_base_home_success, buf_len) == 0) {
+        return ENET_SWITCH_BASE_HOME_COMPLETE;
+    }
+    if (strncmp(buffer, enet_recv_str.switch_base_next_success, buf_len) == 0) {
+        return ENET_SWITCH_BASE_NEXT_COMPLETE;
+    }
+    if (strncmp(buffer, enet_recv_str.switch_base_no_base_left, buf_len) == 0) {
+        return ENET_SWITCH_BASE_NO_BASE_LEFT;
     }
 
     if(strncmp(buffer, enet_recv_str.robot_configuration, strlen(enet_recv_str.robot_configuration)) == 0){

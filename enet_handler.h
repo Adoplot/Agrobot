@@ -8,16 +8,21 @@
 
 typedef enum {
     ENET_UNDEFINED,
+    ///< Requests
     ENET_INIT,      //program receives init from hyundai to detect pc address
     ENET_RETURN_TO_BASE,    //!!! if change smth, then correct it in Hyundai controller !!!
     ENET_CUT,
     ENET_STORE,
+    ENET_SWITCH_BASE_NEXT, ///< Switch to next available base/configuration
+    ENET_SWITCH_BASE_HOME, ///< Go to Home position
+
+    ///< Responses
     ENET_RETURN_TO_BASE_COMPLETE,
     ENET_CUT_COMPLETE,
     ENET_STORE_COMPLETE,
-    ENET_SWITCH_BASE,
-    ENET_SWITCH_BASE_COMPLETE,
-    ENET_SWITCH_BASE_NO_BASE_LEFT,
+    ENET_SWITCH_BASE_NEXT_COMPLETE,
+    ENET_SWITCH_BASE_HOME_COMPLETE, ///< Robot is in Home position
+    ENET_SWITCH_BASE_NO_BASE_LEFT, ///< No next base available
     ENET_ROBOT_CONFIGURATION ///< Received robot axis configuration
 } Enet_Cmd_t;
 
@@ -27,7 +32,12 @@ typedef struct Enet_RecvStr_t {
     char return_to_base[25] = "return_to_base_complete\012";
     char cut[14] = "cut_complete\012";
     char store[16] = "store_complete\012";
-    char switch_base[22] = "switch_base_complete\012";
+
+    char switch_base_next_success[26] = "switch_base_next_success\012";
+    char switch_base_home_success[26] = "switch_base_home_success\012";
+    char switch_base_no_base_left[26] = "switch_base_no_base_left\012";
+    char switch_base_fail[18] = "switch_base_fail\012";
+
     char robot_configuration[20] = "robot_configuration"; //do not use \012 here
 } Enet_RecvStr_t;
 

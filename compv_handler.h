@@ -15,7 +15,8 @@ typedef enum {
     COMPV_REQ_CUT,
     COMPV_REQ_STORE,
     COMPV_REQ_RETURN_TO_BASE,
-    COMPV_REQ_SWITCH_BASE
+    COMPV_REQ_SWITCH_BASE,
+    COMPV_REQ_GO_HOME
 } CompV_Request_t;
 /*
 typedef struct {

@@ -24,6 +24,7 @@ constexpr const char* CUT_STR = "CUT";
 constexpr const char* STORE_STR = "STORE";
 constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
 constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE";
+constexpr const char* GO_HOME_STR = "GO_HOME";
 
 constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
 constexpr const char* COMPV_ANSW_IN_PROGRESS = "IN_PROGRESS";
@@ -62,6 +63,7 @@ static void handleCutRequest();
 static void handleStoreRequest();
 static void handleReturnToBaseRequest();
 static void handleSwitchBaseRequest();
+static void handleGoHomeRequest();
 
 static const char* sequenceToString(Robot_Sequence_t sequence);
 static const char* sequenceStepToString(Robot_Sequence_State_t state);
@@ -76,6 +78,7 @@ static const char* sequenceToString(Robot_Sequence_t sequence) {
         case Robot_Sequence_t::STORE: return STORE_STR;
         case Robot_Sequence_t::RETURN_TO_BASE: return RETURN_TO_BASE_STR;
         case Robot_Sequence_t::SWITCH_BASE: return SWITCH_BASE_STR;
+        case Robot_Sequence_t::GO_HOME: return GO_HOME_STR;
         default: return "UNKNOWN";
     }
 }
@@ -168,6 +171,10 @@ void Compv_HandleCmd(const std::string* data) {
             handleSwitchBaseRequest();
             break;
 
+        case COMPV_REQ_GO_HOME:
+            handleGoHomeRequest();
+            break;
+
         default:
             cerr << "CompV_HandleCmd(): Unexpected cmd" << endl;
             break;
@@ -180,6 +187,10 @@ static void handleReturnToBaseRequest(){
 
 static void handleSwitchBaseRequest(){
     RobotAPI_StartSwitchBaseSequence();
+}
+
+static void handleGoHomeRequest(){
+    RobotAPI_StartGoHomeSequence();
 }
 
 static void handleStoreRequest(){
@@ -636,6 +647,8 @@ static CompV_Request_t getJsonRequest(const json* json){
 
         } else if(json->at("request") == FINAL_APPROACH_STR){
             req = COMPV_REQ_FINAL_APPROACH;
+        } else if(json->at("request") == GO_HOME_STR){
+            req = COMPV_REQ_GO_HOME;
         }
         else
             req = COMPV_REQ_INVALID;
