@@ -30,7 +30,8 @@ vend    [1.1,  -1,  0.8]
 {"request" : "SYNC_TARGETS","positions": [{"id": 1,"isReachable": false,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151},{"id": 2,"isReachable": false,"x1": 10.5,"y1": 20.3,"z1": 30.1,"x2": 10.5,"y2": 20.3,"z2": 30.1}]}
 {"request" : "SET_POS","positions": [{"id": 1,"isReachable": false,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151}]}
 
-
+{"request" : "SWITCH_BASE_NEXT"}
+{"request" : "GO_HOME"}
 
 robot_configuration 0.372 66.433 -35.118 4.085 53.841 -2.503
  */
