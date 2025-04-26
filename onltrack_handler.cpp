@@ -165,6 +165,17 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
             zeroingPosIncrements(&sendIncrements);
             zeroingOriIncrements(&sendIncrements);
         }
+
+        if (pathEndReached) {
+            cout << "Target reached\n" << endl;
+            pathIndexCounter = 0;
+            RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
+
+        } else if (collisionDetected || !incrementsIsValid) {
+            cout << "Target unreachable, ending sequence\n" << endl;
+            pathIndexCounter = 0;
+            RobotAPI_EndSequence(Robot_Sequence_Result_t::UNREACHABLE);
+        }
     }
 
     // Send increments to hyundai
@@ -187,17 +198,6 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         fs << sendIncrements.coord[4] << "\t";
         fs << sendIncrements.coord[5];
         fs << std::endl;
-    }
-
-    if (pathEndReached) {
-        cout << "Target reached\n" << endl;
-        pathIndexCounter = 0;
-        RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
-
-    } else if (collisionDetected || !incrementsIsValid) {
-        cout << "Target unreachable, ending sequence\n" << endl;
-        pathIndexCounter = 0;
-        RobotAPI_EndSequence(Robot_Sequence_Result_t::UNREACHABLE);
     }
 
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
