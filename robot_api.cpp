@@ -209,7 +209,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             break;
         }
         case ENET_INIT: {
-            cout << "ENET1 received <init>" << endl;
+            cout << "[RobotAPI]: ENET1 received <init> from Hyundai at start" << endl;
             //program receives init from hyundai at the start to detect pc address automatically
             break;
         }

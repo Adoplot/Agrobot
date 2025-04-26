@@ -82,7 +82,7 @@ static void handleOnltrackStartCmd(const Hyundai_Data_t *eePos_worldFrame){
     Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendStartCmd, sizeof(sendStartCmd));
 
     printOnltrackData(&sendStartCmd, PRINT_SEND);
-    printf("On-line tracking is started by Hi5 controller.\n");
+    printf("[Onltrack]: On-line tracking is started by Hi5 controller.\n");
 
     // Send first Play cmd to initiate the request-answer process
     Hyundai_Data_t sendPlayCmd{};
@@ -217,7 +217,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
 // Handles F request received from Hyundai via onltrack
 // Turns off OnLTrack
 static void handleOnltrackEndCmd(){
-    printf("On-line tracking is finished by Hi5 controller.\n");
+    printf("[Onltrack]: On-line tracking is finished by Hi5 controller.\n");
     // Clear the value of targetPos_worldFrame, so after onltrack reset robot would wait for new value
     Cartesian_Pos_t zeros{0,0,0,0,0,0};
     CompV_SetTargetPosCamFrame(zeros);
@@ -234,18 +234,22 @@ static void handleOnltrackEndCmd(){
 static void printOnltrackData(const Hyundai_Data_t* data, bool send_or_recv)
 {
     if(send_or_recv == PRINT_SEND){
-        printf("send>> Command: %c, Count: %d, mm,rad, [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
-           data->Command,
-           data->Count,
-           data->coord[0] * 1000, // m -> mm
-           data->coord[1] * 1000,
-           data->coord[2] * 1000,
-           data->coord[3], // rad
-           data->coord[4],
-           data->coord[5]);
+        printf("[Onltrack]: Sending data:\n\t"
+               "Command: %c; Count: %d;\n\t"
+               "Data (mm, rad): [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
+               data->Command,
+               data->Count,
+               data->coord[0] * 1000, // m -> mm
+               data->coord[1] * 1000,
+               data->coord[2] * 1000,
+               data->coord[3], // rad
+               data->coord[4],
+               data->coord[5]);
     }
     if(send_or_recv == PRINT_RECV){
-        printf("recv>> Command: %c, Count: %d, mm,rad, [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
+        printf("[Onltrack]: Received data:\n\t"
+               "Command: %c; Count: %d;\n\t"
+               "Data (mm, rad): [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
            data->Command,
            data->Count,
            data->coord[0] * 1000, // m -> mm

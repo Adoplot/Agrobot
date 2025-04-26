@@ -216,7 +216,7 @@ static void handleCutRequest(){
 }
 
 static void sendStatusResponse(const char* request, const char* status, const char* result){
-    cout << "Answer to CompV - status response:\n\tRequest = " << request <<"\n\tStatus = " << status << "\n\tResult = " << result << endl; //todo elaborate
+    cout << "[CompV]: Sending status response:\n\tRequest = " << request <<"\n\tStatus = " << status << "\n\tResult = " << result << endl; //todo elaborate
     json json_send;
     json_send["request"] = request;
     json_send["status"] = status;
@@ -226,7 +226,7 @@ static void sendStatusResponse(const char* request, const char* status, const ch
 }
 
 static void handleSyncTargetsRequest(const json& json){
-    cout    << "Received Sync Targets request\n"
+    cout    << "[CompV]: Received Sync Targets request\n\t"
             << "Checking if targets are reachable" << endl;
 
     std::vector<Target_Parameters_t> targetParameters = getTargetParametersFromJson(&json); //cam frame
@@ -269,7 +269,7 @@ static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos
 }
 
 static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> targets){
-    cout << "Answer to CompV: Reachable targets JSON" << endl;
+    cout << "[CompV]: Sending Reachable targets JSON" << endl;
     json json_send;
 
     json json_positions = json::array();
@@ -309,6 +309,7 @@ static void handleSetPositionRequest(const json& json) {
     // + get pathApr from IK_getTrajectory
     // o save pathApr for further onltrack increment calculations
 
+    cout << "[CompV]: Received Set Position request" << endl;
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
@@ -318,8 +319,11 @@ static void handleSetPositionRequest(const json& json) {
 
     if (!targetParametersVector.empty()) {
         target = targetParametersVector[0];
+
+        cout << "\tTarget parameters:\n\tX1 = " << target.x1 << "; Y1 = " << target.y1 << "; Z1 = " << target.z1
+        << "\n\tX2 = " << target.x2 << "; Y2 = " << target.y2 << "; Z2 = " << target.z2 << endl;
     } else {
-        std::cerr << "No targets received from JSON\n\tAborting sequence" << std::endl;
+        std::cerr << "\tNo targets received from JSON\n\tAborting sequence" << std::endl;
 
         sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL, COMPV_REASON_JSON_ERR);
         return;
@@ -349,24 +353,25 @@ static void handleSetPositionRequest(const json& json) {
     //Show targetStart_worldFrame coords
     std::cout << std::fixed << std::showpoint;
     std::cout << std::setprecision(3);
-    std::cout << "targetStart \t";
-    std::cout << "x=" << targetStart_worldFrame.x;
-    std::cout << " y=" << targetStart_worldFrame.y;
-    std::cout << " z=" << targetStart_worldFrame.z;
-    std::cout << " rotX=" << targetStart_worldFrame.rotx;
-    std::cout << " rotY=" << targetStart_worldFrame.roty;
-    std::cout << " rotZ=" << targetStart_worldFrame.rotz;
-    cout << endl;
-    std::cout << std::fixed << std::showpoint;
-    std::cout << std::setprecision(3);
-    std::cout << "targetDir \t";
-    std::cout << "x=" << targetDir_worldFrame.x;
-    std::cout << " y=" << targetDir_worldFrame.y;
-    std::cout << " z=" << targetDir_worldFrame.z;
-    std::cout << " rotX=" << targetDir_worldFrame.rotx;
-    std::cout << " rotY=" << targetDir_worldFrame.roty;
-    std::cout << " rotZ=" << targetDir_worldFrame.rotz;
-    cout << endl;
+    cout << "\n\tTarget Start:\n\t"
+    << "X = " << targetStart_worldFrame.x
+    << "; Y = " << targetStart_worldFrame.y
+    << "; Z = " << targetStart_worldFrame.z
+
+    << "\n\tRotX = " << targetStart_worldFrame.rotx
+    << "; RotY = " << targetStart_worldFrame.roty
+    << "; RotZ = " << targetStart_worldFrame.rotz
+    << endl;
+
+    cout << "\n\tTarget Direction:\n\t"
+         << "X = " << targetDir_worldFrame.x
+         << "; Y = " << targetDir_worldFrame.y
+         << "; Z = " << targetDir_worldFrame.z
+
+         << "\n\tRotX = " << targetDir_worldFrame.rotx
+         << "; RotY = " << targetDir_worldFrame.roty
+         << "; RotZ = " << targetDir_worldFrame.rotz
+         << endl;
 
 
     //------------------------------------------------------------
@@ -389,7 +394,7 @@ static void handleSetPositionRequest(const json& json) {
     IK_getWaypointsForApproach(branchStart, branchDir, eeCoords_worldFrame, currentConfig, &code, qWaypoints);
 
     if (code != 1){
-        cout << "IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
+        cout << "[CompV]: IK_getWaypointsForApproach: GIK failed, aborting Approach Sequence" << endl;
         sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL, COMPV_REASON_UNREACHABLE); // Todo: PASHA - handle the Approach sequence FAIL_PATH
     }
     else{
@@ -420,7 +425,7 @@ static void handleSetPositionRequest(const json& json) {
         pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, pathCartesian);
 
         if (pathAprIsValid){
-            cout << "Path is valid" << endl;
+            cout << "\tPath is valid - Calling Start Approach Sequence" << endl;
             //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
@@ -428,7 +433,7 @@ static void handleSetPositionRequest(const json& json) {
             RobotAPI_SetPath(pathCartesian);
             RobotAPI_StartApproachSequence();
         } else{
-            cout << "Path is NOT valid" << endl;
+            cout << "\tPath is NOT valid" << endl;
             sendStatusResponse(SET_POSITION_STR, COMPV_ANSW_FAIL,COMPV_REASON_UNREACHABLE);
         }
 
