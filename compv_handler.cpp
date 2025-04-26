@@ -358,7 +358,7 @@ static void handleSetPositionRequest(const json& json) {
     //Show targetStart_worldFrame coords
     std::cout << std::fixed << std::showpoint;
     std::cout << std::setprecision(3);
-    cout << "\n\tTarget Start:\t"
+    cout << "\n\tTarget Start:\t\t"
     << "X = " << targetStart_worldFrame.x
     << "; Y = " << targetStart_worldFrame.y
     << "; Z = " << targetStart_worldFrame.z
@@ -368,7 +368,7 @@ static void handleSetPositionRequest(const json& json) {
     << "; RotZ = " << targetStart_worldFrame.rotz
     << endl;
 
-    cout << "\n\tTarget Direction:\t"
+    cout << "\tTarget Direction:\t"
          << "X = " << targetDir_worldFrame.x
          << "; Y = " << targetDir_worldFrame.y
          << "; Z = " << targetDir_worldFrame.z
@@ -376,7 +376,7 @@ static void handleSetPositionRequest(const json& json) {
          << "\tRotX = " << targetDir_worldFrame.rotx
          << "; RotY = " << targetDir_worldFrame.roty
          << "; RotZ = " << targetDir_worldFrame.rotz
-         << endl;
+         << "\n" << endl;
 
 
     //------------------------------------------------------------
