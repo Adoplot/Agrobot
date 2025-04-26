@@ -645,8 +645,12 @@ static CompV_Request_t getJsonRequest(const json* json){
         else if(json->at("request") == SYNC_TARGETS_STR){
             req = COMPV_REQ_SYNC_TARGETS;
 
+        } else if(json->at("request") == SWITCH_BASE_STR){
+            req = COMPV_REQ_SWITCH_BASE;
+
         } else if(json->at("request") == FINAL_APPROACH_STR){
             req = COMPV_REQ_FINAL_APPROACH;
+
         } else if(json->at("request") == GO_HOME_STR){
             req = COMPV_REQ_GO_HOME;
         }
