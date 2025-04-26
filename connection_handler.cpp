@@ -116,7 +116,7 @@ sockaddr_in Connection_GetSockAddr(SockType_t socktype) {
 
 // Inits async udp and tcp sockets, inits pollfd structure
 void Connection_Init(){
-    printf("[Connection]: Starting servers...");
+    printf("[Connection]: Starting servers...\n");
 
     // Initialize sockets
     sockfd_onltrack = initializeSocket(PORT_ONLTRACK, TYPE_UDP);
@@ -305,7 +305,7 @@ static Received_Message_t receiveTcp(const int sockfd){
     bzero(buffer, MAX_BUFFER_SIZE);
 
     printf("[Connection]: Received TCP data:\n\t"
-           "SockFd = %d", sockfd);
+           "SockFd = %d\n", sockfd);
 
     long recv_bytes = recv(sockfd, buffer, MAX_BUFFER_SIZE-1, 0);
 
@@ -314,7 +314,7 @@ static Received_Message_t receiveTcp(const int sockfd){
             perror("[Connection]: TCP Receive error EWOULDBLOCK\n");
         }
         else {
-            fprintf(stderr, "TCP Receive error : %s", strerror(errno));
+            fprintf(stderr, "TCP Receive error : %s\n", strerror(errno));
             // client is disconnected. Redundant if exit() is performed right away
             //active_client_count = 0;
             //compv_socket_state = TCP_CLIENT_DISCONNECTED;
@@ -447,7 +447,7 @@ static int listenForClients(const int sockfd) {
     }
     if (rc == LISTEN_ERR)
     {
-        fprintf(stderr, "[Connection]: listen() failed with err: %s\n\tClosing socket...", strerror(errno));
+        fprintf(stderr, "[Connection]: listen() failed with err: %s\n\tClosing socket...\n", strerror(errno));
         close(sockfd);
         exit(EXIT_FAILURE); //if listen fails in program init, then program will not work anyway
     }
