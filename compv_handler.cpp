@@ -216,7 +216,7 @@ static void handleCutRequest(){
 }
 
 static void sendStatusResponse(const char* request, const char* status, const char* result){
-    cout << "Answer to CompV: status response" << endl; //todo elaborate
+    cout << "Answer to CompV - status response:\n\tRequest = " << request <<"\n\tStatus = " << status << "\n\tResult = " << result << endl; //todo elaborate
     json json_send;
     json_send["request"] = request;
     json_send["status"] = status;
