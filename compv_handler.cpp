@@ -23,7 +23,7 @@ constexpr const char* FINAL_APPROACH_STR = "FINAL_APPROACH";
 constexpr const char* CUT_STR = "CUT";
 constexpr const char* STORE_STR = "STORE";
 constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
-constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE";
+constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE_NEXT";
 constexpr const char* GO_HOME_STR = "GO_HOME";
 
 constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
