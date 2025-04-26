@@ -187,6 +187,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     sendIncrements.coord[5] = pos_increments.rotz;
 
     //Logging into log_increments.txt
+    /*
     if (!fs) {
         std::cerr << "Cannot open the output file." << std::endl;
     } else {
@@ -199,6 +200,7 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         fs << sendIncrements.coord[5];
         fs << std::endl;
     }
+     */
 
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
