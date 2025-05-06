@@ -5,6 +5,10 @@
 #include "compv_handler.h"
 #include "connection_handler.h"
 #include "transform_calc.h"
+#include "robot_api.h"
+#include <fstream>
+#include <iomanip>  // std::setprecision()
+#include "Matlab_ik.h"
 
 using std::cout;
 using std::cerr;
@@ -16,6 +20,10 @@ typedef enum {
     ONLTRACK_CMD_PLAY = 'P',
     ONLTRACK_CMD_END = 'F'
 } Onltrack_Cmd_t;
+
+static int pathIndexCounter {0}; //todo: implement reset before starting new sequence
+
+std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
 static Hyundai_Data_t sendIncrements{};
 
@@ -74,7 +82,7 @@ static void handleOnltrackStartCmd(const Hyundai_Data_t *eePos_worldFrame){
     Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendStartCmd, sizeof(sendStartCmd));
 
     printOnltrackData(&sendStartCmd, PRINT_SEND);
-    printf("On-line tracking is started by Hi5 controller.\n");
+    printf("[Onltrack]: On-line tracking is started by Hi5 controller.\n");
 
     // Send first Play cmd to initiate the request-answer process
     Hyundai_Data_t sendPlayCmd{};
@@ -94,44 +102,112 @@ static void handleOnltrackStartCmd(const Hyundai_Data_t *eePos_worldFrame){
 static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     int sockfd_onltrack = Connection_GetSockfd(SOCKTYPE_ONLTRACK);
     sockaddr_in sockaddr_onltrack = Connection_GetSockAddr(SOCKTYPE_ONLTRACK);
+    double increments[6] {};
+    bool incrementsIsValid {false};
     Cartesian_Pos_t pos_increments{0,0,0,0,0,0};
-    Cartesian_Pos_t ori_increments{0,0,0,0,0,0};
+    bool pathEndReached = false;
+    bool collisionDetected = false;
 
-    Cartesian_Pos_t* targetPos_camFrame = Compv_GetTargetPosCamFrame();
     Cartesian_Pos_t* targetPos_worldFrame = Compv_GetTargetPosWorldFrame();
 
     //printOnltrackData(eePos_worldFrame, PRINT_RECV);
+    auto robotPath = RobotAPI_GetPathCopy();
 
-    // Send zero increments while zeros are received from Compv, so robot does not move
-    if ((targetPos_camFrame->x == 0) && (targetPos_camFrame->y == 0) && (targetPos_camFrame->z == 0)) {
+    // Send zero increments while robot is not performing approach or final approach
+    if (    !RobotAPI_IsApproachSequenceActive() &&
+            !RobotAPI_IsFinalApproachSequenceActive()) {
+
         zeroingPosIncrements(&sendIncrements);
-    }
-    else {
-        pos_increments = Transform_CalculatePositionIncrements(eePos_worldFrame, targetPos_worldFrame);
+    } else {
+
+        if (pathIndexCounter < PATH_STEP_NUM) {
+            incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
+                                                        pathIndexCounter, eePos_worldFrame, increments);
+
+            //Get latest robot configuration
+            double *robotConfig = RobotAPI_GetCurrentConfig();
+
+            //Check for axis limits
+            for (int i = 0; i < 6; i++) {
+                if (!IK_AxisInLimits(robotConfig[i], i)) {
+                    cerr << "Axis [" << i+1 << "] collision detected" << endl;
+                    collisionDetected = true;
+                }
+            }
+
+            //Check for self-collision
+            bool isSelfColliding;
+            double collPairs[2];
+            Matlab_checkCollision(robotConfig, &isSelfColliding, collPairs);
+            if (isSelfColliding) {
+                cerr << "Self collision detected between axis " << collPairs[0] << " and " << collPairs[1] << endl;
+                collisionDetected = true;
+            }
+
+            // If something wrong - stop the motion
+            if (collisionDetected || !incrementsIsValid) {
+                zeroingPosIncrements(&sendIncrements);
+                zeroingOriIncrements(&sendIncrements);
+
+            } else {
+                pos_increments.x = increments[0];
+                pos_increments.y = increments[1];
+                pos_increments.z = increments[2];
+                pos_increments.rotx = increments[3];
+                pos_increments.roty = increments[4];
+                pos_increments.rotz = increments[5];
+            }
+
+            pathIndexCounter++;
+
+        } else {
+            pathEndReached = true;
+            zeroingPosIncrements(&sendIncrements);
+            zeroingOriIncrements(&sendIncrements);
+        }
+
+        if (pathEndReached) {
+            cout << "Target reached\n" << endl;
+            pathIndexCounter = 0;
+            RobotAPI_EndSequence(Robot_Sequence_Result_t::SUCCESS);
+
+        } else if (collisionDetected || !incrementsIsValid) {
+            cout << "Target unreachable, ending sequence\n" << endl;
+            pathIndexCounter = 0;
+            RobotAPI_EndSequence(Robot_Sequence_Result_t::UNREACHABLE);
+        }
     }
 
-    // Send zero increments while zeros are received from Compv, so robot does not move
-    if ((targetPos_camFrame->rotx == 0) && (targetPos_camFrame->roty == 0) && (targetPos_camFrame->rotz == 0)) {
-        zeroingOriIncrements(&sendIncrements);
-    }
-    else {
-        ori_increments = Transform_CalculateOrientationIncrements(eePos_worldFrame, targetPos_worldFrame);
-    }
-
+    // Send increments to hyundai
     sendIncrements.coord[0] = pos_increments.x;
     sendIncrements.coord[1] = pos_increments.y;
     sendIncrements.coord[2] = pos_increments.z;
-    sendIncrements.coord[3] = ori_increments.rotx;
-    sendIncrements.coord[4] = ori_increments.roty;
-    sendIncrements.coord[5] = ori_increments.rotz;
+    sendIncrements.coord[3] = pos_increments.rotx;
+    sendIncrements.coord[4] = pos_increments.roty;
+    sendIncrements.coord[5] = pos_increments.rotz;
+
+    //Logging into log_increments.txt
+    /*
+    if (!fs) {
+        std::cerr << "Cannot open the output file." << std::endl;
+    } else {
+        fs << std::fixed << std::setprecision(6) << endl;
+        fs << sendIncrements.coord[0] << "\t";
+        fs << sendIncrements.coord[1] << "\t";
+        fs << sendIncrements.coord[2] << "\t";
+        fs << sendIncrements.coord[3] << "\t";
+        fs << sendIncrements.coord[4] << "\t";
+        fs << sendIncrements.coord[5];
+        fs << std::endl;
+    }
+     */
 
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
-    // Send increments to hyundai
     Connection_SendUdp(sockfd_onltrack, sockaddr_onltrack, &sendIncrements, sizeof(sendIncrements));
 
-    for(int i = 0; i < 3; i++){
-        if(sendIncrements.coord[i] > 0.5){
+    for (int i = 0; i < 3; i++) {
+        if (sendIncrements.coord[i] > 0.5) {
             printOnltrackData(&sendIncrements, PRINT_SEND);
         }
     }
@@ -143,13 +219,16 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
 // Handles F request received from Hyundai via onltrack
 // Turns off OnLTrack
 static void handleOnltrackEndCmd(){
-    printf("On-line tracking is finished by Hi5 controller.\n");
+    printf("[Onltrack]: On-line tracking is finished by Hi5 controller.\n");
     // Clear the value of targetPos_worldFrame, so after onltrack reset robot would wait for new value
     Cartesian_Pos_t zeros{0,0,0,0,0,0};
     CompV_SetTargetPosCamFrame(zeros);
     CompV_SetTargetPosWorldFrame(zeros);
 
     Connection_SetOnltrackState(ONLTRACK_OFF);
+
+    // Close log_increments.txt
+    fs.close();
 }
 
 
@@ -157,18 +236,22 @@ static void handleOnltrackEndCmd(){
 static void printOnltrackData(const Hyundai_Data_t* data, bool send_or_recv)
 {
     if(send_or_recv == PRINT_SEND){
-        printf("send>> Command: %c, Count: %d, mm,rad, [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
-           data->Command,
-           data->Count,
-           data->coord[0] * 1000, // m -> mm
-           data->coord[1] * 1000,
-           data->coord[2] * 1000,
-           data->coord[3], // rad
-           data->coord[4],
-           data->coord[5]);
+        printf("[Onltrack]: Sending data:\n\t"
+               "Command: %c; Count: %d;\n\t"
+               "Data (mm, rad): [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
+               data->Command,
+               data->Count,
+               data->coord[0] * 1000, // m -> mm
+               data->coord[1] * 1000,
+               data->coord[2] * 1000,
+               data->coord[3], // rad
+               data->coord[4],
+               data->coord[5]);
     }
     if(send_or_recv == PRINT_RECV){
-        printf("recv>> Command: %c, Count: %d, mm,rad, [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
+        printf("[Onltrack]: Received data:\n\t"
+               "Command: %c; Count: %d;\n\t"
+               "Data (mm, rad): [X: %.3f, Y: %.3f, Z: %.3f, Rx: %.3f, Ry: %.3f, Rz: %.3f]\n",
            data->Command,
            data->Count,
            data->coord[0] * 1000, // m -> mm

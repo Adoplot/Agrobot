@@ -54,7 +54,7 @@ static int initializeSocket(int port, bool socktype);
 static int listenForClients(const int sockfd);
 
 
-// Interface to get pointer to eePos_worldFrame
+// Interface to get pointer to eePos_worldFrame //todo move to RobotAPI
 Hyundai_Data_t* Connection_GetEePosWorldFrame() {
     return &eePos_worldFrame;
 }
@@ -116,7 +116,7 @@ sockaddr_in Connection_GetSockAddr(SockType_t socktype) {
 
 // Inits async udp and tcp sockets, inits pollfd structure
 void Connection_Init(){
-    std::cout << "Starting server...\n";
+    printf("[Connection]: Starting servers...\n");
 
     // Initialize sockets
     sockfd_onltrack = initializeSocket(PORT_ONLTRACK, TYPE_UDP);
@@ -181,9 +181,6 @@ static void pollingSockets() {
 }
 
 
-
-
-
 // Manages communication with Controller via OnLTrack
 static void handleConnectionOnltrack(){
     Received_Message_t received_message;
@@ -208,6 +205,9 @@ static void handleConnectionEnet1(){
     //Check for new ENET1 messages available
     if (poll_list[POLL_LIST_ENET1].revents == POLLIN) {
         received_message = recvUdp(sockfd_enet1, &buffer, sizeof(buffer));
+
+        //cout << "Assigning Sock Address to ENET1\n\tSock Address = " << received_message.server_address.sin_addr.s_addr << endl;
+
         sockaddr_enet1 = received_message.server_address;
 
         if (received_message.received_bytes_count > 0) {
@@ -270,7 +270,7 @@ static void acceptNewClient() {
         fcntl(sockfd_tcp_client, F_SETFL, flags | O_NONBLOCK);
 
         // Add the new incoming connection to the poll_list
-        printf("  New incoming connection, sockfd: %d\n", sockfd_tcp_client);
+        printf("[Connection]: New incoming connection:\n\tSockFd: %d\n", sockfd_tcp_client);
         poll_list[POLL_LIST_TCP_CLIENT].fd = sockfd_tcp_client;
         poll_list[POLL_LIST_TCP_CLIENT].events = POLLIN;
         active_client_count = 1;        //add +1 client, so poll() could process it
@@ -304,17 +304,17 @@ static Received_Message_t receiveTcp(const int sockfd){
     char buffer[MAX_BUFFER_SIZE];
     bzero(buffer, MAX_BUFFER_SIZE);
 
-    cout << "recvTCP(): sockfd = " << sockfd << endl;
+    printf("[Connection]: Received TCP data:\n\t"
+           "SockFd = %d\n", sockfd);
 
     long recv_bytes = recv(sockfd, buffer, MAX_BUFFER_SIZE-1, 0);
 
     if (recv_bytes == RECV_ERR) {
         if (errno == EWOULDBLOCK) {
-            perror("recvTCP(): recv error EWOULDBLOCK\n");
+            perror("[Connection]: TCP Receive error EWOULDBLOCK\n");
         }
         else {
-            perror("recvTCP(): recv error\n");
-            printf("The last error received_message is: %s\n", strerror(errno));
+            fprintf(stderr, "TCP Receive error : %s\n", strerror(errno));
             // client is disconnected. Redundant if exit() is performed right away
             //active_client_count = 0;
             //compv_socket_state = TCP_CLIENT_DISCONNECTED;
@@ -443,12 +443,11 @@ static int listenForClients(const int sockfd) {
     rc = listen(sockfd, MAX_CLIENT_COUNT);
 
     if (rc == LISTEN_SUCCESS) {
-        std::cout << "TCP server: start listening on port " << PORT_TCP << "\n";
+        std::cout << "[Connection]: TCP server - start listening on port " << PORT_TCP << "\n";
     }
     if (rc == LISTEN_ERR)
     {
-        perror("listen() failed with err: ");
-        printf("The last error message is: %s\n", strerror(errno));
+        fprintf(stderr, "[Connection]: listen() failed with err: %s\n\tClosing socket...\n", strerror(errno));
         close(sockfd);
         exit(EXIT_FAILURE); //if listen fails in program init, then program will not work anyway
     }

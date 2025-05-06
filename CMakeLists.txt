@@ -3,9 +3,14 @@ project(robotarm)
 
 set(CMAKE_CXX_STANDARD 20)
 
-
+# Add libraries
 include_directories(${CMAKE_SOURCE_DIR}/Dependencies/json/include/)
 include_directories(${CMAKE_SOURCE_DIR}/Dependencies/Eigen)
+set(CODEGEN_DIR "${CMAKE_SOURCE_DIR}/Dependencies/matlab-ik-ARM")
+include_directories(${CODEGEN_DIR})
+
+# Find all source files for compilation
+file(GLOB GENERATED_SRC "${CODEGEN_DIR}/*.c" "${CODEGEN_DIR}/*.cpp")
 
 
 add_executable(robot main.cpp
@@ -21,6 +26,9 @@ add_executable(robot main.cpp
         transform_calc.h
         robot_api.cpp
         robot_api.h
+        ${GENERATED_SRC}
+        ik_wrapper.cpp
+        ik_wrapper.h
 )
 
 

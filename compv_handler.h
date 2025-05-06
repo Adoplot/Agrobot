@@ -5,20 +5,18 @@
 
 #include "onltrack_handler.h"
 
-#define COMPV_ANSW_UNREACHABLE "UNREACHABLE"
-
-#define COMPV_REQUEST_SET_POSITION "SET_POS"
-#define COMPV_ANSW_COMPLETE "COMPLETE"
-#define COMPV_ANSW_IN_PROGRESS "IN_PROGRESS"
 
 typedef enum {
-    REQ_INVALID_JSON, //TODO: not used?
-    REQ_INVALID,
-    REQ_SYNC_TARGETS,
-    REQ_SET_POS,
-    REQ_RETURN_TO_BASE,
-    REQ_CUT,
-    REQ_STORE
+    COMPV_REQ_INVALID_JSON, //TODO: not used?
+    COMPV_REQ_INVALID,
+    COMPV_REQ_SYNC_TARGETS,
+    COMPV_REQ_SET_POS,
+    COMPV_REQ_FINAL_APPROACH,
+    COMPV_REQ_CUT,
+    COMPV_REQ_STORE,
+    COMPV_REQ_RETURN_TO_BASE,
+    COMPV_REQ_SWITCH_BASE,
+    COMPV_REQ_GO_HOME
 } CompV_Request_t;
 /*
 typedef struct {
@@ -27,6 +25,8 @@ typedef struct {
     char store[6] = "store";
 } Enet1_Cmd_t;
 */
+void TEST_handleSetPositionRequest(); //ToDo: delete
+void TEST_handleFinalApproachRequest(); //toDo: delete
 
 void CompV_SetTargetPosWorldFrame(Cartesian_Pos_t new_value);
 void CompV_SetTargetPosCamFrame(Cartesian_Pos_t new_value);
@@ -34,5 +34,6 @@ Cartesian_Pos_t* Compv_GetTargetPosCamFrame();
 Cartesian_Pos_t* Compv_GetTargetPosWorldFrame();
 
 void Compv_HandleCmd(const std::string* data);
+void CompV_Init();
 
 #endif //ROBOTARM_COMPV_HANDLER_H
