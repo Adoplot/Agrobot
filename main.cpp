@@ -4,6 +4,7 @@
 #include "robot_api.h"
 #include <iomanip>
 #include "ik_wrapper.h"
+#include "tests.h"
 
 using std::cout;
 using std::cerr;
@@ -39,6 +40,7 @@ robot_configuration 0.372 66.433 -35.118 4.085 53.841 -2.503
 
 int main(void)
 {
+    //Test_Run();
     CompV_Init();
     Connection_Init();
 
