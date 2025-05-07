@@ -29,6 +29,8 @@ add_executable(robot main.cpp
         ${GENERATED_SRC}
         ik_wrapper.cpp
         ik_wrapper.h
+        tests.cpp
+        tests.h
 )
 
 
