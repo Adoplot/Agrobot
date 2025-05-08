@@ -187,20 +187,42 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     sendIncrements.coord[5] = pos_increments.rotz;
 
     //Logging into log_increments.txt
-    /*
-    if (!fs) {
-        std::cerr << "Cannot open the output file." << std::endl;
-    } else {
-        fs << std::fixed << std::setprecision(6) << endl;
-        fs << sendIncrements.coord[0] << "\t";
-        fs << sendIncrements.coord[1] << "\t";
-        fs << sendIncrements.coord[2] << "\t";
-        fs << sendIncrements.coord[3] << "\t";
-        fs << sendIncrements.coord[4] << "\t";
-        fs << sendIncrements.coord[5];
-        fs << std::endl;
+    if (RobotAPI_IsApproachSequenceActive() || RobotAPI_IsFinalApproachSequenceActive()){
+        if (!fs) {
+            std::cerr << "Cannot open the output file." << std::endl;
+            fs.close();
+        } else {
+            fs << std::fixed << std::setprecision(6) << endl;
+            fs << "INCR: ";
+            fs << sendIncrements.coord[0] << "\t";
+            fs << sendIncrements.coord[1] << "\t";
+            fs << sendIncrements.coord[2] << "\t";
+            fs << sendIncrements.coord[3] << "\t";
+            fs << sendIncrements.coord[4] << "\t";
+            fs << sendIncrements.coord[5];
+            fs << std::endl;
+
+            if (robotPath.size() > 2) {
+                fs << "PATH: ";
+                fs << robotPath[pathIndexCounter][0] << "\t";
+                fs << robotPath[pathIndexCounter][1] << "\t";
+                fs << robotPath[pathIndexCounter][2] << "\t";
+                fs << robotPath[pathIndexCounter][3] << "\t";
+                fs << robotPath[pathIndexCounter][4] << "\t";
+                fs << robotPath[pathIndexCounter][5] << "\t";
+                fs << std::endl;
+            }
+            fs << "POS: ";
+            fs << eePos_worldFrame->coord[0] << "\t";
+            fs << eePos_worldFrame->coord[1] << "\t";
+            fs << eePos_worldFrame->coord[2] << "\t";
+            fs << eePos_worldFrame->coord[3] << "\t";
+            fs << eePos_worldFrame->coord[4] << "\t";
+            fs << eePos_worldFrame->coord[5] << "\t";
+            fs << std::endl;
+        }
     }
-     */
+
 
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
