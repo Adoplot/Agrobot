@@ -54,7 +54,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len);
 
 void RobotAPI_ProcessAction();
 
-void RobotAPI_SetPath(const double pathCartesian[PATH_STEP_NUM][6]);
+void RobotAPI_SetPath(const std::vector<std::array<double, 6>> &pathCartesian);
 std::vector<std::array<double, 6>> RobotAPI_GetPathCopy();
 void RobotAPI_ClearPath();
 
