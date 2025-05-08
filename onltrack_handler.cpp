@@ -120,9 +120,9 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         zeroingPosIncrements(&sendIncrements);
     } else {
 
-        if (pathIndexCounter < PATH_STEP_NUM) {
-            incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
-                                                        pathIndexCounter, eePos_worldFrame, increments);
+        if (pathIndexCounter < robotPath.size()) {
+            incrementsIsValid = Transform_getIncrements(robotPath,pathIndexCounter,
+                                                        eePos_worldFrame, increments);
 
             //Get latest robot configuration
             double *robotConfig = RobotAPI_GetCurrentConfig();

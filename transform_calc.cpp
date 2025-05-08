@@ -70,14 +70,14 @@ int Transform_getClosestPathPoint(const std::vector<std::array<double, 6>> &robo
  * true         - step value is in bounds
  * false        - error, step value is out of bounds, causing array index overflow
  */
-bool Transform_getIncrements(const std::vector<std::array<double, 6>> &pathCartesian,const int pathLength, const int step,
+bool Transform_getIncrements(const std::vector<std::array<double, 6>> &pathCartesian, const int step,
                              const Hyundai_Data_t *eePos_worldFrame, double increment[6]){
     // + Calc quats [XYZw] from Euler [rotx,roty,rotz] for path and for current ori
     // + Pos increments = difference between path pos [xyz] and current pos [xyz]
     // + Ori increments = difference between path ori [XYZw] and current ori [XYZw]
     // + Convert ori increments from quat [XYZw] to euler [rotx,roty,rotz]
 
-    if ((step > (pathLength-1)) || (step < 0)){
+    if ((step > (pathCartesian.size()-1)) || (step < 0)){
         cerr << "Transform_getIncrements: pathCartesian array index overflow, step value is out of bounds" << endl;
         return false;
     }
