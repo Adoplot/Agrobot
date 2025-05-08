@@ -19,34 +19,37 @@
  * true             - bool, trajectory is valid
  * false            - bool, trajectory is NOT valid (axis limit violation or self-collision detected)
  */
-bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity, double pathCartesian[PATH_STEP_NUM][6]){
-    bool isValid {true};
-    double pathConfig[PATH_STEP_NUM][6] {};
+bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity,
+                      const double step_time, std::vector<std::array<double, 6>> &pathCartesian){
+    // Clear previous path
+    pathCartesian.clear();
+
+    std::vector<std::array<double, 6>> pathConfig;
+    std::array<double, 6> coords;
     double config[6] {0};
     double robotSE3[16];
     double pos[3];
     double ori[3];
+    bool isValid {true};
 
-    isValid = IK_InterpolatePath(currentConfig,waypoint, velocity, PATH_STEP_NUM, pathConfig);
-
-
-    for (int i = 0; i < PATH_STEP_NUM; i++) {
-        for (int j = 0; j < 6; j++) {
-            config[j] = pathConfig[i][j];
-        }
-        Matlab_getForwardKinematics(config, ROBOTEE, robotSE3, pos, ori);
-
-        for (int k = 0; k < 3; k++){
-            pathCartesian[i][k] = pos[k];
-            pathCartesian[i][k+3] = ori[k];
-        }
-
-    }
-
+    isValid = IK_InterpolatePath(currentConfig, waypoint, velocity, step_time, pathConfig);
 
     if (!isValid){
         return false;
     } else {
+        for (int i=0; i < pathConfig.size()-1; i++) {
+            for (int j=0; j<6; j++) {
+                config[j] = pathConfig[i][j];
+            }
+            Matlab_getForwardKinematics(config, ROBOTEE, robotSE3, pos, ori);
+
+            for (int k = 0; k < 3; k++){
+                coords[k] = pos[k];
+                coords[k+3] = ori[k];
+            }
+            pathCartesian.push_back(coords);
+        }
+
         return true;
     }
 }
@@ -60,10 +63,22 @@ bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], c
  * Outputs:
  * pathConfig   - Nx6 array, robot configurations representing trajectory in configuration-space
  * true         - bool, trajectory is valid, no axis limit violations and no self-collisions
- * false        - bool, NOT valid trajectory, axis limit violation or self-collision
+ * false        - bool, NOT valid trajectory, caused by invalid arguments, axis limit violation or self-collision
  *
  */
-bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity, const int step_number, double pathConfig[PATH_STEP_NUM][6]){
+bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity,
+                        const double step_time, std::vector<std::array<double,6>> &pathConfig){
+
+    if (velocity <= 0) {
+        std::cerr << "IK_InterpolatePath: velocity should be > 0" << std::endl;
+        return false;
+    }
+    if (step_time <= 0) {
+        std::cerr << "IK_InterpolatePath: step_time should be > 0" << std::endl;
+        return false;
+    }
+
+    pathConfig.clear();
     bool axisLimitsOK {true};   //default is true, if any axis is out of limits at any point - value changes to false
     bool noCollision {true};    //default is true, if robot at any point is in collision - value changes to false
     double config[6] {0};
@@ -74,23 +89,25 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
     double distance {0};
     for (int i = 0; i < 6; i++) {
         delta[i] = q_end[i] - q_start[i];
-        distance += delta[i] * delta[i];  // Sum of squares for Euclidean norm
+        distance += delta[i] * delta[i];  // Sum of squares
     }
-    distance = sqrt(distance);  // Euclidean distance in joint space
+    distance = sqrt(distance);
 
     double total_time = distance / velocity;
-    double time_step = total_time / (PATH_STEP_NUM - 1);
+    int totalSteps = std::max(2, static_cast<int>(std::round(total_time / step_time)));
 
     // Iterate through all steps and compute interpolation with axis limit and collision checks
-    for (int i = 0; i < PATH_STEP_NUM; i++) {
-        double alpha = (double)i / (PATH_STEP_NUM - 1);
+    for (int i = 0; i < totalSteps; i++) {
+        double alpha = static_cast<double>(i) / (totalSteps - 1);
+        std::array<double, 6> waypoint{};
         for (int j = 0; j < 6; j++) {
-            pathConfig[i][j] = q_start[j] + alpha * delta[j];
-            config[j] = pathConfig[i][j];
+            waypoint[j] = q_start[j] + alpha * delta[j];
 
             //Check axis limits
-            if (! IK_AxisInLimits(pathConfig[i][j], j)){
+            if (! IK_AxisInLimits(waypoint[j], j)){
                 axisLimitsOK = false;
+                std::cerr << "IK_InterpolatePath: axis out of limits " << std::endl;
+                std::cerr << waypoint[j] << " " << j << std::endl;
             }
         }
 
@@ -99,6 +116,8 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
         if (isSelfColliding){
             noCollision = false;
         }
+
+        pathConfig.push_back(waypoint);
 
     }
 

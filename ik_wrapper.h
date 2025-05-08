@@ -17,7 +17,8 @@
 
 //Trajectory parameters
 #define PATH_STEP_NUM       2000    //steps
-#define PATH_VELOCITY       1       //rad/s
+#define PATH_VELOCITY       0.05       //vel=1 => 0.4 rad/s (23 deg/s)
+#define PATH_STEP_TIME      0.005   //seconds
 
 //Axis limits (in DEGREES)
 #define AXIS_MIN_A1         (-170)
@@ -31,7 +32,7 @@
 #define AXIS_MAX_A2         (180)
 #define AXIS_MAX_A3         (213)
 #define AXIS_MAX_A4         (190)
-#define AXIS_MAX_A5         (135)
+#define AXIS_MAX_A5         (135)   //135
 #define AXIS_MAX_A6         (360)
 
 enum whichEE {
@@ -39,9 +40,11 @@ enum whichEE {
     TOOLEE
 };
 
-bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity, double pathCartesian[PATH_STEP_NUM][6]);
+bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity,
+                      const double step_time, std::vector<std::array<double, 6>> &pathCartesian);
 
-bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity, const int step_number, double pathConfig[PATH_STEP_NUM][6]);
+bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity,
+                        const double step_time, std::vector<std::array<double,6>> &pathConfig);
 
 bool IK_AxisInLimits(const double axisValue, const int axisNum);
 
