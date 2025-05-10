@@ -107,7 +107,7 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
             if (! IK_AxisInLimits(waypoint[j], j)){
                 axisLimitsOK = false;
                 std::cerr << "IK_InterpolatePath: axis out of limits " << std::endl;
-                std::cerr << waypoint[j] << " " << j << std::endl;
+                std::cerr << waypoint[j] << " " << j+1 << std::endl;
             }
         }
 
