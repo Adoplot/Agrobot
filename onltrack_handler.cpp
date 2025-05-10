@@ -23,7 +23,7 @@ typedef enum {
 
 static int pathIndexCounter {0}; //todo: implement reset before starting new sequence
 
-std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
+static std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
 static Hyundai_Data_t sendIncrements{};
 

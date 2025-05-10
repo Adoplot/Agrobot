@@ -443,7 +443,7 @@ static void handleSetPositionRequest(const json& json) {
         }
 
         //Print for debug
-        {
+        if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
             std::cout << std::fixed;
             std::cout << std::setprecision(5);
@@ -600,8 +600,7 @@ static void handleFinalApproachRequest(const json& json) {
         }
 
         //Print for debug
-
-        {
+        if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
             std::cout << std::fixed;
             std::cout << std::setprecision(5);
