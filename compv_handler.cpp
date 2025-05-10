@@ -25,6 +25,7 @@ constexpr const char* STORE_STR = "STORE";
 constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
 constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE_NEXT";
 constexpr const char* GO_HOME_STR = "GO_HOME";
+constexpr const char* SAFE_POSITION = "SAFE_POSITION";
 
 constexpr const char* COMPV_ANSW_COMPLETE = "COMPLETE";
 constexpr const char* COMPV_ANSW_IN_PROGRESS = "IN_PROGRESS";
@@ -64,6 +65,7 @@ static void handleStoreRequest();
 static void handleReturnToBaseRequest();
 static void handleSwitchBaseRequest();
 static void handleGoHomeRequest();
+static void handleSafePositionRequest();
 
 static const char* sequenceToString(Robot_Sequence_t sequence);
 static const char* sequenceStepToString(Robot_Sequence_State_t state);
@@ -172,6 +174,9 @@ void Compv_HandleCmd(const std::string* data) {
             handleSwitchBaseRequest();
             break;
 
+        case COMPV_REQ_SAFE_POSITION:
+            handleSafePositionRequest();
+
         case COMPV_REQ_GO_HOME:
             handleGoHomeRequest();
             break;
@@ -190,6 +195,11 @@ static void handleReturnToBaseRequest(){
 static void handleSwitchBaseRequest(){
     cout << "[CompV]: Received Switch base request" << endl;
     RobotAPI_StartSwitchBaseSequence();
+}
+
+static void handleSafePositionRequest(){
+    cout << "[CompV]: Received Safe position request" << endl;
+    RobotAPI_StartSafePositionSequence();
 }
 
 static void handleGoHomeRequest(){
@@ -664,6 +674,8 @@ static CompV_Request_t getJsonRequest(const json* json){
 
         } else if(json->at("request") == GO_HOME_STR){
             req = COMPV_REQ_GO_HOME;
+        } else if(json->at("request") == SAFE_POSITION){
+            req = COMPV_REQ_SAFE_POSITION;
         }
         else
             req = COMPV_REQ_INVALID;

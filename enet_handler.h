@@ -15,6 +15,7 @@ typedef enum {
     ENET_STORE,
     ENET_SWITCH_BASE_NEXT, ///< Switch to next available base/configuration
     ENET_SWITCH_BASE_HOME, ///< Go to Home position
+    ENET_SAFE_POSITION,
 
     ///< Responses
     ENET_RETURN_TO_BASE_COMPLETE,
@@ -23,7 +24,8 @@ typedef enum {
     ENET_SWITCH_BASE_NEXT_COMPLETE,
     ENET_SWITCH_BASE_HOME_COMPLETE, ///< Robot is in Home position
     ENET_SWITCH_BASE_NO_BASE_LEFT, ///< No next base available
-    ENET_ROBOT_CONFIGURATION ///< Received robot axis configuration
+    ENET_ROBOT_CONFIGURATION, ///< Received robot axis configuration
+    ENET_SAFE_POSITION_COMPLETE ///< Robot is in safe position for transportation
 } Enet_Cmd_t;
 
 
@@ -37,6 +39,7 @@ typedef struct Enet_RecvStr_t {
     char switch_base_home_success[26] = "switch_base_home_success\012";
     char switch_base_no_base_left[26] = "switch_base_no_base_left\012";
     char switch_base_fail[18] = "switch_base_fail\012";
+    char safe_position_success[23] = "safe_position_success\012";
 
     char robot_configuration[20] = "robot_configuration"; //do not use \012 here
 } Enet_RecvStr_t;

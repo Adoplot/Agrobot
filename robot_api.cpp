@@ -193,6 +193,18 @@ void RobotAPI_StartGoHomeSequence(){
     setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 }
 
+void RobotAPI_StartSafePositionSequence(){
+    if(currentSequenceType != Robot_Sequence_t::IDLE){
+        cout << "Robot API is busy, cant start safe position sequence" << endl; //todo: enhance
+        setSequenceState(Robot_Sequence_t::SAFE_POSITION, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
+
+        return;
+    }
+
+    sendRobotCommand(ENET_SAFE_POSITION, "Safe Position");
+    setSequenceState(Robot_Sequence_t::SAFE_POSITION, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+}
+
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
     Enet_RecvStr_t enet_str;
     size_t prefix_len;
@@ -269,6 +281,11 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
         case ENET_SWITCH_BASE_HOME_COMPLETE:
             cout << "ENET1 received <switch_base_home_success>" << endl;
             setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
+            break;
+
+        case ENET_SAFE_POSITION_COMPLETE:
+            cout << "ENET1 received <safe_position_complete>" << endl;
+            setSequenceState(Robot_Sequence_t::SAFE_POSITION, Robot_Sequence_State_t::COMPLETE, Robot_Sequence_Result_t::SUCCESS);
             break;
 
         case ENET_ROBOT_CONFIGURATION:
