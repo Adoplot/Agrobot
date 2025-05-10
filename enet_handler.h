@@ -39,7 +39,7 @@ typedef struct Enet_RecvStr_t {
     char switch_base_home_success[26] = "switch_base_home_success\012";
     char switch_base_no_base_left[26] = "switch_base_no_base_left\012";
     char switch_base_fail[18] = "switch_base_fail\012";
-    char safe_position_success[23] = "safe_position_success\012";
+    char safe_position_success[23] = "safe_position_success\012"; ///< robot moved to safe position successfully
 
     char robot_configuration[20] = "robot_configuration"; //do not use \012 here
 } Enet_RecvStr_t;
