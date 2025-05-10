@@ -16,32 +16,34 @@
 #define SOLVER_ORIENTATION_TOLERANCE    0.1
 
 //Trajectory parameters
-#define PATH_STEP_NUM       2000    //steps
-#define PATH_VELOCITY       1       //rad/s
+#define PATH_VELOCITY       0.05       //vel=1 => 0.4 rad/s (23 deg/s)
+#define PATH_STEP_TIME      0.005   //seconds
 
-//Axis limits (in DEGREES)
-#define AXIS_MIN_A1         (-170)
-#define AXIS_MIN_A2         (-55)
-#define AXIS_MIN_A3         (-70)
-#define AXIS_MIN_A4         (-190)
-#define AXIS_MIN_A5         (-135)
-#define AXIS_MIN_A6         (-360)
+//Axis limits (in DEGREES)              Robot soft limits:
+#define AXIS_MIN_A1         (-167)  //-170
+#define AXIS_MIN_A2         (-52)   //-55
+#define AXIS_MIN_A3         (-62)   //-65
+#define AXIS_MIN_A4         (-187)  //-190
+#define AXIS_MIN_A5         (-122)  //-125
+#define AXIS_MIN_A6         (-357)  //-360
 
-#define AXIS_MAX_A1         (170)
-#define AXIS_MAX_A2         (180)
-#define AXIS_MAX_A3         (213)
-#define AXIS_MAX_A4         (190)
-#define AXIS_MAX_A5         (135)
-#define AXIS_MAX_A6         (360)
+#define AXIS_MAX_A1         (167)   // 170
+#define AXIS_MAX_A2         (177)   // 180
+#define AXIS_MAX_A3         (210)   // 213
+#define AXIS_MAX_A4         (187)   // 190
+#define AXIS_MAX_A5         (92)    // 95
+#define AXIS_MAX_A6         (357)   // 360
 
 enum whichEE {
     ROBOTEE,
     TOOLEE
 };
 
-bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity, double pathCartesian[PATH_STEP_NUM][6]);
+bool IK_getTrajectory(const double currentConfig[6], const double waypoint[6], const double velocity,
+                      const double step_time, std::vector<std::array<double, 6>> &pathCartesian);
 
-bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity, const int step_number, double pathConfig[PATH_STEP_NUM][6]);
+bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const double velocity,
+                        const double step_time, std::vector<std::array<double,6>> &pathConfig);
 
 bool IK_AxisInLimits(const double axisValue, const int axisNum);
 

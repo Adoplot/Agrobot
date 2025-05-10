@@ -425,9 +425,9 @@ static void handleSetPositionRequest(const json& json) {
         //------------------------------------------------------------
         // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
         bool pathAprIsValid {false};
-        double pathCartesian[PATH_STEP_NUM][6] {0};
+        std::vector<std::array<double,6>> pathCartesian{};
 
-        pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, pathCartesian);
+        pathAprIsValid = IK_getTrajectory(currentConfig,waypointApr,PATH_VELOCITY, PATH_STEP_TIME, pathCartesian);
 
         if (pathAprIsValid){
             cout << "\tPath is valid - Calling Start Approach Sequence" << endl;
@@ -443,7 +443,7 @@ static void handleSetPositionRequest(const json& json) {
         }
 
         //Print for debug
-        {
+        if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
             std::cout << std::fixed;
             std::cout << std::setprecision(5);
@@ -460,11 +460,11 @@ static void handleSetPositionRequest(const json& json) {
             }
             cout << endl;
             for (int i = 0; i < 6; i++) {
-                cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
+                cout << pathCartesian[pathCartesian.size() - 2][i] << "  ";
             }
             cout << endl;
             for (int i = 0; i < 6; i++) {
-                cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
+                cout << pathCartesian[pathCartesian.size() - 1][i] << "  ";
             }
             cout << endl;
         }
@@ -580,9 +580,9 @@ static void handleFinalApproachRequest(const json& json) {
         //------------------------------------------------------------
         // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
         bool pathFinal_IsValid {false};
-        double pathCartesian[PATH_STEP_NUM][6] {0};
+        std::vector<std::array<double,6>> pathCartesian{};
 
-        pathFinal_IsValid = IK_getTrajectory(currentConfig, qWaypointCut, PATH_VELOCITY, pathCartesian);
+        pathFinal_IsValid = IK_getTrajectory(currentConfig, qWaypointCut, PATH_VELOCITY, PATH_STEP_TIME, pathCartesian);
 
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
@@ -600,7 +600,7 @@ static void handleFinalApproachRequest(const json& json) {
         }
 
         //Print for debug
-        {
+        if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
             std::cout << std::fixed;
             std::cout << std::setprecision(5);
@@ -617,14 +617,15 @@ static void handleFinalApproachRequest(const json& json) {
             }
             cout << endl;
             for (int i = 0; i < 6; i++) {
-                cout << pathCartesian[PATH_STEP_NUM - 2][i] << "  ";
+                cout << pathCartesian[pathCartesian.size() - 2][i] << "  ";
             }
             cout << endl;
             for (int i = 0; i < 6; i++) {
-                cout << pathCartesian[PATH_STEP_NUM - 1][i] << "  ";
+                cout << pathCartesian[pathCartesian.size() - 1][i] << "  ";
             }
             cout << endl;
         }
+
     }
 
 }

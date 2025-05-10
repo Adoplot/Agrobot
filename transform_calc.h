@@ -12,6 +12,7 @@
 #define POSITIONING_ACCURACY 0.02   // distance from ee to target that is considered negligible
 #define ORIENTATION_ACCURACY 0.02   // difference between ee and target ori that is considered negligible
 #define SCISSORS_LENGTH 0.3         // in meters
+#define LOWPASS_ALPHA 0.2           // Low-pass filter parameter for increment smoothing
 
 // Camera and toolEE position in robotEE frame
 #define CAMERA_POS_X (-0.1025)      // -0.1025 m
@@ -30,8 +31,9 @@ double Transform_getDistanceBetweenPositions(const Hyundai_Data_t *eePos_worldFr
 int Transform_getClosestPathPoint(const std::vector<std::array<double, 6>> &robotPath,
                                   const Hyundai_Data_t *eePos_worldFrame, const int pathLength);
 
-bool Transform_getIncrements(const std::vector<std::array<double, 6>> &pathCartesian,const int pathLength,
-                             const int step, const Hyundai_Data_t *eePos_worldFrame, double increment[6]);
+bool Transform_getIncrements(const std::vector<std::array<double, 6>> &pathCartesian, const int step,
+                             const Hyundai_Data_t *eePos_worldFrame, const double prev_increment[6],
+                             double increment[6]);
 
 Hyundai_Data_t Transform_ConvertFrameRobotEE2ToolEE(const Hyundai_Data_t* eePos_worldFrame);
 

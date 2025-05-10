@@ -19,7 +19,7 @@ static int sockfd_enet1;
 static sockaddr_in sockaddr_enet1;
 
 static double currentRobotConfig[6];
-static double robotPathCartesian[PATH_STEP_NUM][6] {0};
+static std::vector<std::array<double, 6>> robotPathCartesian;
 
 static RobotSequenceCallback stateCallback = nullptr;
 
@@ -349,26 +349,16 @@ void RobotAPI_ProcessAction(){
 }
 
 std::vector<std::array<double, 6>> RobotAPI_GetPathCopy() {
-    std::vector<std::array<double, 6>> copy(PATH_STEP_NUM);
-    for (int i = 0; i < PATH_STEP_NUM; ++i) {
-        for (int j = 0; j < 6; ++j) {
-            copy[i][j] = robotPathCartesian[i][j];
-        }
-    }
-    return copy; // copy elision or move constructor used — efficient
+    return robotPathCartesian; // pathCopy elision or move constructor used — efficient
 }
 
-void RobotAPI_SetPath(const double pathCartesian[PATH_STEP_NUM][6]) {
-
-    for (int i = 0; i < PATH_STEP_NUM; ++i) {
-        for (int j = 0; j < 6; ++j) {
-            robotPathCartesian[i][j] = pathCartesian[i][j];
-        }
-    }
+void RobotAPI_SetPath(const std::vector<std::array<double, 6>> &pathCartesian) {
+    robotPathCartesian = pathCartesian; // vector copy assignment
 }
+
 
 void RobotAPI_ClearPath(){
-    memset(robotPathCartesian, 0, sizeof(robotPathCartesian));
+    robotPathCartesian.clear();
 }
 
 

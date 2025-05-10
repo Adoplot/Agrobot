@@ -22,8 +22,9 @@ typedef enum {
 } Onltrack_Cmd_t;
 
 static int pathIndexCounter {0}; //todo: implement reset before starting new sequence
+static double prev_increments[6] {0};
 
-std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
+static std::ofstream fs("/home/adoplot/CLionProjects/Agrobot/log_increments.txt");
 
 static Hyundai_Data_t sendIncrements{};
 
@@ -120,9 +121,9 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
         zeroingPosIncrements(&sendIncrements);
     } else {
 
-        if (pathIndexCounter < PATH_STEP_NUM) {
-            incrementsIsValid = Transform_getIncrements(robotPath, PATH_STEP_NUM,
-                                                        pathIndexCounter, eePos_worldFrame, increments);
+        if (pathIndexCounter < robotPath.size()) {
+            incrementsIsValid = Transform_getIncrements(robotPath, pathIndexCounter,
+                                                        eePos_worldFrame, prev_increments, increments);
 
             //Get latest robot configuration
             double *robotConfig = RobotAPI_GetCurrentConfig();
@@ -186,21 +187,51 @@ static void handleOnltrackPlayCmd(const Hyundai_Data_t *eePos_worldFrame){
     sendIncrements.coord[4] = pos_increments.roty;
     sendIncrements.coord[5] = pos_increments.rotz;
 
+    // Save last increments
+    prev_increments[0] = sendIncrements.coord[0];
+    prev_increments[1] = sendIncrements.coord[1];
+    prev_increments[2] = sendIncrements.coord[2];
+    prev_increments[3] = sendIncrements.coord[3];
+    prev_increments[4] = sendIncrements.coord[4];
+    prev_increments[5] = sendIncrements.coord[5];
+
     //Logging into log_increments.txt
-    /*
-    if (!fs) {
-        std::cerr << "Cannot open the output file." << std::endl;
-    } else {
-        fs << std::fixed << std::setprecision(6) << endl;
-        fs << sendIncrements.coord[0] << "\t";
-        fs << sendIncrements.coord[1] << "\t";
-        fs << sendIncrements.coord[2] << "\t";
-        fs << sendIncrements.coord[3] << "\t";
-        fs << sendIncrements.coord[4] << "\t";
-        fs << sendIncrements.coord[5];
-        fs << std::endl;
+    if (RobotAPI_IsApproachSequenceActive() || RobotAPI_IsFinalApproachSequenceActive()){
+        if (!fs) {
+            std::cerr << "Cannot open the output file." << std::endl;
+            fs.close();
+        } else {
+            fs << std::fixed << std::setprecision(6) << endl;
+            fs << "INCR: ";
+            fs << sendIncrements.coord[0] << "\t";
+            fs << sendIncrements.coord[1] << "\t";
+            fs << sendIncrements.coord[2] << "\t";
+            fs << sendIncrements.coord[3] << "\t";
+            fs << sendIncrements.coord[4] << "\t";
+            fs << sendIncrements.coord[5];
+            fs << std::endl;
+
+            if (robotPath.size() > 2) {
+                fs << "PATH: ";
+                fs << robotPath[pathIndexCounter][0] << "\t";
+                fs << robotPath[pathIndexCounter][1] << "\t";
+                fs << robotPath[pathIndexCounter][2] << "\t";
+                fs << robotPath[pathIndexCounter][3] << "\t";
+                fs << robotPath[pathIndexCounter][4] << "\t";
+                fs << robotPath[pathIndexCounter][5] << "\t";
+                fs << std::endl;
+            }
+            fs << "POS: ";
+            fs << eePos_worldFrame->coord[0] << "\t";
+            fs << eePos_worldFrame->coord[1] << "\t";
+            fs << eePos_worldFrame->coord[2] << "\t";
+            fs << eePos_worldFrame->coord[3] << "\t";
+            fs << eePos_worldFrame->coord[4] << "\t";
+            fs << eePos_worldFrame->coord[5] << "\t";
+            fs << std::endl;
+        }
     }
-     */
+
 
     sendIncrements.Command = ONLTRACK_CMD_PLAY;
 
