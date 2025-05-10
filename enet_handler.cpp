@@ -43,6 +43,10 @@ static Enet_Cmd_t getEnet1CmdType(char* buffer, long buf_len){
         return ENET_SWITCH_BASE_NO_BASE_LEFT;
     }
 
+    if (strncmp(buffer, enet_recv_str.safe_position_success, buf_len) == 0) {
+        return ENET_SAFE_POSITION_COMPLETE;
+    }
+
     if(strncmp(buffer, enet_recv_str.robot_configuration, strlen(enet_recv_str.robot_configuration)) == 0){
         return ENET_ROBOT_CONFIGURATION;
     }

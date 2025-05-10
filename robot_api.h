@@ -13,6 +13,7 @@ enum class Robot_Sequence_t {
     STORE,
     RETURN_TO_BASE,
     SWITCH_BASE,
+    SAFE_POSITION,
     GO_HOME
 };
 
@@ -41,6 +42,7 @@ void RobotAPI_StartStoreSequence();
 void RobotAPI_StartReturnToBaseSequence();
 void RobotAPI_StartSwitchBaseSequence();
 void RobotAPI_StartGoHomeSequence();
+void RobotAPI_StartSafePositionSequence();
 
 bool RobotAPI_IsApproachSequenceActive();
 bool RobotAPI_IsFinalApproachSequenceActive();
