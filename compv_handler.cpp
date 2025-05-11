@@ -67,7 +67,7 @@ static void handleGoHomeRequest();
 static void handleSafePositionRequest();
 
 static const char* sequenceToString(Robot_Sequence_t sequence);
-static const char* sequenceStepToString(Robot_Sequence_State_t state);
+static const char* sequenceStatusToString(Robot_Sequence_State_t state);
 static const char* sequenceResultToString(Robot_Sequence_Result_t result);
 
 static const char* sequenceToString(Robot_Sequence_t sequence) {
@@ -84,7 +84,7 @@ static const char* sequenceToString(Robot_Sequence_t sequence) {
     }
 }
 
-static const char* sequenceStepToString(Robot_Sequence_State_t state) {
+static const char* sequenceStatusToString(Robot_Sequence_State_t state) {
     switch (state) {
         case Robot_Sequence_State_t::INIT: return COMPV_ANSW_FAIL;
         case Robot_Sequence_State_t::REQUESTED: return COMPV_ANSW_REQUESTED;
@@ -726,10 +726,10 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
 
 static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state, Robot_Sequence_Result_t result) {
     const char* sequenceName = sequenceToString(sequence);
-    const char* currentSequenceState = sequenceStepToString(state);
+    const char* currentSequenceStatus = sequenceStatusToString(state);
     const char* currentSequenceResult = sequenceResultToString(result);
 
-    sendStatusResponse(sequenceName, currentSequenceState, currentSequenceResult);
+    sendStatusResponse(sequenceName, currentSequenceStatus, currentSequenceResult);
 }
 
 void CompV_Init(){
