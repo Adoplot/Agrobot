@@ -41,12 +41,10 @@ robot_configuration 0.372 66.433 -35.118 4.085 53.841 -2.503
 int main(void)
 {
     //Test_Run();
-    CompV_Init();
     Connection_Init();
 
     while(1){
         Connection_ProcessAction();
-        RobotAPI_ProcessAction();
     }
 };
 

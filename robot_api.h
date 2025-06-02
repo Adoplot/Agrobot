@@ -25,15 +25,12 @@ enum class Robot_Sequence_State_t {
 };
 
 enum class Robot_Sequence_Result_t {
+    INIT,
     BUSY, ///< Robot is busy
     UNREACHABLE, ///< Target is unreachable
     BASE_END, ///< No more bases available
     SUCCESS ///< Finished successfully
 };
-
-using RobotSequenceCallback = std::function<void(Robot_Sequence_t, Robot_Sequence_State_t, Robot_Sequence_Result_t)>;
-
-void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback);
 
 void RobotAPI_StartApproachSequence();
 void RobotAPI_StartFinalApproachSequence();
@@ -54,10 +51,13 @@ double* RobotAPI_GetCurrentConfig();
 
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len);
 
-void RobotAPI_ProcessAction();
-
 void RobotAPI_SetPath(const std::vector<std::array<double, 6>> &pathCartesian);
 std::vector<std::array<double, 6>> RobotAPI_GetPathCopy();
 void RobotAPI_ClearPath();
+
+Robot_Sequence_t RobotAPI_GetSequence();
+Robot_Sequence_State_t RobotAPI_GetSequenceState();
+Robot_Sequence_Result_t RobotAPI_GetSequenceResult();
+void RobotAPI_ResetSequenceData();
 
 #endif //ROBOTARM_ROBOT_API_H

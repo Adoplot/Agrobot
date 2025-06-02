@@ -17,7 +17,8 @@ typedef enum {
     COMPV_REQ_RETURN_TO_BASE,
     COMPV_REQ_SWITCH_BASE,
     COMPV_REQ_SAFE_POSITION,
-    COMPV_REQ_GO_HOME
+    COMPV_REQ_GO_HOME,
+    COMPV_REQ_GET_ROBOT_STATE
 } CompV_Request_t;
 /*
 typedef struct {
@@ -35,6 +36,5 @@ Cartesian_Pos_t* Compv_GetTargetPosCamFrame();
 Cartesian_Pos_t* Compv_GetTargetPosWorldFrame();
 
 void Compv_HandleCmd(const std::string* data);
-void CompV_Init();
 
 #endif //ROBOTARM_COMPV_HANDLER_H

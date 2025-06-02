@@ -25,6 +25,7 @@ constexpr const char* RETURN_TO_BASE_STR = "RETURN_TO_BASE";
 constexpr const char* SWITCH_BASE_STR = "SWITCH_BASE_NEXT";
 constexpr const char* GO_HOME_STR = "GO_HOME";
 constexpr const char* SAFE_POSITION = "SAFE_POSITION";
+constexpr const char* GET_ROBOT_STATE_STR = "GET_ROBOT_STATE";
 
 constexpr const char* COMPV_RESULT_COMPLETE = "COMPLETE";
 constexpr const char* COMPV_RESULT_IN_PROGRESS = "IN_PROGRESS";
@@ -37,6 +38,7 @@ constexpr const char* COMPV_REASON_BUSY = "BUSY";
 constexpr const char* COMPV_REASON_SUCCESS = "SUCCESS";
 constexpr const char* COMPV_REASON_JSON_ERR = "JSON_ERROR";
 constexpr const char* COMPV_REASON_GENERIC_ERROR = "ERROR";
+constexpr const char* COMPV_REASON_INIT = "NO_REASON";
 
 static int sockfd_compv;
 
@@ -52,8 +54,6 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
 
 static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos);
 
-static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state, Robot_Sequence_Result_t result);
-
 static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> positions);
 static void sendStatusResponse(const char* request, const char* result, const char* reason);
 
@@ -66,6 +66,7 @@ static void handleReturnToBaseRequest();
 static void handleSwitchBaseRequest();
 static void handleGoHomeRequest();
 static void handleSafePositionRequest();
+static void handleGetRobotStateRequest();
 
 static const char* sequenceToString(Robot_Sequence_t sequence);
 static const char* sequenceResultToString(Robot_Sequence_State_t state);
@@ -97,6 +98,7 @@ static const char* sequenceResultToString(Robot_Sequence_State_t state) {
 
 static const char* sequenceReasonToString(Robot_Sequence_Result_t result){
     switch(result){
+        case Robot_Sequence_Result_t::INIT: return COMPV_REASON_INIT;
         case Robot_Sequence_Result_t::BUSY: return COMPV_REASON_BUSY;
         case Robot_Sequence_Result_t::BASE_END: return COMPV_REASON_BASE_END;
         case Robot_Sequence_Result_t::SUCCESS: return COMPV_REASON_SUCCESS;
@@ -181,6 +183,10 @@ void Compv_HandleCmd(const std::string* data) {
             handleGoHomeRequest();
             break;
 
+        case COMPV_REQ_GET_ROBOT_STATE:
+            handleGetRobotStateRequest();
+            break;
+
         default:
             cerr << "CompV_HandleCmd(): Unexpected cmd" << endl;
             break;
@@ -205,6 +211,34 @@ static void handleSafePositionRequest(){
 static void handleGoHomeRequest(){
     cout << "[CompV]: Received Go Home request" << endl;
     RobotAPI_StartGoHomeSequence();
+}
+
+static void handleGetRobotStateRequest(){
+    cout << "[CompV]: Sending Robot State Response" << endl;
+
+    json json_send;
+
+    Robot_Sequence_State_t sequenceState = RobotAPI_GetSequenceState();
+
+    const char* sequenceName = sequenceToString(RobotAPI_GetSequence());
+    const char* currentSequenceResult = sequenceResultToString(sequenceState);
+    const char* currentSequenceReason = sequenceReasonToString(RobotAPI_GetSequenceResult());
+
+
+    if( sequenceState == Robot_Sequence_State_t::COMPLETE ||
+        sequenceState == Robot_Sequence_State_t::FAIL){
+
+        RobotAPI_ResetSequenceData();
+    }
+
+
+    json_send["request"] = GET_ROBOT_STATE_STR;
+    json_send["sequence"] = sequenceName;
+    json_send["result"] = currentSequenceResult;
+    json_send["reason"] = currentSequenceReason;
+
+    std::string string_send = json_send.dump();
+    Connection_SendTcp(sockfd_compv, &string_send);
 }
 
 static void handleStoreRequest(){
@@ -672,6 +706,8 @@ static CompV_Request_t getJsonRequest(const json* json){
             req = COMPV_REQ_GO_HOME;
         } else if(json->at("request") == SAFE_POSITION){
             req = COMPV_REQ_SAFE_POSITION;
+        } else if(json->at("request") == GET_ROBOT_STATE_STR){
+            req = COMPV_REQ_GET_ROBOT_STATE;
         }
         else
             req = COMPV_REQ_INVALID;
@@ -723,16 +759,4 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
     }
 
     return positions;
-}
-
-static void onRobotSequenceEvent(Robot_Sequence_t sequence, Robot_Sequence_State_t state, Robot_Sequence_Result_t result) {
-    const char* sequenceName = sequenceToString(sequence);
-    const char* currentSequenceResult = sequenceResultToString(state);
-    const char* currentSequenceReason = sequenceReasonToString(result);
-
-    sendStatusResponse(sequenceName, currentSequenceResult, currentSequenceReason);
-}
-
-void CompV_Init(){
-    RobotAPI_SetSequenceCallback(onRobotSequenceEvent);
 }
