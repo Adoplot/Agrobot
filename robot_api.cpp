@@ -21,32 +21,18 @@ static sockaddr_in sockaddr_enet1;
 static double currentRobotConfig[6];
 static std::vector<std::array<double, 6>> robotPathCartesian;
 
-static RobotSequenceCallback stateCallback = nullptr;
-
 static Robot_Sequence_t currentSequenceType = Robot_Sequence_t::IDLE;
 static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INIT;
+static Robot_Sequence_Result_t currentSequenceResult = Robot_Sequence_Result_t::INIT;
 
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result);
 static void sendRobotCommand(int command, const std::string& action_name);
-static void resetSequenceState();
 static void setRobotConfig(double a1, double a2, double a3, double a4, double a5, double a6);
 
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result) {
     currentSequenceType = newType;
     currentSequenceState = newState;
-
-    if (stateCallback == nullptr) {
-        LOCAL_LOG_ERR("State callback is not initialized\n\tWill not send state change notifications");
-    } else {
-        stateCallback(newType, newState, result);
-    }
-}
-
-static void resetSequenceState(){
-    currentSequenceType = Robot_Sequence_t::IDLE;
-    currentSequenceState = Robot_Sequence_State_t::INIT;
-
-    LOCAL_LOG_INFO("Reset sequence to idle state");
+    currentSequenceResult = result;
 }
 
 // Todo: PASHA - targetParameters_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
@@ -343,26 +329,8 @@ bool RobotAPI_IsFinalApproachSequenceActive(){
     return currentSequenceType == Robot_Sequence_t::FINAL_APPROACH;
 }
 
-void RobotAPI_SetSequenceCallback(RobotSequenceCallback callback){
-    stateCallback = callback;
-}
-
 void RobotAPI_EndSequence(Robot_Sequence_Result_t reason){
     setSequenceState(currentSequenceType, Robot_Sequence_State_t::COMPLETE, reason);
-}
-
-void RobotAPI_ProcessAction(){
-    switch(currentSequenceState){
-        case Robot_Sequence_State_t::INIT:
-        case Robot_Sequence_State_t::REQUESTED:
-
-            break;
-
-        case Robot_Sequence_State_t::COMPLETE:
-        case Robot_Sequence_State_t::FAIL:
-            resetSequenceState();
-            break;
-    }
 }
 
 std::vector<std::array<double, 6>> RobotAPI_GetPathCopy() {
@@ -372,6 +340,27 @@ std::vector<std::array<double, 6>> RobotAPI_GetPathCopy() {
 void RobotAPI_SetPath(const std::vector<std::array<double, 6>> &pathCartesian) {
     robotPathCartesian = pathCartesian; // vector copy assignment
 }
+
+Robot_Sequence_t RobotAPI_GetSequence(){
+    return currentSequenceType;
+}
+
+Robot_Sequence_State_t RobotAPI_GetSequenceState(){
+    return currentSequenceState;
+}
+
+Robot_Sequence_Result_t RobotAPI_GetSequenceResult(){
+    return currentSequenceResult;
+}
+
+void RobotAPI_ResetSequenceData(){
+    currentSequenceType = Robot_Sequence_t::IDLE;
+    currentSequenceState = Robot_Sequence_State_t::INIT;
+    currentSequenceResult = Robot_Sequence_Result_t::INIT;
+
+    LOCAL_LOG_INFO("Reset sequence parameters to idle state");
+}
+
 
 
 void RobotAPI_ClearPath(){
