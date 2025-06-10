@@ -323,10 +323,12 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
 }
 
 bool RobotAPI_IsApproachSequenceActive(){
-    return currentSequenceType == Robot_Sequence_t::APPROACH;
+    return (currentSequenceType == Robot_Sequence_t::APPROACH
+    && currentSequenceState == Robot_Sequence_State_t::REQUESTED);
 }
 bool RobotAPI_IsFinalApproachSequenceActive(){
-    return currentSequenceType == Robot_Sequence_t::FINAL_APPROACH;
+    return (currentSequenceType == Robot_Sequence_t::FINAL_APPROACH
+           && currentSequenceState == Robot_Sequence_State_t::REQUESTED);
 }
 
 void RobotAPI_EndSequence(Robot_Sequence_Result_t reason){
