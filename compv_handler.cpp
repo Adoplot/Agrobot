@@ -552,11 +552,11 @@ static void handleApproachRequest(const json& json) {
             //      terminate called after throwing an instance of 'std::bad_function_call'
             //      what():  bad_function_call
             //  PASHA FIXED
-            RobotAPI_SetPath(pathCartesian);
 
             if(!RobotAPI_StartApproachSequence()){
                 sendStatusResponse(APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
             } else {
+                RobotAPI_SetPath(pathCartesian);
                 sendApproachResponse(targetStart_worldFrame.x, targetStart_worldFrame.y, targetStart_worldFrame.z,
                                      targetDir_worldFrame.x,targetDir_worldFrame.y, targetDir_worldFrame.z);
             }
@@ -709,11 +709,11 @@ static void handleFinalApproachRequest(const json& json) {
 
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
-            RobotAPI_SetPath(pathCartesian);
 
             if(!RobotAPI_StartFinalApproachSequence()){
                 sendStatusResponse(FINAL_APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
             } else {
+                RobotAPI_SetPath(pathCartesian);
                 sendFinalApproachResponse(targetStart_worldFrame.x, targetStart_worldFrame.y, targetStart_worldFrame.z,
                                           targetDir_worldFrame.x,targetDir_worldFrame.y, targetDir_worldFrame.z);
             }
