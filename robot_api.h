@@ -32,14 +32,14 @@ enum class Robot_Sequence_Result_t {
     SUCCESS ///< Finished successfully
 };
 
-void RobotAPI_StartApproachSequence();
-void RobotAPI_StartFinalApproachSequence();
-void RobotAPI_StartCutSequence();
-void RobotAPI_StartStoreSequence();
-void RobotAPI_StartReturnToBaseSequence();
-void RobotAPI_StartSwitchBaseSequence();
-void RobotAPI_StartGoHomeSequence();
-void RobotAPI_StartSafePositionSequence();
+bool RobotAPI_StartApproachSequence();
+bool RobotAPI_StartFinalApproachSequence();
+bool RobotAPI_StartCutSequence();
+bool RobotAPI_StartStoreSequence();
+bool RobotAPI_StartReturnToBaseSequence();
+bool RobotAPI_StartSwitchBaseSequence();
+bool RobotAPI_StartGoHomeSequence();
+bool RobotAPI_StartSafePositionSequence();
 
 bool RobotAPI_IsApproachSequenceActive();
 bool RobotAPI_IsFinalApproachSequenceActive();

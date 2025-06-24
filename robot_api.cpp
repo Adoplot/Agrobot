@@ -93,102 +93,107 @@ static void sendRobotCommand(int command, const std::string& action_name) {
     Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
 }
 
-void RobotAPI_StartApproachSequence(){
+bool RobotAPI_StartApproachSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         LOCAL_LOG_INFO("Robot API is busy, cant start approach sequence");
-        setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
-
-        return;
+        return false;
     }
 
     // coordinates are handled in handleOnltrackPlayCmd()
     setSequenceState(Robot_Sequence_t::APPROACH, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
+
 }
 
-void RobotAPI_StartFinalApproachSequence(){
-    if(currentSequenceType != Robot_Sequence_t::IDLE){
+bool RobotAPI_StartFinalApproachSequence(){
+    if(currentSequenceType != Robot_Sequence_t::IDLE) {
         cout << "Robot API is busy, cant start approach sequence" << endl; //todo: enhance
+        return false;
 
-        setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
-
-        return;
     }
 
     // coordinates are handled in handleOnltrackPlayCmd()
     setSequenceState(Robot_Sequence_t::FINAL_APPROACH, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+    return true;
 }
 
-void RobotAPI_StartCutSequence(){
+bool RobotAPI_StartCutSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE) {
         cout << "Robot API is busy, cant start cut sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_CUT, "Cut");
     setSequenceState(Robot_Sequence_t::CUT, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
 
+    return true;
+
 }
 
-void RobotAPI_StartStoreSequence(){
+bool RobotAPI_StartStoreSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start store sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
-
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_STORE, "Store");
     setSequenceState(Robot_Sequence_t::STORE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
 }
 
-void RobotAPI_StartReturnToBaseSequence(){
+bool RobotAPI_StartReturnToBaseSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start return to base sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_RETURN_TO_BASE, "Return To Base");
     setSequenceState(Robot_Sequence_t::RETURN_TO_BASE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
 }
 
-void RobotAPI_StartSwitchBaseSequence(){
+bool RobotAPI_StartSwitchBaseSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start switch base sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_SWITCH_BASE_NEXT, "Switch Base");
     setSequenceState(Robot_Sequence_t::SWITCH_BASE, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
 }
 
-void RobotAPI_StartGoHomeSequence(){
+bool RobotAPI_StartGoHomeSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start go home sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_SWITCH_BASE_HOME, "Go Home");
     setSequenceState(Robot_Sequence_t::GO_HOME, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
 }
 
-void RobotAPI_StartSafePositionSequence(){
+bool RobotAPI_StartSafePositionSequence(){
     if(currentSequenceType != Robot_Sequence_t::IDLE){
         cout << "Robot API is busy, cant start safe position sequence" << endl; //todo: enhance
-        setSequenceState(Robot_Sequence_t::SAFE_POSITION, Robot_Sequence_State_t::FAIL, Robot_Sequence_Result_t::BUSY);
 
-        return;
+        return false;
     }
 
     sendRobotCommand(ENET_SAFE_POSITION, "Safe Position");
     setSequenceState(Robot_Sequence_t::SAFE_POSITION, Robot_Sequence_State_t::REQUESTED, Robot_Sequence_Result_t::SUCCESS);
+
+    return true;
 }
 
 void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){

@@ -55,6 +55,8 @@ static std::vector<Target_Parameters_t> getTargetParametersFromJson(const nlohma
 static void convertTargetParameterToJson(json& j, const Target_Parameters_t& pos);
 
 static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> positions);
+static void sendApproachResponse(double x1, double y1, double z1, double x2, double y2, double z2);
+static void sendFinalApproachResponse(double x1, double y1, double z1, double x2, double y2, double z2);
 static void sendStatusResponse(const char* request, const char* result, const char* reason);
 
 static void handleSyncTargetsRequest(const json& json);
@@ -195,22 +197,42 @@ void Compv_HandleCmd(const std::string* data) {
 
 static void handleReturnToBaseRequest(){
     cout << "[CompV]: Received Return to base request" << endl;
-    RobotAPI_StartReturnToBaseSequence();
+
+    if(!RobotAPI_StartReturnToBaseSequence()){
+        sendStatusResponse(RETURN_TO_BASE_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(RETURN_TO_BASE_STR, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 static void handleSwitchBaseRequest(){
     cout << "[CompV]: Received Switch base request" << endl;
-    RobotAPI_StartSwitchBaseSequence();
+
+    if(!RobotAPI_StartSwitchBaseSequence()){
+        sendStatusResponse(SWITCH_BASE_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(SWITCH_BASE_STR, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 static void handleSafePositionRequest(){
     cout << "[CompV]: Received Safe position request" << endl;
-    RobotAPI_StartSafePositionSequence();
+
+    if(!RobotAPI_StartSafePositionSequence()){
+        sendStatusResponse(SAFE_POSITION, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(SAFE_POSITION, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 static void handleGoHomeRequest(){
     cout << "[CompV]: Received Go Home request" << endl;
-    RobotAPI_StartGoHomeSequence();
+
+    if(!RobotAPI_StartGoHomeSequence()){
+        sendStatusResponse(GO_HOME_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(GO_HOME_STR, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 static void handleGetRobotStateRequest(){
@@ -243,7 +265,12 @@ static void handleGetRobotStateRequest(){
 
 static void handleStoreRequest(){
     cout << "[CompV]: Received Store request" << endl;
-    RobotAPI_StartStoreSequence();
+
+    if(!RobotAPI_StartStoreSequence()){
+        sendStatusResponse(STORE_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(STORE_STR, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 // Parses string to JSON, checks if JSON is valid
@@ -261,7 +288,11 @@ static json jsonParse(const std::string* data) {
 }
 
 static void handleCutRequest(){
-    RobotAPI_StartCutSequence();
+    if(!RobotAPI_StartCutSequence()){
+        sendStatusResponse(CUT_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+    } else {
+        sendStatusResponse(CUT_STR, COMPV_RESULT_REQUESTED, COMPV_REASON_SUCCESS);
+    }
 }
 
 static void sendStatusResponse(const char* request, const char* result, const char* reason){
@@ -332,6 +363,48 @@ static void sendSyncTargetsResponse(std::vector<Target_Parameters_t> targets){
     json_send["reason"] = COMPV_REASON_SUCCESS; ///< TODO: Add error handling
 
     json_send["positions"] = json_positions;
+
+    std::string string_send = json_send.dump();
+    Connection_SendTcp(sockfd_compv, &string_send);
+}
+
+static void sendApproachResponse(double x1, double y1, double z1, double x2, double y2, double z2){
+    cout << "[CompV]: Sending approach response" << endl;
+    json json_send;
+    json json_position = json{
+            {"x1", x1},
+            {"y1", y1},
+            {"z1", z1},
+            {"x2", x2},
+            {"y2", y2},
+            {"z2", z2}
+    };
+
+    json_send["request"] = APPROACH_STR;
+    json_send["result"] = COMPV_RESULT_REQUESTED;
+    json_send["reason"] = COMPV_REASON_SUCCESS; ///< TODO: Add error handling
+    json_send["target_coordinates_wrld"] = json_position;
+
+    std::string string_send = json_send.dump();
+    Connection_SendTcp(sockfd_compv, &string_send);
+}
+
+static void sendFinalApproachResponse(double x1, double y1, double z1, double x2, double y2, double z2){
+    cout << "[CompV]: Sending final approach response" << endl;
+    json json_send;
+    json json_position = json{
+            {"x1", x1},
+            {"y1", y1},
+            {"z1", z1},
+            {"x2", x2},
+            {"y2", y2},
+            {"z2", z2}
+    };
+
+    json_send["request"] = FINAL_APPROACH_STR;
+    json_send["result"] = COMPV_RESULT_REQUESTED;
+    json_send["reason"] = COMPV_REASON_SUCCESS; ///< TODO: Add error handling
+    json_send["target_coordinates_wrld"] = json_position;
 
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
@@ -480,7 +553,13 @@ static void handleApproachRequest(const json& json) {
             //      what():  bad_function_call
             //  PASHA FIXED
             RobotAPI_SetPath(pathCartesian);
-            RobotAPI_StartApproachSequence();
+
+            if(!RobotAPI_StartApproachSequence()){
+                sendStatusResponse(APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+            } else {
+                sendApproachResponse(targetStart_worldFrame.x, targetStart_worldFrame.y, targetStart_worldFrame.z,
+                                     targetDir_worldFrame.x,targetDir_worldFrame.y, targetDir_worldFrame.z);
+            }
         } else{
             cout << "\tPath is NOT valid" << endl;
             sendStatusResponse(APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_UNREACHABLE);
@@ -631,7 +710,13 @@ static void handleFinalApproachRequest(const json& json) {
         if (pathFinal_IsValid){
             cout << "FinalApproach: Path is valid" << endl;
             RobotAPI_SetPath(pathCartesian);
-            RobotAPI_StartFinalApproachSequence();
+
+            if(!RobotAPI_StartFinalApproachSequence()){
+                sendStatusResponse(FINAL_APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
+            } else {
+                sendFinalApproachResponse(targetStart_worldFrame.x, targetStart_worldFrame.y, targetStart_worldFrame.z,
+                                          targetDir_worldFrame.x,targetDir_worldFrame.y, targetDir_worldFrame.z);
+            }
         } else {
             cout << "FinalApproach: Path is NOT valid" << endl;
 
