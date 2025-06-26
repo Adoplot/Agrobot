@@ -12,8 +12,13 @@
 #define SOLVER_ENFORCE_JOINT_LIMITS     true
 #define SOLVER_ALLOW_RANDOM_RESTARTS    true
 #define SOLVER_STEP_TOLERANCE           1.0E-13
-#define SOLVER_POSITION_TOLERANCE       0.02
+#define SOLVER_POSITION_TOLERANCE       0.01
 #define SOLVER_ORIENTATION_TOLERANCE    0.1
+
+//Positioning parameters
+#define CAM_ANGLE_OFFSET    (20)    //(in DEG) offset angle for camera so tool do not obstruct view on the target branch
+#define DIST_WEIGHT_POS     1       //weight for position in total distance calculation between bodyEE and Approach seq target
+#define DIST_WEIGHT_ORI     0.5     //weight for orientation in total distance calculation between bodyEE and Approach seq target
 
 //Trajectory parameters
 #define PATH_VELOCITY       0.05       //vel=1 => 0.4 rad/s (23 deg/s)
