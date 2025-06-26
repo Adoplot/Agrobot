@@ -5,7 +5,7 @@
 // File: Matlab_ik_types.h
 //
 // MATLAB Coder version            : 24.2
-// C/C++ source code generated on  : 03-Apr-2025 13:21:22
+// C/C++ source code generated on  : 26-Jun-2025 16:17:08
 //
 
 #ifndef MATLAB_IK_TYPES_H

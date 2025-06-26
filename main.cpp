@@ -29,8 +29,9 @@ using std::endl;
 vstart  [1.1,   0,  0.8]
 vend    [1.1,  -1,  0.8]
 {"request" : "SYNC_TARGETS","positions": [{"id": 1,"isReachable": false,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151},{"id": 2,"isReachable": false,"x1": 10.5,"y1": 20.3,"z1": 30.1,"x2": 10.5,"y2": 20.3,"z2": 30.1}]}
-{"request" : "SET_POS","positions": [{"id": 1,"isReachable": false,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151}]}
+{"request" : "APPROACH","positions": [{"id": 1,"isReachable": true,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151}]}
 
+{"request" : "APPROACH","positions": [{"id": 1,"isReachable": true,"x1": 0.014,"y1": 0.016,"z1": 0.484,"x2": -0.053,"y2": 0.029,"z2": 0.507}]}
 {"request" : "SWITCH_BASE_NEXT"}
 {"request" : "GO_HOME"}
 
