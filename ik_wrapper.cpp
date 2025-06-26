@@ -102,6 +102,7 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
         std::array<double, 6> waypoint{};
         for (int j = 0; j < 6; j++) {
             waypoint[j] = q_start[j] + alpha * delta[j];
+            config[j] = q_start[j] + alpha * delta[j];      // need double[6] for codegen checkCollision()
 
             //Check axis limits
             if (! IK_AxisInLimits(waypoint[j], j)){
