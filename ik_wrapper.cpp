@@ -7,7 +7,6 @@
 #include "ik_wrapper.h"
 
 //TODO: Adoplot - add cartesian constraint for both GIKs (to not collide with robot's platform)
-//TODO: Adoplot - make path generation with controlled speed (variable-length path vector)
 
 /*
  * Calculates Cartesian trajectory from one config to another, based on speed and number of steps
@@ -102,6 +101,7 @@ bool IK_InterpolatePath(const double q_start[6], const double q_end[6], const do
         std::array<double, 6> waypoint{};
         for (int j = 0; j < 6; j++) {
             waypoint[j] = q_start[j] + alpha * delta[j];
+            config[j] = q_start[j] + alpha * delta[j];      // need double[6] for codegen checkCollision()
 
             //Check axis limits
             if (! IK_AxisInLimits(waypoint[j], j)){
@@ -186,16 +186,20 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
 
     coder::array<double, 2U> sortedList;
     double listLength {0};  //redundant
-    double tooleePos_worldFrame[3];
+    double coords_bodyEE_worldFrame[6];
 
     // EE -> toolEE both in world frame
-    Hyundai_Data_t tooleeCoords_worldFrame = Transform_ConvertFrameRobotEE2ToolEE(eeCoords_worldFrame);
-    tooleePos_worldFrame[0] = tooleeCoords_worldFrame.coord[0];
-    tooleePos_worldFrame[1] = tooleeCoords_worldFrame.coord[1];
-    tooleePos_worldFrame[2] = tooleeCoords_worldFrame.coord[2];
+    coords_bodyEE_worldFrame[0] = eeCoords_worldFrame->coord[0];
+    coords_bodyEE_worldFrame[1] = eeCoords_worldFrame->coord[1];
+    coords_bodyEE_worldFrame[2] = eeCoords_worldFrame->coord[2];
+    coords_bodyEE_worldFrame[3] = eeCoords_worldFrame->coord[3];
+    coords_bodyEE_worldFrame[4] = eeCoords_worldFrame->coord[4];
+    coords_bodyEE_worldFrame[5] = eeCoords_worldFrame->coord[5];
+
 
     //Get sortedList with points on a circle around the cutting place
-    Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, tooleePos_worldFrame, sortedList, &listLength);
+    Matlab_getSortedCirclePointList(CIRCLE_RADIUS, branchStart, branchDir, CIRCLE_POINT_NUM, coords_bodyEE_worldFrame,
+                                    CAM_ANGLE_OFFSET, DIST_WEIGHT_POS, DIST_WEIGHT_ORI, sortedList, &listLength);
 
     //Todo: comment out if not debugging
     IK_PrintSortedPointList(&sortedList);
@@ -216,7 +220,7 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
             targetApr[i] = sortedList.at(n, i);
         }
         //Check if robot can reach both waypoints (on circle and cutplace) and if so, output waypoints
-        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters,&exitCode,&solutionInfoApr,qWaypoints);
+        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypoints);
         *code = static_cast<int>(exitCode+0.1);  //to safely cast double to int, because (0.9999 -> 0)
         n++;
     }

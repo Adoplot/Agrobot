@@ -436,7 +436,7 @@ static void handleApproachRequest(const json& json) {
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
     //In camera frame
-    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json); //Todo: PASHA - get targetParameters (as func input or otherwise)
+    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json);
     Target_Parameters_t target;
 
     if (!targetParametersVector.empty()) {
@@ -451,7 +451,7 @@ static void handleApproachRequest(const json& json) {
         return;
     }
 
-    double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
+    double *currentConfig = RobotAPI_GetCurrentConfig();
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
@@ -540,7 +540,6 @@ static void handleApproachRequest(const json& json) {
         //------------------------------------------------------------
         //Calculating trajectory for Approach sequence
         //------------------------------------------------------------
-        // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
         bool pathAprIsValid {false};
         std::vector<std::array<double,6>> pathCartesian{};
 
@@ -548,10 +547,6 @@ static void handleApproachRequest(const json& json) {
 
         if (pathAprIsValid){
             cout << "\tPath is valid - Calling Start Approach Sequence" << endl;
-            //Todo: PASHA - when call RobotAPI_StartApproachSequence() while testing, there is error:
-            //      terminate called after throwing an instance of 'std::bad_function_call'
-            //      what():  bad_function_call
-            //  PASHA FIXED
 
             if(!RobotAPI_StartApproachSequence()){
                 sendStatusResponse(APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_BUSY);
@@ -611,7 +606,7 @@ static void handleFinalApproachRequest(const json& json) {
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
 
-    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json); //Todo: PASHA - get targetParameters (as func input or otherwise)
+    std::vector<Target_Parameters_t> targetParametersVector = getTargetParametersFromJson(&json);
     Target_Parameters_t target;
 
     if (!targetParametersVector.empty()) {
@@ -623,7 +618,7 @@ static void handleFinalApproachRequest(const json& json) {
         return;
     }
 
-    double *currentConfig = RobotAPI_GetCurrentConfig(); //Todo: PAHSA - get currentConfig from Hyundai//Todo: PAHSA - get currentConfig from Hyundai
+    double *currentConfig = RobotAPI_GetCurrentConfig();
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
@@ -680,7 +675,7 @@ static void handleFinalApproachRequest(const json& json) {
     struct0_T solverParameters {};
     IK_InitSolverParameters(&solverParameters);
 
-    Matlab_getGikCut(currentConfig,branchStart,&solverParameters,&exitCode,&solutionInfoApr,qWaypointCut);
+    Matlab_getGikCut(currentConfig,branchStart,&solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypointCut);
     code = static_cast<int>(exitCode+0.1);
 
     if (code != 1){
@@ -701,7 +696,6 @@ static void handleFinalApproachRequest(const json& json) {
         //------------------------------------------------------------
         //Calculating trajectory for Approach sequence
         //------------------------------------------------------------
-        // ToDo: PASHA - probably these should be global, so can be used for increment calc and in onltrack
         bool pathFinal_IsValid {false};
         std::vector<std::array<double,6>> pathCartesian{};
 

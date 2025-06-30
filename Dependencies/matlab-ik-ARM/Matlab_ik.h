@@ -5,7 +5,7 @@
 // File: Matlab_ik.h
 //
 // MATLAB Coder version            : 24.2
-// C/C++ source code generated on  : 03-Apr-2025 13:21:22
+// C/C++ source code generated on  : 26-Jun-2025 16:17:08
 //
 
 #ifndef MATLAB_IK_H
@@ -33,19 +33,21 @@ extern void Matlab_getForwardKinematics(const double currentConfig[6],
 extern void Matlab_getGikCut(const double currentConfig[6],
                              const double targetPos_Fin[3],
                              const struct0_T *solverParameters,
-                             double *exitCode, struct1_T *solutionInfoFin,
-                             double qWaypoint[6]);
+                             double cam_angle_offset, double *exitCode,
+                             struct1_T *solutionInfoFin, double qWaypoint[6]);
 
 extern void Matlab_getGikFull(const double currentConfig[6],
                               const double target_Apr[8],
                               const double targetPos_Fin[3],
                               const struct0_T *solverParameters,
-                              double *exitCode, struct1_T *solutionInfoApr,
+                              double cam_angle_offset, double *exitCode,
+                              struct1_T *solutionInfoApr,
                               double qWaypoints[18]);
 
 extern void Matlab_getSortedCirclePointList(
     double R, const double branchStart[3], const double branchEnd[3],
-    double numCirclePoints, const double pos_toolEE[3],
+    double numCirclePoints, const double coords_bodyEE[6],
+    double cam_angle_offset, double weight_pos, double weight_ori,
     coder::array<double, 2U> &sortedList, double *listLength);
 
 extern void Matlab_ik_initialize();

@@ -23,7 +23,7 @@
 #define TOOLEE_POS_Z 0.26           // 0.26 m
 
 // Circle point list parameters
-#define CIRCLE_RADIUS       0.3
+#define CIRCLE_RADIUS       0.2
 #define CIRCLE_POINT_NUM    10
 
 double Transform_getDistanceBetweenPositions(const Hyundai_Data_t *eePos_worldFrame, const std::array<double, 6> target);
