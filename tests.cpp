@@ -12,13 +12,15 @@ using std::endl;
 static void test_IK_InterpolatePath();
 static void test_IK_getTrajectory();
 static void test_Matlab_getSortedCirclePointList();
+static void test_IK_getWaypointsForApproach();
 
 // Put your test code here
 void Test_Run(){
     cout << "=============TESTS===============" << endl;
     //test_IK_InterpolatePath();
     //test_IK_getTrajectory();
-    test_Matlab_getSortedCirclePointList();
+    //test_Matlab_getSortedCirclePointList();
+    test_IK_getWaypointsForApproach();
     cout << "===========TESTS END=============" << endl;
 }
 
@@ -115,4 +117,26 @@ void test_Matlab_getSortedCirclePointList(){
 1.4000	-0.4000	0.4000	0.1312	-0.8086	-0.0919	0.5662	2.4556
 1.3618	-0.3628	0.2885	0.0964	-0.5940	-0.1279	0.7883	2.4606
      */
+}
+
+
+void test_IK_getWaypointsForApproach(){
+    double branchStart[3] {1.2, -0.4, 0.4};
+    double branchDir[3] {1.2, 0.8, 0.8};
+    Hyundai_Data_t eeCoords_worldFrame {};
+    eeCoords_worldFrame.coord[0] = 0.5694;
+    eeCoords_worldFrame.coord[1] = -0.0013;
+    eeCoords_worldFrame.coord[2] = 0.4871;
+    eeCoords_worldFrame.coord[3] = 2.3865;
+    eeCoords_worldFrame.coord[4] = 1.4531;
+    eeCoords_worldFrame.coord[5] = 2.3318;
+    double currentConfig[6] {Transform_Deg2Rad(0.373), Transform_Deg2Rad(66.433), Transform_Deg2Rad(-35.118),
+                             Transform_Deg2Rad(4.085), Transform_Deg2Rad(53.841), Transform_Deg2Rad(-2.503)};
+    int code {};
+    double qWaypoints[18] {};
+
+    IK_getWaypointsForApproach(branchStart, branchDir, &eeCoords_worldFrame,
+    currentConfig, &code, qWaypoints);
+
+    IK_PrintWaypoints(qWaypoints);
 }
