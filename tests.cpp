@@ -4,6 +4,7 @@
 #include <array>
 #include "Matlab_ik_types.h"
 #include "Matlab_ik.h"
+#include <iomanip>
 
 using std::cout;
 using std::cerr;
@@ -13,6 +14,7 @@ static void test_IK_InterpolatePath();
 static void test_IK_getTrajectory();
 static void test_Matlab_getSortedCirclePointList();
 static void test_IK_getWaypointsForApproach();
+static void test_Matlab_getGikCut();
 
 // Put your test code here
 void Test_Run(){
@@ -20,7 +22,8 @@ void Test_Run(){
     //test_IK_InterpolatePath();
     //test_IK_getTrajectory();
     //test_Matlab_getSortedCirclePointList();
-    test_IK_getWaypointsForApproach();
+    //test_IK_getWaypointsForApproach();
+    test_Matlab_getGikCut();
     cout << "===========TESTS END=============" << endl;
 }
 
@@ -139,4 +142,27 @@ void test_IK_getWaypointsForApproach(){
     currentConfig, &code, qWaypoints);
 
     IK_PrintWaypoints(qWaypoints);
+}
+
+
+void test_Matlab_getGikCut(){
+    double branchStart[3] {1.2, -0.4, 0.4};
+    double branchDir[3] {1.2, 0.8, 0.8};
+    double exitCode {0};
+    struct1_T solutionInfoApr {};
+    struct0_T solverParameters {};
+    IK_InitSolverParameters(&solverParameters);
+    double qWaypointCut[6];
+    double currentConfig[6] {-0.5515, 0.6579, 0.3983, -1.2941, 0.5806, -1.3366};
+
+    Matlab_getGikCut(currentConfig,branchStart,&solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypointCut);
+
+    cout << "qWaypointCut: ";
+    cout << std::fixed;
+    cout << std::setprecision(4);
+    for (int i=0;i<6;i++){
+        cout << qWaypointCut[i] << "  ";
+    }
+    cout << endl;
+
 }
