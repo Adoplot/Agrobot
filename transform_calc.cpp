@@ -399,97 +399,6 @@ Cartesian_Pos_t convertFrameCam2World(const Hyundai_Data_t* eePos_worldFrame,
 }
 
 
-// Todo: delete
-// Calculates position increments to get from current position to the target pos. Uses lerp().
-// Returns: increment of Euler angles
-Cartesian_Pos_t Transform_CalculatePositionIncrements(const Hyundai_Data_t *eePos_worldFrame,
-                                                      const Cartesian_Pos_t *targetPos_worldFrame) {
-    Cartesian_Pos_t increments{};
-
-    double vinX = eePos_worldFrame->coord[0];
-    double vinY = eePos_worldFrame->coord[1];
-    double vinZ = eePos_worldFrame->coord[2];
-
-    double voutX = targetPos_worldFrame->x;
-    double voutY = targetPos_worldFrame->y;
-    double voutZ = targetPos_worldFrame->z;
-
-    // Linear interpolation between eePos_worldFrame and targetPos_worldFrame
-    double vresX = std::lerp(vinX, voutX, LERP_INTERP_FACTOR);
-    double vresY = std::lerp(vinY, voutY, LERP_INTERP_FACTOR);
-    double vresZ = std::lerp(vinZ, voutZ, LERP_INTERP_FACTOR);
-
-    // Calculate increments
-    double vincrX = vresX - vinX;
-    double vincrY = vresY - vinY;
-    double vincrZ = vresZ - vinZ;
-
-#ifdef DEBUG_LERP
-    std::cout << " vincrX = \t" << vincrX;
-    std::cout << " vincrY = \t" << vincrY;
-    std::cout << " vincrZ = \t" << vincrZ << std::endl;
-    std::cout << " vresX = \t" << vresX;
-    std::cout << " vresY = \t" << vresY;
-    std::cout << " vresZ = \t" << vresZ << std::endl;
-#endif
-
-    increments.x = vincrX;
-    increments.y = vincrY;
-    increments.z = vincrZ;
-
-    return increments;
-}
-
-// ToDo: delete
-// Calculates orientation increments to get from current orientation to the target ori. Uses slerp() with quaternions.
-// Returns: increment of Euler angles
-Cartesian_Pos_t Transform_CalculateOrientationIncrements(const Hyundai_Data_t *eePos_worldFrame,
-                                                         const Cartesian_Pos_t *targetPos_worldFrame) {
-    Cartesian_Pos_t increments{};
-    Quaterniond qin, qout, qres, qincr;
-
-    // Convert Euler angles to Quaternions for further interpolation
-    Cartesian_Pos_t camPos_worldFrame = convertFrameCam2World(eePos_worldFrame,SCISSORS_LENGTH);
-
-    // Convert Euler angles to start and finish quaternions
-    qin = Transform_ConvertEuler2Quat(camPos_worldFrame.rotz, camPos_worldFrame.roty, camPos_worldFrame.rotx);
-    qout = Transform_ConvertEuler2Quat(targetPos_worldFrame->rotz, targetPos_worldFrame->roty,
-                                       targetPos_worldFrame->rotx);
-
-    // Check if quat chose the shortest path. If not, change quat to shortest.
-    if (qin.dot(qout) < 0.0) {
-        qout = quat_conjugate(qout);
-        qout.normalize();
-    }
-
-    qres = qin.slerp(SLERP_INTERP_FACTOR, qout);    //slerp from current to target rotation
-    qres.normalize();           //to insure quat is unit quat, as it can drift occasionally
-
-    qincr = qres * qin.inverse();   // calculate difference between qin and qres (increment)
-    qincr.normalize();
-
-    Cartesian_Pos_t eul_incr = Transform_ConvertQuat2Euler(qincr);   //convert increment quat to inc euler
-
-#ifdef DEBUG_QUATERNIONS
-    //std::cout << "targ RotX = " << recvRobotDataTCPframed->rotX << " \ttarg RotY = " << recvRobotDataTCPframed->rotY << "\ttarg RotZ = " << recvRobotDataTCPframed->rotZ << std::endl;
-    //std::cout << "sent RotX = " << euler_to_send.rotX << " \tsent RotY = " << euler_to_send.rotY << "\tsent RotZ = " << euler_to_send.rotZ << std::endl;
-    std::cout << std::fixed << std::setprecision(5);
-    std::cout << "qin=  \t" << qin << "\n";
-    std::cout << "qres= \t" << qres << "\n";
-    std::cout << "qincr= \t" << qincr << "\n";
-    std::cout << "qout= \t" << qout << "\n";
-    std::cout << "----------------------------------------\n";
-#endif
-
-    // Write increment Euler values to send
-    increments.rotx = eul_incr.rotx;
-    increments.roty = eul_incr.roty;
-    increments.rotz = eul_incr.rotz;
-
-    return increments;
-}
-
-
 // Conjugates quaternion
 // Returns: conjugate of a quaternion
 Quaterniond quat_conjugate(const Quaterniond q){
@@ -528,20 +437,6 @@ Cartesian_Pos_t Transform_ConvertQuat2Euler(Quaterniond q) {
     eul.rotz = std::atan2(mat(1, 0), mat(0, 0));
 
     return eul;
-}
-
-// Todo: delete and replace with newer version
-// Calculates distance between two points in 3D space
-// Returns: distance in meters
-double Transform_CalcDistanceBetweenPoints(const Hyundai_Data_t *eePos_worldFrame, const Cartesian_Pos_t *targetPos_worldFrame){
-    double x1,x2,y1,y2,z1,z2;
-    x1 = eePos_worldFrame->coord[0];
-    y1 = eePos_worldFrame->coord[1];
-    z1 = eePos_worldFrame->coord[2];
-    x2 = targetPos_worldFrame->x;
-    y2 = targetPos_worldFrame->y;
-    z2 = targetPos_worldFrame->z;
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2));
 }
 
 

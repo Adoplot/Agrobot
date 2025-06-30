@@ -35,11 +35,7 @@ static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t ne
     currentSequenceResult = result;
 }
 
-// Todo: PASHA - targetParameters_worldFrame has to include cutplace [x1 y1 z1] and branch direction [x2 y2 z2]
-//             - create pseudo function for calculating targetParameters_worldFrame from targetParameters_camFrame.
-//               Input - *eePos_worldFrame
-// Todo: PASHA - get currentConfig from Hyundai
-// Todo: ADOPLOT get branchStart and branchDir from targetParameters_worldFrame
+
 bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetParameters_worldFrame, Hyundai_Data_t *eePos_worldFrame){
     double branchStart[3]       {targetParameters_worldFrame->x1,targetParameters_worldFrame->y1,targetParameters_worldFrame->z1};
     double branchDir[3]         {targetParameters_worldFrame->x2,targetParameters_worldFrame->y2,targetParameters_worldFrame->z2};
