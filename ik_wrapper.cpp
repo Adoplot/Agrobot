@@ -221,7 +221,7 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
             targetApr[i] = sortedList.at(n, i);
         }
         //Check if robot can reach both waypoints (on circle and cutplace) and if so, output waypoints
-        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters,&exitCode,&solutionInfoApr,qWaypoints);
+        Matlab_getGikFull(currentConfig, targetApr, branchStart, &solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypoints);
         *code = static_cast<int>(exitCode+0.1);  //to safely cast double to int, because (0.9999 -> 0)
         n++;
     }
