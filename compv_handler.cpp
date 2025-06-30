@@ -680,7 +680,7 @@ static void handleFinalApproachRequest(const json& json) {
     struct0_T solverParameters {};
     IK_InitSolverParameters(&solverParameters);
 
-    Matlab_getGikCut(currentConfig,branchStart,&solverParameters,&exitCode,&solutionInfoApr,qWaypointCut);
+    Matlab_getGikCut(currentConfig,branchStart,&solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypointCut);
     code = static_cast<int>(exitCode+0.1);
 
     if (code != 1){
