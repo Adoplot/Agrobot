@@ -256,8 +256,9 @@ static void handleGetRobotStateRequest(){
 
     json_send["request"] = GET_ROBOT_STATE_STR;
     json_send["sequence"] = sequenceName;
-    json_send["result"] = currentSequenceResult;
     json_send["reason"] = currentSequenceReason;
+    json_send["state"] = currentSequenceResult;
+
 
     std::string string_send = json_send.dump();
     Connection_SendTcp(sockfd_compv, &string_send);
