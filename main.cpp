@@ -32,7 +32,14 @@ vend    [1.1,  -1,  0.8]
 {"request" : "APPROACH","positions": [{"id": 1,"isReachable": true,"x1": -0.0247,"y1": -0.2511,"z1": 0.4641,"x2": 0.9704,"y2": -0.3361,"z2": 0.5151}]}
 
 {"request" : "APPROACH","positions": [{"id": 1,"isReachable": true,"x1": 0.014,"y1": 0.016,"z1": 0.484,"x2": -0.053,"y2": 0.029,"z2": 0.507}]}
-{"request" : "SWITCH_BASE_NEXT"}
+{"request" : "FINAL_APPROACH","positions": [{"id": 1,"isReachable": true,"x1": 0.014,"y1": 0.016,"z1": 0.484,"x2": -0.053,"y2": 0.029,"z2": 0.507}]}
+
+{"request" : "APPROACH","positions": [{"id": 1,"isReachable": true,"x1":-0.04486518353223801,"x2":0.0023883781395852566,"y1":0.10394474118947983,"y2":0.11216890811920166,"z1":0.47699999809265137,"z2":0.45899999141693115}]}
+{"request" : "FINAL_APPROACH","positions": [{"id": 1,"isReachable": true,"x1":-0.04486518353223801,"x2":0.0023883781395852566,"y1":0.10394474118947983,"y2":0.11216890811920166,"z1":0.47699999809265137,"z2":0.45899999141693115}]}
+
+
+ {"request" : "SWITCH_BASE_NEXT"}
+{"request" : "GET_ROBOT_STATE"}
 {"request" : "GO_HOME"}
 
 robot_configuration 0.372 66.433 -35.118 4.085 53.841 -2.503

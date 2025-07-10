@@ -5,7 +5,7 @@
 // File: Matlab_ik.cpp
 //
 // MATLAB Coder version            : 24.2
-// C/C++ source code generated on  : 26-Jun-2025 16:17:08
+// C/C++ source code generated on  : 10-Jul-2025 13:29:03
 //
 
 // Include Files
@@ -1612,317 +1612,6 @@ namespace coder
   }
 
   //
-  // Arguments    : void
-  // Return Type  : rigidBodyJoint *
-  //
-  rigidBodyJoint *rigidBodyJoint::b_init()
-  {
-    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
-
-    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
-
-    static const char b_cv[7]{ 'j', 'n', 't', 'B', 'a', 's', 'e' };
-
-    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
-
-    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
-
-    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
-
-    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    rigidBodyJoint *obj;
-    robotics::manip::internal::CharacterVector s;
-    double msubspace_data[36];
-    double poslim_data[14];
-    int exitg1;
-    int homepos_size_idx_1;
-    int i;
-    int ibmat;
-    int poslim_size_idx_0;
-    signed char homepos_data[7];
-    signed char b_tmp;
-    bool result;
-    obj = this;
-    obj->InTree = false;
-    for (i = 0; i < 16; i++) {
-      b_tmp = iv[i];
-      obj->JointToParentTransform[i] = b_tmp;
-      obj->ChildToJointTransform[i] = b_tmp;
-    }
-
-    for (i = 0; i < 14; i++) {
-      obj->PositionLimitsInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 7; i++) {
-      obj->HomePositionInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 36; i++) {
-      obj->MotionSubspaceInternal[i] = 0.0;
-    }
-
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->NameInternal = s;
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->TypeInternal = s;
-    s = obj->NameInternal;
-    s.Length = 7.0;
-    for (i = 0; i < 7; i++) {
-      s.Vector[i] = b_cv[i];
-    }
-
-    obj->NameInternal = s;
-    s = obj->TypeInternal;
-    s.Length = 5.0;
-    for (i = 0; i < 5; i++) {
-      s.Vector[i] = b_cv1[i];
-    }
-
-    obj->TypeInternal = s;
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 8) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 8) {
-          if (b_cv2[ibmat] != s.Vector[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (result) {
-      ibmat = 0;
-    } else {
-      result = false;
-      if (i == 9) {
-        ibmat = 0;
-        do {
-          exitg1 = 0;
-          if (ibmat < 9) {
-            if (cv1[ibmat] != s.Vector[ibmat]) {
-              exitg1 = 1;
-            } else {
-              ibmat++;
-            }
-          } else {
-            result = true;
-            exitg1 = 1;
-          }
-        } while (exitg1 == 0);
-      }
-
-      if (result) {
-        ibmat = 1;
-      } else {
-        result = false;
-        if (i == 8) {
-          ibmat = 0;
-          do {
-            exitg1 = 0;
-            if (ibmat < 8) {
-              if (b_cv3[ibmat] != s.Vector[ibmat]) {
-                exitg1 = 1;
-              } else {
-                ibmat++;
-              }
-            } else {
-              result = true;
-              exitg1 = 1;
-            }
-          } while (exitg1 == 0);
-        }
-
-        if (result) {
-          ibmat = 2;
-        } else {
-          ibmat = -1;
-        }
-      }
-    }
-
-    switch (ibmat) {
-     case 0:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -3.1415926535897931;
-      poslim_data[1] = 3.1415926535897931;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 1:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv1[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -0.5;
-      poslim_data[1] = 0.5;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 2:
-      {
-        signed char b_I[36];
-        signed char b[6];
-        for (i = 0; i < 36; i++) {
-          b_I[i] = 0;
-        }
-
-        for (ibmat = 0; ibmat < 6; ibmat++) {
-          b_I[ibmat + 6 * ibmat] = 1;
-        }
-
-        for (i = 0; i < 36; i++) {
-          msubspace_data[i] = b_I[i];
-        }
-
-        poslim_size_idx_0 = 7;
-        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
-             ++) {
-          ibmat = homepos_size_idx_1 * 3;
-          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
-          b[ibmat] = b_tmp;
-          b[ibmat + 1] = b_tmp;
-          b[ibmat + 2] = b_tmp;
-          poslim_data[7 * homepos_size_idx_1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
-        }
-
-        for (i = 0; i < 2; i++) {
-          poslim_data[7 * i + 4] = b[3 * i];
-          poslim_data[7 * i + 5] = b[3 * i + 1];
-          poslim_data[7 * i + 6] = b[3 * i + 2];
-        }
-
-        homepos_size_idx_1 = 7;
-        for (i = 0; i < 7; i++) {
-          homepos_data[i] = iv2[i];
-        }
-
-        obj->VelocityNumber = 6.0;
-        obj->PositionNumber = 7.0;
-        obj->JointAxisInternal[0] = rtNaN;
-        obj->JointAxisInternal[1] = rtNaN;
-        obj->JointAxisInternal[2] = rtNaN;
-      }
-      break;
-
-     default:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = 0.0;
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = 0.0;
-      poslim_data[1] = 0.0;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 0.0;
-      obj->PositionNumber = 0.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 0.0;
-      break;
-    }
-
-    obj->set_MotionSubspace(msubspace_data);
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 5) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 5) {
-          if (s.Vector[ibmat] != b_cv4[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (!result) {
-      double d;
-      d = obj->PositionNumber;
-      if (d < 1.0) {
-        ibmat = 0;
-      } else {
-        ibmat = static_cast<int>(d);
-      }
-
-      for (i = 0; i < 2; i++) {
-        for (int i1{0}; i1 < ibmat; i1++) {
-          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
-            poslim_size_idx_0 * i];
-        }
-      }
-
-      for (i = 0; i < homepos_size_idx_1; i++) {
-        obj->HomePositionInternal[i] = homepos_data[i];
-      }
-    } else {
-      obj->PositionLimitsInternal[0] = poslim_data[0];
-      obj->PositionLimitsInternal[7] = poslim_data[1];
-      obj->HomePositionInternal[0] = homepos_data[0];
-    }
-
-    return obj;
-  }
-
-  //
   // Arguments    : robotics::manip::internal::RigidBodyTree &iobj_0
   //                robotics::manip::internal::CollisionSet &iobj_1
   //                rigidBodyJoint &iobj_2
@@ -2291,6 +1980,317 @@ namespace coder
     obj->BodyInternal = &iobj_3;
     obj->TreeInternal = b_default;
     obj->matlabCodegenIsDeleted = false;
+    return obj;
+  }
+
+  //
+  // Arguments    : void
+  // Return Type  : rigidBodyJoint *
+  //
+  rigidBodyJoint *rigidBodyJoint::b_init()
+  {
+    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
+
+    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
+
+    static const char b_cv[7]{ 'j', 'n', 't', 'B', 'a', 's', 'e' };
+
+    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
+
+    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
+
+    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
+
+    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    rigidBodyJoint *obj;
+    robotics::manip::internal::CharacterVector s;
+    double msubspace_data[36];
+    double poslim_data[14];
+    int exitg1;
+    int homepos_size_idx_1;
+    int i;
+    int ibmat;
+    int poslim_size_idx_0;
+    signed char homepos_data[7];
+    signed char b_tmp;
+    bool result;
+    obj = this;
+    obj->InTree = false;
+    for (i = 0; i < 16; i++) {
+      b_tmp = iv[i];
+      obj->JointToParentTransform[i] = b_tmp;
+      obj->ChildToJointTransform[i] = b_tmp;
+    }
+
+    for (i = 0; i < 14; i++) {
+      obj->PositionLimitsInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 7; i++) {
+      obj->HomePositionInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 36; i++) {
+      obj->MotionSubspaceInternal[i] = 0.0;
+    }
+
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->NameInternal = s;
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->TypeInternal = s;
+    s = obj->NameInternal;
+    s.Length = 7.0;
+    for (i = 0; i < 7; i++) {
+      s.Vector[i] = b_cv[i];
+    }
+
+    obj->NameInternal = s;
+    s = obj->TypeInternal;
+    s.Length = 5.0;
+    for (i = 0; i < 5; i++) {
+      s.Vector[i] = b_cv1[i];
+    }
+
+    obj->TypeInternal = s;
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 8) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 8) {
+          if (b_cv2[ibmat] != s.Vector[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (result) {
+      ibmat = 0;
+    } else {
+      result = false;
+      if (i == 9) {
+        ibmat = 0;
+        do {
+          exitg1 = 0;
+          if (ibmat < 9) {
+            if (cv1[ibmat] != s.Vector[ibmat]) {
+              exitg1 = 1;
+            } else {
+              ibmat++;
+            }
+          } else {
+            result = true;
+            exitg1 = 1;
+          }
+        } while (exitg1 == 0);
+      }
+
+      if (result) {
+        ibmat = 1;
+      } else {
+        result = false;
+        if (i == 8) {
+          ibmat = 0;
+          do {
+            exitg1 = 0;
+            if (ibmat < 8) {
+              if (b_cv3[ibmat] != s.Vector[ibmat]) {
+                exitg1 = 1;
+              } else {
+                ibmat++;
+              }
+            } else {
+              result = true;
+              exitg1 = 1;
+            }
+          } while (exitg1 == 0);
+        }
+
+        if (result) {
+          ibmat = 2;
+        } else {
+          ibmat = -1;
+        }
+      }
+    }
+
+    switch (ibmat) {
+     case 0:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -3.1415926535897931;
+      poslim_data[1] = 3.1415926535897931;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 1:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv1[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -0.5;
+      poslim_data[1] = 0.5;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 2:
+      {
+        signed char b_I[36];
+        signed char b[6];
+        for (i = 0; i < 36; i++) {
+          b_I[i] = 0;
+        }
+
+        for (ibmat = 0; ibmat < 6; ibmat++) {
+          b_I[ibmat + 6 * ibmat] = 1;
+        }
+
+        for (i = 0; i < 36; i++) {
+          msubspace_data[i] = b_I[i];
+        }
+
+        poslim_size_idx_0 = 7;
+        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
+             ++) {
+          ibmat = homepos_size_idx_1 * 3;
+          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
+          b[ibmat] = b_tmp;
+          b[ibmat + 1] = b_tmp;
+          b[ibmat + 2] = b_tmp;
+          poslim_data[7 * homepos_size_idx_1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
+        }
+
+        for (i = 0; i < 2; i++) {
+          poslim_data[7 * i + 4] = b[3 * i];
+          poslim_data[7 * i + 5] = b[3 * i + 1];
+          poslim_data[7 * i + 6] = b[3 * i + 2];
+        }
+
+        homepos_size_idx_1 = 7;
+        for (i = 0; i < 7; i++) {
+          homepos_data[i] = iv2[i];
+        }
+
+        obj->VelocityNumber = 6.0;
+        obj->PositionNumber = 7.0;
+        obj->JointAxisInternal[0] = rtNaN;
+        obj->JointAxisInternal[1] = rtNaN;
+        obj->JointAxisInternal[2] = rtNaN;
+      }
+      break;
+
+     default:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = 0.0;
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = 0.0;
+      poslim_data[1] = 0.0;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 0.0;
+      obj->PositionNumber = 0.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 0.0;
+      break;
+    }
+
+    obj->set_MotionSubspace(msubspace_data);
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 5) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 5) {
+          if (s.Vector[ibmat] != b_cv4[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (!result) {
+      double d;
+      d = obj->PositionNumber;
+      if (d < 1.0) {
+        ibmat = 0;
+      } else {
+        ibmat = static_cast<int>(d);
+      }
+
+      for (i = 0; i < 2; i++) {
+        for (int i1{0}; i1 < ibmat; i1++) {
+          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
+            poslim_size_idx_0 * i];
+        }
+      }
+
+      for (i = 0; i < homepos_size_idx_1; i++) {
+        obj->HomePositionInternal[i] = homepos_data[i];
+      }
+    } else {
+      obj->PositionLimitsInternal[0] = poslim_data[0];
+      obj->PositionLimitsInternal[7] = poslim_data[1];
+      obj->HomePositionInternal[0] = homepos_data[0];
+    }
+
     return obj;
   }
 
@@ -5327,27 +5327,6 @@ namespace coder
   }
 
   //
-  // Arguments    : void
-  // Return Type  : collisionCapsule *
-  //
-  collisionCapsule *collisionCapsule::d_init()
-  {
-    void *geometryInternal;
-    collisionCapsule *obj;
-    obj = this;
-    for (int i{0}; i < 16; i++) {
-      obj->PoseInternal[i] = iv[i];
-    }
-
-    obj->RadiusInternal = 0.071;
-    obj->LengthInternal = 0.331;
-    geometryInternal = collisioncodegen_makeCapsule(0.071, 0.331);
-    obj->GeometryInternal = geometryInternal;
-    obj->matlabCodegenIsDeleted = false;
-    return obj;
-  }
-
-  //
   // Arguments    : robotics::manip::internal::RigidBodyTree &iobj_0
   //                robotics::manip::internal::CollisionSet &iobj_1
   //                rigidBodyJoint &iobj_2
@@ -6026,6 +6005,27 @@ namespace coder
       obj->HomePositionInternal[0] = homepos_data[0];
     }
 
+    return obj;
+  }
+
+  //
+  // Arguments    : void
+  // Return Type  : collisionCapsule *
+  //
+  collisionCapsule *collisionCapsule::d_init()
+  {
+    void *geometryInternal;
+    collisionCapsule *obj;
+    obj = this;
+    for (int i{0}; i < 16; i++) {
+      obj->PoseInternal[i] = iv[i];
+    }
+
+    obj->RadiusInternal = 0.071;
+    obj->LengthInternal = 0.331;
+    geometryInternal = collisioncodegen_makeCapsule(0.071, 0.331);
+    obj->GeometryInternal = geometryInternal;
+    obj->matlabCodegenIsDeleted = false;
     return obj;
   }
 
@@ -11087,6 +11087,77 @@ namespace coder
   }
 
   //
+  // Arguments    : void
+  // Return Type  : constraintOrientationTarget *
+  //
+  constraintOrientationTarget *constraintOrientationTarget::init()
+  {
+    constraintOrientationTarget *obj;
+    obj = this;
+    obj->ConstructorPropertyDefaultValues.f2[0] = 1.0;
+    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[3] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
+    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
+    for (int i{0}; i < 10; i++) {
+      obj->EndEffector[i] = cv3[i];
+    }
+
+    double defaultValues_f2_idx_0;
+    double defaultValues_f2_idx_1;
+    double defaultValues_f2_idx_2;
+    double defaultValues_f2_idx_3;
+    double defaultValues_f3;
+    double defaultValues_f4;
+    double normRowMatrix_idx_0;
+    double normRowMatrix_idx_1;
+    double normRowMatrix_idx_2;
+    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
+    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
+    obj->ReferenceBody.set_size(0, 0);
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[0];
+    defaultValues_f2_idx_0 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_0 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[1];
+    defaultValues_f2_idx_1 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_1 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[2];
+    defaultValues_f2_idx_2 = defaultValues_f2_idx_3;
+    normRowMatrix_idx_2 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
+    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[3];
+    normRowMatrix_idx_0 = 1.0 / std::sqrt(((normRowMatrix_idx_0 +
+      normRowMatrix_idx_1) + normRowMatrix_idx_2) + defaultValues_f2_idx_3 *
+      defaultValues_f2_idx_3);
+    obj->TargetOrientation[0] = defaultValues_f2_idx_0 * normRowMatrix_idx_0;
+    obj->TargetOrientation[1] = defaultValues_f2_idx_1 * normRowMatrix_idx_0;
+    obj->TargetOrientation[2] = defaultValues_f2_idx_2 * normRowMatrix_idx_0;
+    obj->TargetOrientation[3] = defaultValues_f2_idx_3 * normRowMatrix_idx_0;
+    obj->OrientationTolerance = defaultValues_f3;
+    obj->Weights = defaultValues_f4;
+    return obj;
+  }
+
+  //
+  // Arguments    : const double varargin_1[9]
+  //                const double varargin_2[3]
+  // Return Type  : void
+  //
+  void se3::init(const double varargin_1[9], const double varargin_2[3])
+  {
+    std::memset(&M[0], 0, 16U * sizeof(double));
+    M[15] = 1.0;
+    for (int i{0}; i < 3; i++) {
+      int i1;
+      i1 = i << 2;
+      M[i1] = varargin_1[3 * i];
+      M[i1 + 1] = varargin_1[3 * i + 1];
+      M[i1 + 2] = varargin_1[3 * i + 2];
+      M[i + 12] = varargin_2[i];
+    }
+  }
+
+  //
   // Arguments    : rigidBodyTree &varargin_2
   // Return Type  : generalizedInverseKinematics *
   //
@@ -11551,346 +11622,57 @@ namespace coder
   }
 
   //
-  // Arguments    : const double varargin_1[9]
-  //                const double varargin_2[3]
-  // Return Type  : void
-  //
-  void se3::init(const double varargin_1[9], const double varargin_2[3])
-  {
-    std::memset(&M[0], 0, 16U * sizeof(double));
-    M[15] = 1.0;
-    for (int i{0}; i < 3; i++) {
-      int i1;
-      i1 = i << 2;
-      M[i1] = varargin_1[3 * i];
-      M[i1 + 1] = varargin_1[3 * i + 1];
-      M[i1 + 2] = varargin_1[3 * i + 2];
-      M[i + 12] = varargin_2[i];
-    }
-  }
-
-  //
   // Arguments    : void
-  // Return Type  : rigidBodyTree *
+  // Return Type  : constraintPositionTarget *
   //
-  rigidBodyTree *rigidBodyTree::init()
+  constraintPositionTarget *constraintPositionTarget::init()
   {
-    rigidBodyTree *obj;
+    constraintPositionTarget *obj;
     obj = this;
-    obj->TreeInternal = obj->_pobj1.init();
-    obj->TreeInternal->Base.CollisionsInternal = obj->_pobj0.init(10.0);
-    obj->matlabCodegenIsDeleted = false;
+    obj->ConstructorPropertyDefaultValues.f2[0] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
+    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
+    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
+    for (int i{0}; i < 9; i++) {
+      obj->EndEffector[i] = cv4[i];
+    }
+
+    double d;
+    double defaultValues_f3;
+    double defaultValues_f4;
+    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
+    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
+    obj->ReferenceBody.set_size(0, 0);
+    d = obj->ConstructorPropertyDefaultValues.f2[0];
+    obj->TargetPosition[0] = d;
+    d = obj->ConstructorPropertyDefaultValues.f2[1];
+    obj->TargetPosition[1] = d;
+    d = obj->ConstructorPropertyDefaultValues.f2[2];
+    obj->TargetPosition[2] = d;
+    obj->PositionTolerance = defaultValues_f3;
+    obj->Weights = defaultValues_f4;
     return obj;
   }
 
   //
   // Arguments    : void
-  // Return Type  : rigidBodyJoint *
+  // Return Type  : collisionCapsule *
   //
-  rigidBodyJoint *rigidBodyJoint::init()
+  collisionCapsule *collisionCapsule::init()
   {
-    static const char b_cv[8]{ 'b', 'a', 's', 'e', '_', 'j', 'n', 't' };
-
-    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
-
-    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
-
-    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
-
-    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
-
-    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
-
-    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    rigidBodyJoint *obj;
-    robotics::manip::internal::CharacterVector s;
-    double msubspace_data[36];
-    double poslim_data[14];
-    int exitg1;
-    int homepos_size_idx_1;
-    int i;
-    int ibmat;
-    int poslim_size_idx_0;
-    signed char homepos_data[7];
-    signed char b_tmp;
-    bool result;
+    void *geometryInternal;
+    collisionCapsule *obj;
     obj = this;
-    obj->InTree = false;
-    for (i = 0; i < 16; i++) {
-      b_tmp = iv[i];
-      obj->JointToParentTransform[i] = b_tmp;
-      obj->ChildToJointTransform[i] = b_tmp;
+    for (int i{0}; i < 16; i++) {
+      obj->PoseInternal[i] = iv[i];
     }
 
-    for (i = 0; i < 14; i++) {
-      obj->PositionLimitsInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 7; i++) {
-      obj->HomePositionInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 36; i++) {
-      obj->MotionSubspaceInternal[i] = 0.0;
-    }
-
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->NameInternal = s;
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->TypeInternal = s;
-    s = obj->NameInternal;
-    s.Length = 8.0;
-    for (i = 0; i < 8; i++) {
-      s.Vector[i] = b_cv[i];
-    }
-
-    obj->NameInternal = s;
-    s = obj->TypeInternal;
-    s.Length = 5.0;
-    for (i = 0; i < 5; i++) {
-      s.Vector[i] = b_cv1[i];
-    }
-
-    obj->TypeInternal = s;
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 8) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 8) {
-          if (b_cv2[ibmat] != s.Vector[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (result) {
-      ibmat = 0;
-    } else {
-      result = false;
-      if (i == 9) {
-        ibmat = 0;
-        do {
-          exitg1 = 0;
-          if (ibmat < 9) {
-            if (cv1[ibmat] != s.Vector[ibmat]) {
-              exitg1 = 1;
-            } else {
-              ibmat++;
-            }
-          } else {
-            result = true;
-            exitg1 = 1;
-          }
-        } while (exitg1 == 0);
-      }
-
-      if (result) {
-        ibmat = 1;
-      } else {
-        result = false;
-        if (i == 8) {
-          ibmat = 0;
-          do {
-            exitg1 = 0;
-            if (ibmat < 8) {
-              if (b_cv3[ibmat] != s.Vector[ibmat]) {
-                exitg1 = 1;
-              } else {
-                ibmat++;
-              }
-            } else {
-              result = true;
-              exitg1 = 1;
-            }
-          } while (exitg1 == 0);
-        }
-
-        if (result) {
-          ibmat = 2;
-        } else {
-          ibmat = -1;
-        }
-      }
-    }
-
-    switch (ibmat) {
-     case 0:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -3.1415926535897931;
-      poslim_data[1] = 3.1415926535897931;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 1:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv1[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -0.5;
-      poslim_data[1] = 0.5;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 2:
-      {
-        signed char b_I[36];
-        signed char b[6];
-        for (i = 0; i < 36; i++) {
-          b_I[i] = 0;
-        }
-
-        for (ibmat = 0; ibmat < 6; ibmat++) {
-          b_I[ibmat + 6 * ibmat] = 1;
-        }
-
-        for (i = 0; i < 36; i++) {
-          msubspace_data[i] = b_I[i];
-        }
-
-        poslim_size_idx_0 = 7;
-        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
-             ++) {
-          ibmat = homepos_size_idx_1 * 3;
-          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
-          b[ibmat] = b_tmp;
-          b[ibmat + 1] = b_tmp;
-          b[ibmat + 2] = b_tmp;
-          poslim_data[7 * homepos_size_idx_1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
-        }
-
-        for (i = 0; i < 2; i++) {
-          poslim_data[7 * i + 4] = b[3 * i];
-          poslim_data[7 * i + 5] = b[3 * i + 1];
-          poslim_data[7 * i + 6] = b[3 * i + 2];
-        }
-
-        homepos_size_idx_1 = 7;
-        for (i = 0; i < 7; i++) {
-          homepos_data[i] = iv2[i];
-        }
-
-        obj->VelocityNumber = 6.0;
-        obj->PositionNumber = 7.0;
-        obj->JointAxisInternal[0] = rtNaN;
-        obj->JointAxisInternal[1] = rtNaN;
-        obj->JointAxisInternal[2] = rtNaN;
-      }
-      break;
-
-     default:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = 0.0;
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = 0.0;
-      poslim_data[1] = 0.0;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 0.0;
-      obj->PositionNumber = 0.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 0.0;
-      break;
-    }
-
-    obj->set_MotionSubspace(msubspace_data);
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 5) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 5) {
-          if (s.Vector[ibmat] != b_cv4[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (!result) {
-      double d;
-      d = obj->PositionNumber;
-      if (d < 1.0) {
-        ibmat = 0;
-      } else {
-        ibmat = static_cast<int>(d);
-      }
-
-      for (i = 0; i < 2; i++) {
-        for (int i1{0}; i1 < ibmat; i1++) {
-          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
-            poslim_size_idx_0 * i];
-        }
-      }
-
-      for (i = 0; i < homepos_size_idx_1; i++) {
-        obj->HomePositionInternal[i] = homepos_data[i];
-      }
-    } else {
-      obj->PositionLimitsInternal[0] = poslim_data[0];
-      obj->PositionLimitsInternal[7] = poslim_data[1];
-      obj->HomePositionInternal[0] = homepos_data[0];
-    }
-
+    obj->RadiusInternal = 0.18;
+    obj->LengthInternal = 0.05;
+    geometryInternal = collisioncodegen_makeCapsule(0.18, 0.05);
+    obj->GeometryInternal = geometryInternal;
+    obj->matlabCodegenIsDeleted = false;
     return obj;
   }
 
@@ -12268,108 +12050,326 @@ namespace coder
 
   //
   // Arguments    : void
-  // Return Type  : collisionCapsule *
+  // Return Type  : rigidBodyJoint *
   //
-  collisionCapsule *collisionCapsule::init()
+  rigidBodyJoint *rigidBodyJoint::init()
   {
-    void *geometryInternal;
-    collisionCapsule *obj;
+    static const char b_cv[8]{ 'b', 'a', 's', 'e', '_', 'j', 'n', 't' };
+
+    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
+
+    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
+
+    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
+
+    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
+
+    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
+
+    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    rigidBodyJoint *obj;
+    robotics::manip::internal::CharacterVector s;
+    double msubspace_data[36];
+    double poslim_data[14];
+    int exitg1;
+    int homepos_size_idx_1;
+    int i;
+    int ibmat;
+    int poslim_size_idx_0;
+    signed char homepos_data[7];
+    signed char b_tmp;
+    bool result;
     obj = this;
-    for (int i{0}; i < 16; i++) {
-      obj->PoseInternal[i] = iv[i];
+    obj->InTree = false;
+    for (i = 0; i < 16; i++) {
+      b_tmp = iv[i];
+      obj->JointToParentTransform[i] = b_tmp;
+      obj->ChildToJointTransform[i] = b_tmp;
     }
 
-    obj->RadiusInternal = 0.18;
-    obj->LengthInternal = 0.05;
-    geometryInternal = collisioncodegen_makeCapsule(0.18, 0.05);
-    obj->GeometryInternal = geometryInternal;
+    for (i = 0; i < 14; i++) {
+      obj->PositionLimitsInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 7; i++) {
+      obj->HomePositionInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 36; i++) {
+      obj->MotionSubspaceInternal[i] = 0.0;
+    }
+
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->NameInternal = s;
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->TypeInternal = s;
+    s = obj->NameInternal;
+    s.Length = 8.0;
+    for (i = 0; i < 8; i++) {
+      s.Vector[i] = b_cv[i];
+    }
+
+    obj->NameInternal = s;
+    s = obj->TypeInternal;
+    s.Length = 5.0;
+    for (i = 0; i < 5; i++) {
+      s.Vector[i] = b_cv1[i];
+    }
+
+    obj->TypeInternal = s;
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 8) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 8) {
+          if (b_cv2[ibmat] != s.Vector[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (result) {
+      ibmat = 0;
+    } else {
+      result = false;
+      if (i == 9) {
+        ibmat = 0;
+        do {
+          exitg1 = 0;
+          if (ibmat < 9) {
+            if (cv1[ibmat] != s.Vector[ibmat]) {
+              exitg1 = 1;
+            } else {
+              ibmat++;
+            }
+          } else {
+            result = true;
+            exitg1 = 1;
+          }
+        } while (exitg1 == 0);
+      }
+
+      if (result) {
+        ibmat = 1;
+      } else {
+        result = false;
+        if (i == 8) {
+          ibmat = 0;
+          do {
+            exitg1 = 0;
+            if (ibmat < 8) {
+              if (b_cv3[ibmat] != s.Vector[ibmat]) {
+                exitg1 = 1;
+              } else {
+                ibmat++;
+              }
+            } else {
+              result = true;
+              exitg1 = 1;
+            }
+          } while (exitg1 == 0);
+        }
+
+        if (result) {
+          ibmat = 2;
+        } else {
+          ibmat = -1;
+        }
+      }
+    }
+
+    switch (ibmat) {
+     case 0:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -3.1415926535897931;
+      poslim_data[1] = 3.1415926535897931;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 1:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv1[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -0.5;
+      poslim_data[1] = 0.5;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 2:
+      {
+        signed char b_I[36];
+        signed char b[6];
+        for (i = 0; i < 36; i++) {
+          b_I[i] = 0;
+        }
+
+        for (ibmat = 0; ibmat < 6; ibmat++) {
+          b_I[ibmat + 6 * ibmat] = 1;
+        }
+
+        for (i = 0; i < 36; i++) {
+          msubspace_data[i] = b_I[i];
+        }
+
+        poslim_size_idx_0 = 7;
+        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
+             ++) {
+          ibmat = homepos_size_idx_1 * 3;
+          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
+          b[ibmat] = b_tmp;
+          b[ibmat + 1] = b_tmp;
+          b[ibmat + 2] = b_tmp;
+          poslim_data[7 * homepos_size_idx_1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
+        }
+
+        for (i = 0; i < 2; i++) {
+          poslim_data[7 * i + 4] = b[3 * i];
+          poslim_data[7 * i + 5] = b[3 * i + 1];
+          poslim_data[7 * i + 6] = b[3 * i + 2];
+        }
+
+        homepos_size_idx_1 = 7;
+        for (i = 0; i < 7; i++) {
+          homepos_data[i] = iv2[i];
+        }
+
+        obj->VelocityNumber = 6.0;
+        obj->PositionNumber = 7.0;
+        obj->JointAxisInternal[0] = rtNaN;
+        obj->JointAxisInternal[1] = rtNaN;
+        obj->JointAxisInternal[2] = rtNaN;
+      }
+      break;
+
+     default:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = 0.0;
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = 0.0;
+      poslim_data[1] = 0.0;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 0.0;
+      obj->PositionNumber = 0.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 0.0;
+      break;
+    }
+
+    obj->set_MotionSubspace(msubspace_data);
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 5) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 5) {
+          if (s.Vector[ibmat] != b_cv4[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (!result) {
+      double d;
+      d = obj->PositionNumber;
+      if (d < 1.0) {
+        ibmat = 0;
+      } else {
+        ibmat = static_cast<int>(d);
+      }
+
+      for (i = 0; i < 2; i++) {
+        for (int i1{0}; i1 < ibmat; i1++) {
+          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
+            poslim_size_idx_0 * i];
+        }
+      }
+
+      for (i = 0; i < homepos_size_idx_1; i++) {
+        obj->HomePositionInternal[i] = homepos_data[i];
+      }
+    } else {
+      obj->PositionLimitsInternal[0] = poslim_data[0];
+      obj->PositionLimitsInternal[7] = poslim_data[1];
+      obj->HomePositionInternal[0] = homepos_data[0];
+    }
+
+    return obj;
+  }
+
+  //
+  // Arguments    : void
+  // Return Type  : rigidBodyTree *
+  //
+  rigidBodyTree *rigidBodyTree::init()
+  {
+    rigidBodyTree *obj;
+    obj = this;
+    obj->TreeInternal = obj->_pobj1.init();
+    obj->TreeInternal->Base.CollisionsInternal = obj->_pobj0.init(10.0);
     obj->matlabCodegenIsDeleted = false;
-    return obj;
-  }
-
-  //
-  // Arguments    : void
-  // Return Type  : constraintOrientationTarget *
-  //
-  constraintOrientationTarget *constraintOrientationTarget::init()
-  {
-    constraintOrientationTarget *obj;
-    obj = this;
-    obj->ConstructorPropertyDefaultValues.f2[0] = 1.0;
-    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[3] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
-    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
-    for (int i{0}; i < 10; i++) {
-      obj->EndEffector[i] = cv3[i];
-    }
-
-    double defaultValues_f2_idx_0;
-    double defaultValues_f2_idx_1;
-    double defaultValues_f2_idx_2;
-    double defaultValues_f2_idx_3;
-    double defaultValues_f3;
-    double defaultValues_f4;
-    double normRowMatrix_idx_0;
-    double normRowMatrix_idx_1;
-    double normRowMatrix_idx_2;
-    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
-    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
-    obj->ReferenceBody.set_size(0, 0);
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[0];
-    defaultValues_f2_idx_0 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_0 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[1];
-    defaultValues_f2_idx_1 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_1 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[2];
-    defaultValues_f2_idx_2 = defaultValues_f2_idx_3;
-    normRowMatrix_idx_2 = defaultValues_f2_idx_3 * defaultValues_f2_idx_3;
-    defaultValues_f2_idx_3 = obj->ConstructorPropertyDefaultValues.f2[3];
-    normRowMatrix_idx_0 = 1.0 / std::sqrt(((normRowMatrix_idx_0 +
-      normRowMatrix_idx_1) + normRowMatrix_idx_2) + defaultValues_f2_idx_3 *
-      defaultValues_f2_idx_3);
-    obj->TargetOrientation[0] = defaultValues_f2_idx_0 * normRowMatrix_idx_0;
-    obj->TargetOrientation[1] = defaultValues_f2_idx_1 * normRowMatrix_idx_0;
-    obj->TargetOrientation[2] = defaultValues_f2_idx_2 * normRowMatrix_idx_0;
-    obj->TargetOrientation[3] = defaultValues_f2_idx_3 * normRowMatrix_idx_0;
-    obj->OrientationTolerance = defaultValues_f3;
-    obj->Weights = defaultValues_f4;
-    return obj;
-  }
-
-  //
-  // Arguments    : void
-  // Return Type  : constraintPositionTarget *
-  //
-  constraintPositionTarget *constraintPositionTarget::init()
-  {
-    constraintPositionTarget *obj;
-    obj = this;
-    obj->ConstructorPropertyDefaultValues.f2[0] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[1] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f2[2] = 0.0;
-    obj->ConstructorPropertyDefaultValues.f3 = 0.0;
-    obj->ConstructorPropertyDefaultValues.f4 = 1.0;
-    for (int i{0}; i < 9; i++) {
-      obj->EndEffector[i] = cv4[i];
-    }
-
-    double d;
-    double defaultValues_f3;
-    double defaultValues_f4;
-    defaultValues_f3 = obj->ConstructorPropertyDefaultValues.f3;
-    defaultValues_f4 = obj->ConstructorPropertyDefaultValues.f4;
-    obj->ReferenceBody.set_size(0, 0);
-    d = obj->ConstructorPropertyDefaultValues.f2[0];
-    obj->TargetPosition[0] = d;
-    d = obj->ConstructorPropertyDefaultValues.f2[1];
-    obj->TargetPosition[1] = d;
-    d = obj->ConstructorPropertyDefaultValues.f2[2];
-    obj->TargetPosition[2] = d;
-    obj->PositionTolerance = defaultValues_f3;
-    obj->Weights = defaultValues_f4;
     return obj;
   }
 
@@ -13574,6 +13574,317 @@ namespace coder
   }
 
   //
+  // Arguments    : void
+  // Return Type  : rigidBodyJoint *
+  //
+  rigidBodyJoint *rigidBodyJoint::k_init()
+  {
+    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
+
+    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
+
+    static const char b_cv[7]{ 'j', 'n', 't', 'T', 'o', 'o', 'l' };
+
+    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
+
+    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
+
+    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
+
+    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
+
+    rigidBodyJoint *obj;
+    robotics::manip::internal::CharacterVector s;
+    double msubspace_data[36];
+    double poslim_data[14];
+    int exitg1;
+    int homepos_size_idx_1;
+    int i;
+    int ibmat;
+    int poslim_size_idx_0;
+    signed char homepos_data[7];
+    signed char b_tmp;
+    bool result;
+    obj = this;
+    obj->InTree = false;
+    for (i = 0; i < 16; i++) {
+      b_tmp = iv[i];
+      obj->JointToParentTransform[i] = b_tmp;
+      obj->ChildToJointTransform[i] = b_tmp;
+    }
+
+    for (i = 0; i < 14; i++) {
+      obj->PositionLimitsInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 7; i++) {
+      obj->HomePositionInternal[i] = 0.0;
+    }
+
+    for (i = 0; i < 36; i++) {
+      obj->MotionSubspaceInternal[i] = 0.0;
+    }
+
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->NameInternal = s;
+    s.Length = 200.0;
+    for (i = 0; i < 200; i++) {
+      s.Vector[i] = ' ';
+    }
+
+    obj->TypeInternal = s;
+    s = obj->NameInternal;
+    s.Length = 7.0;
+    for (i = 0; i < 7; i++) {
+      s.Vector[i] = b_cv[i];
+    }
+
+    obj->NameInternal = s;
+    s = obj->TypeInternal;
+    s.Length = 5.0;
+    for (i = 0; i < 5; i++) {
+      s.Vector[i] = b_cv1[i];
+    }
+
+    obj->TypeInternal = s;
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 8) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 8) {
+          if (b_cv2[ibmat] != s.Vector[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (result) {
+      ibmat = 0;
+    } else {
+      result = false;
+      if (i == 9) {
+        ibmat = 0;
+        do {
+          exitg1 = 0;
+          if (ibmat < 9) {
+            if (cv1[ibmat] != s.Vector[ibmat]) {
+              exitg1 = 1;
+            } else {
+              ibmat++;
+            }
+          } else {
+            result = true;
+            exitg1 = 1;
+          }
+        } while (exitg1 == 0);
+      }
+
+      if (result) {
+        ibmat = 1;
+      } else {
+        result = false;
+        if (i == 8) {
+          ibmat = 0;
+          do {
+            exitg1 = 0;
+            if (ibmat < 8) {
+              if (b_cv3[ibmat] != s.Vector[ibmat]) {
+                exitg1 = 1;
+              } else {
+                ibmat++;
+              }
+            } else {
+              result = true;
+              exitg1 = 1;
+            }
+          } while (exitg1 == 0);
+        }
+
+        if (result) {
+          ibmat = 2;
+        } else {
+          ibmat = -1;
+        }
+      }
+    }
+
+    switch (ibmat) {
+     case 0:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -3.1415926535897931;
+      poslim_data[1] = 3.1415926535897931;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 1:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = b_iv1[i];
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = -0.5;
+      poslim_data[1] = 0.5;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 1.0;
+      obj->PositionNumber = 1.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 1.0;
+      break;
+
+     case 2:
+      {
+        signed char b_I[36];
+        signed char b[6];
+        for (i = 0; i < 36; i++) {
+          b_I[i] = 0;
+        }
+
+        for (ibmat = 0; ibmat < 6; ibmat++) {
+          b_I[ibmat + 6 * ibmat] = 1;
+        }
+
+        for (i = 0; i < 36; i++) {
+          msubspace_data[i] = b_I[i];
+        }
+
+        poslim_size_idx_0 = 7;
+        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
+             ++) {
+          ibmat = homepos_size_idx_1 * 3;
+          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
+          b[ibmat] = b_tmp;
+          b[ibmat + 1] = b_tmp;
+          b[ibmat + 2] = b_tmp;
+          poslim_data[7 * homepos_size_idx_1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
+          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
+        }
+
+        for (i = 0; i < 2; i++) {
+          poslim_data[7 * i + 4] = b[3 * i];
+          poslim_data[7 * i + 5] = b[3 * i + 1];
+          poslim_data[7 * i + 6] = b[3 * i + 2];
+        }
+
+        homepos_size_idx_1 = 7;
+        for (i = 0; i < 7; i++) {
+          homepos_data[i] = iv2[i];
+        }
+
+        obj->VelocityNumber = 6.0;
+        obj->PositionNumber = 7.0;
+        obj->JointAxisInternal[0] = rtNaN;
+        obj->JointAxisInternal[1] = rtNaN;
+        obj->JointAxisInternal[2] = rtNaN;
+      }
+      break;
+
+     default:
+      for (i = 0; i < 6; i++) {
+        msubspace_data[i] = 0.0;
+      }
+
+      poslim_size_idx_0 = 1;
+      poslim_data[0] = 0.0;
+      poslim_data[1] = 0.0;
+      homepos_size_idx_1 = 1;
+      homepos_data[0] = 0;
+      obj->VelocityNumber = 0.0;
+      obj->PositionNumber = 0.0;
+      obj->JointAxisInternal[0] = 0.0;
+      obj->JointAxisInternal[1] = 0.0;
+      obj->JointAxisInternal[2] = 0.0;
+      break;
+    }
+
+    obj->set_MotionSubspace(msubspace_data);
+    s = obj->TypeInternal;
+    if (s.Length < 1.0) {
+      i = 0;
+    } else {
+      i = static_cast<int>(s.Length);
+    }
+
+    result = false;
+    if (i == 5) {
+      ibmat = 0;
+      do {
+        exitg1 = 0;
+        if (ibmat < 5) {
+          if (s.Vector[ibmat] != b_cv4[ibmat]) {
+            exitg1 = 1;
+          } else {
+            ibmat++;
+          }
+        } else {
+          result = true;
+          exitg1 = 1;
+        }
+      } while (exitg1 == 0);
+    }
+
+    if (!result) {
+      double d;
+      d = obj->PositionNumber;
+      if (d < 1.0) {
+        ibmat = 0;
+      } else {
+        ibmat = static_cast<int>(d);
+      }
+
+      for (i = 0; i < 2; i++) {
+        for (int i1{0}; i1 < ibmat; i1++) {
+          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
+            poslim_size_idx_0 * i];
+        }
+      }
+
+      for (i = 0; i < homepos_size_idx_1; i++) {
+        obj->HomePositionInternal[i] = homepos_data[i];
+      }
+    } else {
+      obj->PositionLimitsInternal[0] = poslim_data[0];
+      obj->PositionLimitsInternal[7] = poslim_data[1];
+      obj->HomePositionInternal[0] = homepos_data[0];
+    }
+
+    return obj;
+  }
+
+  //
   // Arguments    : robotics::manip::internal::RigidBodyTree &iobj_0
   //                robotics::manip::internal::CollisionSet &iobj_1
   //                rigidBodyJoint &iobj_2
@@ -13939,317 +14250,6 @@ namespace coder
     obj->BodyInternal = &iobj_3;
     obj->TreeInternal = b_default;
     obj->matlabCodegenIsDeleted = false;
-    return obj;
-  }
-
-  //
-  // Arguments    : void
-  // Return Type  : rigidBodyJoint *
-  //
-  rigidBodyJoint *rigidBodyJoint::k_init()
-  {
-    static const char b_cv2[8]{ 'r', 'e', 'v', 'o', 'l', 'u', 't', 'e' };
-
-    static const char b_cv3[8]{ 'f', 'l', 'o', 'a', 't', 'i', 'n', 'g' };
-
-    static const char b_cv[7]{ 'j', 'n', 't', 'T', 'o', 'o', 'l' };
-
-    static const signed char iv2[7]{ 1, 0, 0, 0, 0, 0, 0 };
-
-    static const signed char b_iv[6]{ 0, 0, 1, 0, 0, 0 };
-
-    static const signed char b_iv1[6]{ 0, 0, 0, 0, 0, 1 };
-
-    static const char b_cv1[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    static const char b_cv4[5]{ 'f', 'i', 'x', 'e', 'd' };
-
-    rigidBodyJoint *obj;
-    robotics::manip::internal::CharacterVector s;
-    double msubspace_data[36];
-    double poslim_data[14];
-    int exitg1;
-    int homepos_size_idx_1;
-    int i;
-    int ibmat;
-    int poslim_size_idx_0;
-    signed char homepos_data[7];
-    signed char b_tmp;
-    bool result;
-    obj = this;
-    obj->InTree = false;
-    for (i = 0; i < 16; i++) {
-      b_tmp = iv[i];
-      obj->JointToParentTransform[i] = b_tmp;
-      obj->ChildToJointTransform[i] = b_tmp;
-    }
-
-    for (i = 0; i < 14; i++) {
-      obj->PositionLimitsInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 7; i++) {
-      obj->HomePositionInternal[i] = 0.0;
-    }
-
-    for (i = 0; i < 36; i++) {
-      obj->MotionSubspaceInternal[i] = 0.0;
-    }
-
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->NameInternal = s;
-    s.Length = 200.0;
-    for (i = 0; i < 200; i++) {
-      s.Vector[i] = ' ';
-    }
-
-    obj->TypeInternal = s;
-    s = obj->NameInternal;
-    s.Length = 7.0;
-    for (i = 0; i < 7; i++) {
-      s.Vector[i] = b_cv[i];
-    }
-
-    obj->NameInternal = s;
-    s = obj->TypeInternal;
-    s.Length = 5.0;
-    for (i = 0; i < 5; i++) {
-      s.Vector[i] = b_cv1[i];
-    }
-
-    obj->TypeInternal = s;
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 8) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 8) {
-          if (b_cv2[ibmat] != s.Vector[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (result) {
-      ibmat = 0;
-    } else {
-      result = false;
-      if (i == 9) {
-        ibmat = 0;
-        do {
-          exitg1 = 0;
-          if (ibmat < 9) {
-            if (cv1[ibmat] != s.Vector[ibmat]) {
-              exitg1 = 1;
-            } else {
-              ibmat++;
-            }
-          } else {
-            result = true;
-            exitg1 = 1;
-          }
-        } while (exitg1 == 0);
-      }
-
-      if (result) {
-        ibmat = 1;
-      } else {
-        result = false;
-        if (i == 8) {
-          ibmat = 0;
-          do {
-            exitg1 = 0;
-            if (ibmat < 8) {
-              if (b_cv3[ibmat] != s.Vector[ibmat]) {
-                exitg1 = 1;
-              } else {
-                ibmat++;
-              }
-            } else {
-              result = true;
-              exitg1 = 1;
-            }
-          } while (exitg1 == 0);
-        }
-
-        if (result) {
-          ibmat = 2;
-        } else {
-          ibmat = -1;
-        }
-      }
-    }
-
-    switch (ibmat) {
-     case 0:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -3.1415926535897931;
-      poslim_data[1] = 3.1415926535897931;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 1:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = b_iv1[i];
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = -0.5;
-      poslim_data[1] = 0.5;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 1.0;
-      obj->PositionNumber = 1.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 1.0;
-      break;
-
-     case 2:
-      {
-        signed char b_I[36];
-        signed char b[6];
-        for (i = 0; i < 36; i++) {
-          b_I[i] = 0;
-        }
-
-        for (ibmat = 0; ibmat < 6; ibmat++) {
-          b_I[ibmat + 6 * ibmat] = 1;
-        }
-
-        for (i = 0; i < 36; i++) {
-          msubspace_data[i] = b_I[i];
-        }
-
-        poslim_size_idx_0 = 7;
-        for (homepos_size_idx_1 = 0; homepos_size_idx_1 < 2; homepos_size_idx_1
-             ++) {
-          ibmat = homepos_size_idx_1 * 3;
-          b_tmp = static_cast<signed char>(10 * homepos_size_idx_1 - 5);
-          b[ibmat] = b_tmp;
-          b[ibmat + 1] = b_tmp;
-          b[ibmat + 2] = b_tmp;
-          poslim_data[7 * homepos_size_idx_1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 1] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 2] = rtNaN;
-          poslim_data[7 * homepos_size_idx_1 + 3] = rtNaN;
-        }
-
-        for (i = 0; i < 2; i++) {
-          poslim_data[7 * i + 4] = b[3 * i];
-          poslim_data[7 * i + 5] = b[3 * i + 1];
-          poslim_data[7 * i + 6] = b[3 * i + 2];
-        }
-
-        homepos_size_idx_1 = 7;
-        for (i = 0; i < 7; i++) {
-          homepos_data[i] = iv2[i];
-        }
-
-        obj->VelocityNumber = 6.0;
-        obj->PositionNumber = 7.0;
-        obj->JointAxisInternal[0] = rtNaN;
-        obj->JointAxisInternal[1] = rtNaN;
-        obj->JointAxisInternal[2] = rtNaN;
-      }
-      break;
-
-     default:
-      for (i = 0; i < 6; i++) {
-        msubspace_data[i] = 0.0;
-      }
-
-      poslim_size_idx_0 = 1;
-      poslim_data[0] = 0.0;
-      poslim_data[1] = 0.0;
-      homepos_size_idx_1 = 1;
-      homepos_data[0] = 0;
-      obj->VelocityNumber = 0.0;
-      obj->PositionNumber = 0.0;
-      obj->JointAxisInternal[0] = 0.0;
-      obj->JointAxisInternal[1] = 0.0;
-      obj->JointAxisInternal[2] = 0.0;
-      break;
-    }
-
-    obj->set_MotionSubspace(msubspace_data);
-    s = obj->TypeInternal;
-    if (s.Length < 1.0) {
-      i = 0;
-    } else {
-      i = static_cast<int>(s.Length);
-    }
-
-    result = false;
-    if (i == 5) {
-      ibmat = 0;
-      do {
-        exitg1 = 0;
-        if (ibmat < 5) {
-          if (s.Vector[ibmat] != b_cv4[ibmat]) {
-            exitg1 = 1;
-          } else {
-            ibmat++;
-          }
-        } else {
-          result = true;
-          exitg1 = 1;
-        }
-      } while (exitg1 == 0);
-    }
-
-    if (!result) {
-      double d;
-      d = obj->PositionNumber;
-      if (d < 1.0) {
-        ibmat = 0;
-      } else {
-        ibmat = static_cast<int>(d);
-      }
-
-      for (i = 0; i < 2; i++) {
-        for (int i1{0}; i1 < ibmat; i1++) {
-          obj->PositionLimitsInternal[i1 + 7 * i] = poslim_data[i1 +
-            poslim_size_idx_0 * i];
-        }
-      }
-
-      for (i = 0; i < homepos_size_idx_1; i++) {
-        obj->HomePositionInternal[i] = homepos_data[i];
-      }
-    } else {
-      obj->PositionLimitsInternal[0] = poslim_data[0];
-      obj->PositionLimitsInternal[7] = poslim_data[1];
-      obj->HomePositionInternal[0] = homepos_data[0];
-    }
-
     return obj;
   }
 
@@ -15306,13 +15306,21 @@ namespace coder
   // Arguments    : void
   // Return Type  : void
   //
-  void collisionCapsule::matlabCodegenDestructor()
+  void rigidBodyTree::matlabCodegenDestructor()
   {
-    void *geometryInternal;
     if (!matlabCodegenIsDeleted) {
       matlabCodegenIsDeleted = true;
-      geometryInternal = GeometryInternal;
-      collisioncodegen_destructGeometry(&geometryInternal);
+    }
+  }
+
+  //
+  // Arguments    : void
+  // Return Type  : void
+  //
+  void rigidBody::matlabCodegenDestructor()
+  {
+    if (!matlabCodegenIsDeleted) {
+      matlabCodegenIsDeleted = true;
     }
   }
 
@@ -15334,21 +15342,13 @@ namespace coder
   // Arguments    : void
   // Return Type  : void
   //
-  void rigidBody::matlabCodegenDestructor()
+  void collisionCapsule::matlabCodegenDestructor()
   {
+    void *geometryInternal;
     if (!matlabCodegenIsDeleted) {
       matlabCodegenIsDeleted = true;
-    }
-  }
-
-  //
-  // Arguments    : void
-  // Return Type  : void
-  //
-  void rigidBodyTree::matlabCodegenDestructor()
-  {
-    if (!matlabCodegenIsDeleted) {
-      matlabCodegenIsDeleted = true;
+      geometryInternal = GeometryInternal;
+      collisioncodegen_destructGeometry(&geometryInternal);
     }
   }
 
@@ -17564,92 +17564,6 @@ namespace coder
         }
 
         //
-        // Arguments    : const char bodyname[6]
-        // Return Type  : double
-        //
-        double b_RigidBodyTree::b_findBodyIndexByName(const char bodyname[6])
-        {
-          CharacterVector obj;
-          RigidBody *b_obj;
-          double bid;
-          int exitg1;
-          int kstr;
-          bool b_bool;
-          bid = -1.0;
-          obj = Base.NameInternal;
-          if (obj.Length < 1.0) {
-            kstr = 0;
-          } else {
-            kstr = static_cast<int>(obj.Length);
-          }
-
-          b_bool = false;
-          if (kstr == 6) {
-            kstr = 0;
-            do {
-              exitg1 = 0;
-              if (kstr < 6) {
-                if (obj.Vector[kstr] != bodyname[kstr]) {
-                  exitg1 = 1;
-                } else {
-                  kstr++;
-                }
-              } else {
-                b_bool = true;
-                exitg1 = 1;
-              }
-            } while (exitg1 == 0);
-          }
-
-          if (b_bool) {
-            bid = 0.0;
-          } else {
-            double d;
-            int i;
-            bool exitg2;
-            d = NumBodies;
-            i = 0;
-            exitg2 = false;
-            while ((!exitg2) && (i <= static_cast<int>(d) - 1)) {
-              b_obj = Bodies[i];
-              obj = b_obj->NameInternal;
-              if (obj.Length < 1.0) {
-                kstr = 0;
-              } else {
-                kstr = static_cast<int>(obj.Length);
-              }
-
-              b_bool = false;
-              if (kstr == 6) {
-                kstr = 0;
-                do {
-                  exitg1 = 0;
-                  if (kstr < 6) {
-                    if (obj.Vector[kstr] != bodyname[kstr]) {
-                      exitg1 = 1;
-                    } else {
-                      kstr++;
-                    }
-                  } else {
-                    b_bool = true;
-                    exitg1 = 1;
-                  }
-                } while (exitg1 == 0);
-              }
-
-              if (b_bool) {
-                bid = static_cast<double>(i) + 1.0;
-                exitg2 = true;
-              } else {
-                i++;
-              }
-            }
-          }
-
-          return bid;
-        }
-
-        //
         // Arguments    : void
         // Return Type  : double
         //
@@ -17714,6 +17628,92 @@ namespace coder
                   exitg1 = 0;
                   if (kstr < 8) {
                     if (obj.Vector[kstr] != b_cv[kstr]) {
+                      exitg1 = 1;
+                    } else {
+                      kstr++;
+                    }
+                  } else {
+                    b_bool = true;
+                    exitg1 = 1;
+                  }
+                } while (exitg1 == 0);
+              }
+
+              if (b_bool) {
+                bid = static_cast<double>(i) + 1.0;
+                exitg2 = true;
+              } else {
+                i++;
+              }
+            }
+          }
+
+          return bid;
+        }
+
+        //
+        // Arguments    : const char bodyname[6]
+        // Return Type  : double
+        //
+        double b_RigidBodyTree::b_findBodyIndexByName(const char bodyname[6])
+        {
+          CharacterVector obj;
+          RigidBody *b_obj;
+          double bid;
+          int exitg1;
+          int kstr;
+          bool b_bool;
+          bid = -1.0;
+          obj = Base.NameInternal;
+          if (obj.Length < 1.0) {
+            kstr = 0;
+          } else {
+            kstr = static_cast<int>(obj.Length);
+          }
+
+          b_bool = false;
+          if (kstr == 6) {
+            kstr = 0;
+            do {
+              exitg1 = 0;
+              if (kstr < 6) {
+                if (obj.Vector[kstr] != bodyname[kstr]) {
+                  exitg1 = 1;
+                } else {
+                  kstr++;
+                }
+              } else {
+                b_bool = true;
+                exitg1 = 1;
+              }
+            } while (exitg1 == 0);
+          }
+
+          if (b_bool) {
+            bid = 0.0;
+          } else {
+            double d;
+            int i;
+            bool exitg2;
+            d = NumBodies;
+            i = 0;
+            exitg2 = false;
+            while ((!exitg2) && (i <= static_cast<int>(d) - 1)) {
+              b_obj = Bodies[i];
+              obj = b_obj->NameInternal;
+              if (obj.Length < 1.0) {
+                kstr = 0;
+              } else {
+                kstr = static_cast<int>(obj.Length);
+              }
+
+              b_bool = false;
+              if (kstr == 6) {
+                kstr = 0;
+                do {
+                  exitg1 = 0;
+                  if (kstr < 6) {
+                    if (obj.Vector[kstr] != bodyname[kstr]) {
                       exitg1 = 1;
                     } else {
                       kstr++;
@@ -20242,72 +20242,6 @@ namespace coder
         }
 
         //
-        // Arguments    : const char bodyname_data[]
-        //                const int bodyname_size[2]
-        // Return Type  : double
-        //
-        double b_RigidBodyTree::findBodyIndexByName(const char bodyname_data[],
-          const int bodyname_size[2])
-        {
-          CharacterVector obj;
-          RigidBody *b_obj;
-          double bid;
-          int obj_size[2];
-          int loop_ub;
-          char obj_data[200];
-          bid = -1.0;
-          obj = Base.NameInternal;
-          if (obj.Length < 1.0) {
-            loop_ub = 0;
-          } else {
-            loop_ub = static_cast<int>(obj.Length);
-          }
-
-          obj_size[0] = 1;
-          obj_size[1] = loop_ub;
-          if (loop_ub - 1 >= 0) {
-            ::std::copy(&obj.Vector[0], &obj.Vector[loop_ub], &obj_data[0]);
-          }
-
-          if (::coder::internal::b_strcmp(obj_data, obj_size, bodyname_data,
-               bodyname_size)) {
-            bid = 0.0;
-          } else {
-            double d;
-            int i;
-            bool exitg1;
-            d = NumBodies;
-            i = 0;
-            exitg1 = false;
-            while ((!exitg1) && (i <= static_cast<int>(d) - 1)) {
-              b_obj = Bodies[i];
-              obj = b_obj->NameInternal;
-              if (obj.Length < 1.0) {
-                loop_ub = 0;
-              } else {
-                loop_ub = static_cast<int>(obj.Length);
-              }
-
-              obj_size[0] = 1;
-              obj_size[1] = loop_ub;
-              if (loop_ub - 1 >= 0) {
-                ::std::copy(&obj.Vector[0], &obj.Vector[loop_ub], &obj_data[0]);
-              }
-
-              if (::coder::internal::b_strcmp(obj_data, obj_size, bodyname_data,
-                   bodyname_size)) {
-                bid = static_cast<double>(i) + 1.0;
-                exitg1 = true;
-              } else {
-                i++;
-              }
-            }
-          }
-
-          return bid;
-        }
-
-        //
         // Arguments    : void
         // Return Type  : double
         //
@@ -20482,6 +20416,72 @@ namespace coder
         }
 
         //
+        // Arguments    : const char bodyname_data[]
+        //                const int bodyname_size[2]
+        // Return Type  : double
+        //
+        double b_RigidBodyTree::findBodyIndexByName(const char bodyname_data[],
+          const int bodyname_size[2])
+        {
+          CharacterVector obj;
+          RigidBody *b_obj;
+          double bid;
+          int obj_size[2];
+          int loop_ub;
+          char obj_data[200];
+          bid = -1.0;
+          obj = Base.NameInternal;
+          if (obj.Length < 1.0) {
+            loop_ub = 0;
+          } else {
+            loop_ub = static_cast<int>(obj.Length);
+          }
+
+          obj_size[0] = 1;
+          obj_size[1] = loop_ub;
+          if (loop_ub - 1 >= 0) {
+            ::std::copy(&obj.Vector[0], &obj.Vector[loop_ub], &obj_data[0]);
+          }
+
+          if (::coder::internal::b_strcmp(obj_data, obj_size, bodyname_data,
+               bodyname_size)) {
+            bid = 0.0;
+          } else {
+            double d;
+            int i;
+            bool exitg1;
+            d = NumBodies;
+            i = 0;
+            exitg1 = false;
+            while ((!exitg1) && (i <= static_cast<int>(d) - 1)) {
+              b_obj = Bodies[i];
+              obj = b_obj->NameInternal;
+              if (obj.Length < 1.0) {
+                loop_ub = 0;
+              } else {
+                loop_ub = static_cast<int>(obj.Length);
+              }
+
+              obj_size[0] = 1;
+              obj_size[1] = loop_ub;
+              if (loop_ub - 1 >= 0) {
+                ::std::copy(&obj.Vector[0], &obj.Vector[loop_ub], &obj_data[0]);
+              }
+
+              if (::coder::internal::b_strcmp(obj_data, obj_size, bodyname_data,
+                   bodyname_size)) {
+                bid = static_cast<double>(i) + 1.0;
+                exitg1 = true;
+              } else {
+                i++;
+              }
+            }
+          }
+
+          return bid;
+        }
+
+        //
         // Arguments    : const double qvec[6]
         //                cell_wrap_41 Ttree_data[]
         //                int Ttree_size[2]
@@ -20559,8 +20559,7 @@ namespace coder
         //                int value_size[2]
         // Return Type  : void
         //
-        void OrientationTarget::get_EndEffector(char value_data[], int
-          value_size[2])
+        void PositionTarget::get_EndEffector(char value_data[], int value_size[2])
         {
           CharacterVector c_obj;
           RigidBody *b_obj;
@@ -20605,7 +20604,8 @@ namespace coder
         //                int value_size[2]
         // Return Type  : void
         //
-        void PositionTarget::get_EndEffector(char value_data[], int value_size[2])
+        void OrientationTarget::get_EndEffector(char value_data[], int
+          value_size[2])
         {
           CharacterVector c_obj;
           RigidBody *b_obj;
@@ -21016,7 +21016,7 @@ namespace coder
         //                int value_size[2]
         // Return Type  : void
         //
-        void OrientationTarget::get_ReferenceBody(char value_data[], int
+        void PositionTarget::get_ReferenceBody(char value_data[], int
           value_size[2])
         {
           CharacterVector c_obj;
@@ -21062,7 +21062,7 @@ namespace coder
         //                int value_size[2]
         // Return Type  : void
         //
-        void PositionTarget::get_ReferenceBody(char value_data[], int
+        void OrientationTarget::get_ReferenceBody(char value_data[], int
           value_size[2])
         {
           CharacterVector c_obj;
@@ -21213,6 +21213,46 @@ namespace coder
               b_value[r1[i1] + b_value.size(0) * r2[i]] = r3[i1 + loop_ub * i];
             }
           }
+        }
+
+        //
+        // Arguments    : double maxElements
+        // Return Type  : CollisionSet *
+        //
+        CollisionSet *CollisionSet::init(double maxElements)
+        {
+          static const void *t0_GeometryInternal{ nullptr };
+
+          CollisionGeometry defaultGeometry;
+          CollisionSet *obj;
+          int size_tmp_idx_1;
+          obj = this;
+          obj->Size = 0.0;
+          obj->MaxElements = maxElements;
+          size_tmp_idx_1 = static_cast<int>(obj->MaxElements);
+          obj->CollisionGeometries.set_size(1, size_tmp_idx_1);
+          defaultGeometry.CollisionPrimitive = const_cast<void *>
+            (t0_GeometryInternal);
+          for (size_tmp_idx_1 = 0; size_tmp_idx_1 < 16; size_tmp_idx_1++) {
+            defaultGeometry.LocalPose[size_tmp_idx_1] = iv[size_tmp_idx_1];
+          }
+
+          for (size_tmp_idx_1 = 0; size_tmp_idx_1 < 16; size_tmp_idx_1++) {
+            defaultGeometry.WorldPose[size_tmp_idx_1] = iv[size_tmp_idx_1];
+          }
+
+          double d;
+          defaultGeometry.MeshScale[0] = 1.0;
+          defaultGeometry.MeshScale[1] = 1.0;
+          defaultGeometry.MeshScale[2] = 1.0;
+          d = obj->MaxElements;
+          size_tmp_idx_1 = static_cast<int>(d);
+          for (int i{0}; i < size_tmp_idx_1; i++) {
+            obj->CollisionGeometries[i] = defaultGeometry;
+          }
+
+          obj->matlabCodegenIsDeleted = false;
+          return obj;
         }
 
         //
@@ -21579,98 +21619,6 @@ namespace coder
         }
 
         //
-        // Arguments    : void
-        // Return Type  : RigidBodyTree *
-        //
-        RigidBodyTree *RigidBodyTree::init()
-        {
-          static const char jname[14]{ 'd', 'u', 'm', 'm', 'y', 'b', 'o', 'd',
-            'y', '1', '_', 'j', 'n', 't' };
-
-          CharacterVector s;
-          RigidBodyTree *obj;
-          double unusedExpr[5];
-          obj = this;
-          b_rand(unusedExpr);
-          s.Length = 200.0;
-          for (int i{0}; i < 200; i++) {
-            s.Vector[i] = ' ';
-          }
-
-          obj->Base.NameInternal = s;
-          s = obj->Base.NameInternal;
-          s.Length = 4.0;
-          s.Vector[0] = 'b';
-          s.Vector[1] = 'a';
-          s.Vector[2] = 's';
-          s.Vector[3] = 'e';
-          obj->Base.NameInternal = s;
-          obj->Base.JointInternal.init();
-          obj->Base.CollisionsInternal.init(static_cast<double>(0.0));
-          obj->Base.matlabCodegenIsDeleted = false;
-          s.Length = 200.0;
-          for (int i{0}; i < 200; i++) {
-            s.Vector[i] = ' ';
-          }
-
-          obj->_pobj0.NameInternal = s;
-          s = obj->_pobj0.NameInternal;
-          s.Length = 10.0;
-          for (int i{0}; i < 10; i++) {
-            s.Vector[i] = cv[i];
-          }
-
-          obj->_pobj0.NameInternal = s;
-          obj->_pobj0.JointInternal.init(jname);
-          obj->_pobj0.CollisionsInternal.init(static_cast<double>(0.0));
-          obj->_pobj0.matlabCodegenIsDeleted = false;
-          obj->Bodies[0] = &obj->_pobj0;
-          b_rand(unusedExpr);
-          obj->matlabCodegenIsDeleted = false;
-          return obj;
-        }
-
-        //
-        // Arguments    : double maxElements
-        // Return Type  : CollisionSet *
-        //
-        CollisionSet *CollisionSet::init(double maxElements)
-        {
-          static const void *t0_GeometryInternal{ nullptr };
-
-          CollisionGeometry defaultGeometry;
-          CollisionSet *obj;
-          int size_tmp_idx_1;
-          obj = this;
-          obj->Size = 0.0;
-          obj->MaxElements = maxElements;
-          size_tmp_idx_1 = static_cast<int>(obj->MaxElements);
-          obj->CollisionGeometries.set_size(1, size_tmp_idx_1);
-          defaultGeometry.CollisionPrimitive = const_cast<void *>
-            (t0_GeometryInternal);
-          for (size_tmp_idx_1 = 0; size_tmp_idx_1 < 16; size_tmp_idx_1++) {
-            defaultGeometry.LocalPose[size_tmp_idx_1] = iv[size_tmp_idx_1];
-          }
-
-          for (size_tmp_idx_1 = 0; size_tmp_idx_1 < 16; size_tmp_idx_1++) {
-            defaultGeometry.WorldPose[size_tmp_idx_1] = iv[size_tmp_idx_1];
-          }
-
-          double d;
-          defaultGeometry.MeshScale[0] = 1.0;
-          defaultGeometry.MeshScale[1] = 1.0;
-          defaultGeometry.MeshScale[2] = 1.0;
-          d = obj->MaxElements;
-          size_tmp_idx_1 = static_cast<int>(d);
-          for (int i{0}; i < size_tmp_idx_1; i++) {
-            obj->CollisionGeometries[i] = defaultGeometry;
-          }
-
-          obj->matlabCodegenIsDeleted = false;
-          return obj;
-        }
-
-        //
         // Arguments    : const char bodyInput[10]
         // Return Type  : RigidBody *
         //
@@ -21880,6 +21828,58 @@ namespace coder
         }
 
         //
+        // Arguments    : void
+        // Return Type  : RigidBodyTree *
+        //
+        RigidBodyTree *RigidBodyTree::init()
+        {
+          static const char jname[14]{ 'd', 'u', 'm', 'm', 'y', 'b', 'o', 'd',
+            'y', '1', '_', 'j', 'n', 't' };
+
+          CharacterVector s;
+          RigidBodyTree *obj;
+          double unusedExpr[5];
+          obj = this;
+          b_rand(unusedExpr);
+          s.Length = 200.0;
+          for (int i{0}; i < 200; i++) {
+            s.Vector[i] = ' ';
+          }
+
+          obj->Base.NameInternal = s;
+          s = obj->Base.NameInternal;
+          s.Length = 4.0;
+          s.Vector[0] = 'b';
+          s.Vector[1] = 'a';
+          s.Vector[2] = 's';
+          s.Vector[3] = 'e';
+          obj->Base.NameInternal = s;
+          obj->Base.JointInternal.init();
+          obj->Base.CollisionsInternal.init(static_cast<double>(0.0));
+          obj->Base.matlabCodegenIsDeleted = false;
+          s.Length = 200.0;
+          for (int i{0}; i < 200; i++) {
+            s.Vector[i] = ' ';
+          }
+
+          obj->_pobj0.NameInternal = s;
+          s = obj->_pobj0.NameInternal;
+          s.Length = 10.0;
+          for (int i{0}; i < 10; i++) {
+            s.Vector[i] = cv[i];
+          }
+
+          obj->_pobj0.NameInternal = s;
+          obj->_pobj0.JointInternal.init(jname);
+          obj->_pobj0.CollisionsInternal.init(static_cast<double>(0.0));
+          obj->_pobj0.matlabCodegenIsDeleted = false;
+          obj->Bodies[0] = &obj->_pobj0;
+          b_rand(unusedExpr);
+          obj->matlabCodegenIsDeleted = false;
+          return obj;
+        }
+
+        //
         // Arguments    : RigidBody *body1
         //                RigidBody *body2
         //                array<double, 2U> &indices
@@ -21949,27 +21949,6 @@ namespace coder
         // Arguments    : void
         // Return Type  : void
         //
-        void CollisionSet::matlabCodegenDestructor()
-        {
-          CollisionGeometry obj;
-          if (!matlabCodegenIsDeleted) {
-            double d;
-            int i;
-            matlabCodegenIsDeleted = true;
-            d = Size;
-            i = static_cast<int>(d);
-            for (int b_i{0}; b_i < i; b_i++) {
-              obj = CollisionGeometries[b_i];
-              collisioncodegen_destructGeometry(&obj.CollisionPrimitive);
-              CollisionGeometries[b_i] = obj;
-            }
-          }
-        }
-
-        //
-        // Arguments    : void
-        // Return Type  : void
-        //
         void OrientationTarget::matlabCodegenDestructor()
         {
           if (!matlabCodegenIsDeleted) {
@@ -21992,29 +21971,7 @@ namespace coder
         // Arguments    : void
         // Return Type  : void
         //
-        void RigidBodyTree::matlabCodegenDestructor()
-        {
-          if (!matlabCodegenIsDeleted) {
-            matlabCodegenIsDeleted = true;
-          }
-        }
-
-        //
-        // Arguments    : void
-        // Return Type  : void
-        //
-        void b_RigidBody::matlabCodegenDestructor()
-        {
-          if (!matlabCodegenIsDeleted) {
-            matlabCodegenIsDeleted = true;
-          }
-        }
-
-        //
-        // Arguments    : void
-        // Return Type  : void
-        //
-        void b_RigidBodyTree::matlabCodegenDestructor()
+        void GIKProblem::matlabCodegenDestructor()
         {
           if (!matlabCodegenIsDeleted) {
             matlabCodegenIsDeleted = true;
@@ -22036,7 +21993,28 @@ namespace coder
         // Arguments    : void
         // Return Type  : void
         //
-        void GIKProblem::matlabCodegenDestructor()
+        void CollisionSet::matlabCodegenDestructor()
+        {
+          CollisionGeometry obj;
+          if (!matlabCodegenIsDeleted) {
+            double d;
+            int i;
+            matlabCodegenIsDeleted = true;
+            d = Size;
+            i = static_cast<int>(d);
+            for (int b_i{0}; b_i < i; b_i++) {
+              obj = CollisionGeometries[b_i];
+              collisioncodegen_destructGeometry(&obj.CollisionPrimitive);
+              CollisionGeometries[b_i] = obj;
+            }
+          }
+        }
+
+        //
+        // Arguments    : void
+        // Return Type  : void
+        //
+        void b_RigidBodyTree::matlabCodegenDestructor()
         {
           if (!matlabCodegenIsDeleted) {
             matlabCodegenIsDeleted = true;
@@ -22044,60 +22022,24 @@ namespace coder
         }
 
         //
-        // Arguments    : const array<double, 1U> &x
-        //                array<double, 1U> &f
+        // Arguments    : void
         // Return Type  : void
         //
-        void GIKProblem::residuals(const array<double, 1U> &x, array<double, 1U>
-          &f)
+        void b_RigidBody::matlabCodegenDestructor()
         {
-          array<double, 2U> J;
-          double d;
-          int i;
-          bool flag;
-          flag = true;
-          d = NumVariables;
-          i = 0;
-          int exitg1;
-          do {
-            exitg1 = 0;
-            if (i <= static_cast<int>(d) - 1) {
-              if (x[i] != LastX[i]) {
-                exitg1 = 1;
-              } else {
-                i++;
-              }
-            } else {
-              flag = false;
-              exitg1 = 1;
-            }
-          } while (exitg1 == 0);
+          if (!matlabCodegenIsDeleted) {
+            matlabCodegenIsDeleted = true;
+          }
+        }
 
-          if (flag) {
-            residualsInternal(x, f, J);
-            i = x.size(0);
-            LastX.set_size(x.size(0));
-            for (int b_i{0}; b_i < i; b_i++) {
-              LastX[b_i] = x[b_i];
-            }
-
-            i = f.size(0);
-            LastF.set_size(f.size(0));
-            for (int b_i{0}; b_i < i; b_i++) {
-              LastF[b_i] = f[b_i];
-            }
-
-            LastJ.set_size(J.size(0), J.size(1));
-            i = J.size(0) * J.size(1);
-            for (int b_i{0}; b_i < i; b_i++) {
-              LastJ[b_i] = J[b_i];
-            }
-          } else {
-            f.set_size(LastF.size(0));
-            i = LastF.size(0);
-            for (int b_i{0}; b_i < i; b_i++) {
-              f[b_i] = LastF[b_i];
-            }
+        //
+        // Arguments    : void
+        // Return Type  : void
+        //
+        void RigidBodyTree::matlabCodegenDestructor()
+        {
+          if (!matlabCodegenIsDeleted) {
+            matlabCodegenIsDeleted = true;
           }
         }
 
@@ -22161,6 +22103,64 @@ namespace coder
             i = LastJ.size(0) * LastJ.size(1);
             for (int b_i{0}; b_i < i; b_i++) {
               J[b_i] = LastJ[b_i];
+            }
+          }
+        }
+
+        //
+        // Arguments    : const array<double, 1U> &x
+        //                array<double, 1U> &f
+        // Return Type  : void
+        //
+        void GIKProblem::residuals(const array<double, 1U> &x, array<double, 1U>
+          &f)
+        {
+          array<double, 2U> J;
+          double d;
+          int i;
+          bool flag;
+          flag = true;
+          d = NumVariables;
+          i = 0;
+          int exitg1;
+          do {
+            exitg1 = 0;
+            if (i <= static_cast<int>(d) - 1) {
+              if (x[i] != LastX[i]) {
+                exitg1 = 1;
+              } else {
+                i++;
+              }
+            } else {
+              flag = false;
+              exitg1 = 1;
+            }
+          } while (exitg1 == 0);
+
+          if (flag) {
+            residualsInternal(x, f, J);
+            i = x.size(0);
+            LastX.set_size(x.size(0));
+            for (int b_i{0}; b_i < i; b_i++) {
+              LastX[b_i] = x[b_i];
+            }
+
+            i = f.size(0);
+            LastF.set_size(f.size(0));
+            for (int b_i{0}; b_i < i; b_i++) {
+              LastF[b_i] = f[b_i];
+            }
+
+            LastJ.set_size(J.size(0), J.size(1));
+            i = J.size(0) * J.size(1);
+            for (int b_i{0}; b_i < i; b_i++) {
+              LastJ[b_i] = J[b_i];
+            }
+          } else {
+            f.set_size(LastF.size(0));
+            i = LastF.size(0);
+            for (int b_i{0}; b_i < i; b_i++) {
+              f[b_i] = LastF[b_i];
             }
           }
         }
@@ -35184,7 +35184,7 @@ static coder::rigidBodyTree *rbtForCodegen(coder::robotics::manip::internal::
     lobj_22[i].matlabCodegenIsDeleted = true;
   }
 
-  //    Auto-generated by MATLAB on 16-Jun-2025 15:47:13
+  //    Auto-generated by MATLAB on 10-Jul-2025 12:55:40
   c_robot = iobj_3.init();
   obj = c_robot->TreeInternal;
   obj->Gravity[0] = 0.0;
@@ -35275,7 +35275,7 @@ static coder::rigidBodyTree *rbtForCodegen(coder::robotics::manip::internal::
   g_joint.h_init();
   g_joint.g_setFixedTransform();
   g_joint.f_set_PositionLimits();
-  g_joint.set_JointAxis();
+  g_joint.c_set_JointAxis();
   g_joint.set_HomePosition();
   e_body.g_init(lobj_23[6], lobj_24[10], lobj_25[12], lobj_26[6]);
   e_body.BodyInternal->JointInternal = g_joint.copy(lobj_25[13]);
@@ -36665,7 +36665,7 @@ void Matlab_getSortedCirclePointList(double R, const double branchStart[3],
   //                      the direction of the branch growth
   //  numCirclePoints   - double, defines how many evenly spaced points on
   //                      the circle to output
-  //  coords_bodyEE     - 1x3 array representing [x y z] position of the
+  //  coords_bodyEE     - 1x6 array representing [xyzABC] position of the
   //                      robot's bodyEE (NOT SCISSOR'S EE)
   //  cam_angle_offset  - double, holds camera angle offset around EE's
   //                      Y-axis in DEG. Needed so scissors do not obstruct
@@ -37050,27 +37050,7 @@ void Matlab_getSortedCirclePointList(double R, const double branchStart[3],
   nx = iidx.size(0);
 
   //     %% Visual
-  //  hold on
-  //  plot3(x2,y2,z2,'ro', 'LineWidth', 1)
-  //
-  //  % Visualize coordinate frames
-  //  for i = 1:length(t2)
-  //      p = [x2(i); y2(i); z2(i)];
-  //      % Extract axes from quaternion
-  //      R_mat = quat2rotm(quats_0(i, :));
-  //      X_dir = R_mat(:, 1);
-  //      Y_dir = R_mat(:, 2);
-  //      Z_dir = R_mat(:, 3);
-  //      % Plot axes
-  //      quiver3(p(1), p(2), p(3), X_dir(1)/4, X_dir(2)/4, X_dir(3)/4, 'r', 'LineWidth', 1.5); % X-axis
-  //      quiver3(p(1), p(2), p(3), Y_dir(1)/4, Y_dir(2)/4, Y_dir(3)/4, 'g', 'LineWidth', 1.5); % Y-axis
-  //      quiver3(p(1), p(2), p(3), Z_dir(1)/4, Z_dir(2)/4, Z_dir(3)/4, 'b', 'LineWidth', 1.5); % Z-axis
-  //  end
-  //
-  //  quiver3(branchStart(1),branchStart(2),branchStart(3),vn(1),vn(2),vn(3),'Color', 'r')
-  //  plot3(branchStart(1),branchStart(2),branchStart(3), 'ro')
-  //  plot3(branchEnd(1),branchEnd(2),branchEnd(3), 'ro')
-  //  axis equal
+  //  Visualize coordinate frames
   *listLength = nx;
 }
 
