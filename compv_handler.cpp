@@ -45,6 +45,10 @@ static int sockfd_compv;
 static Cartesian_Pos_t targetPos_camFrame{};
 static Cartesian_Pos_t targetPos_worldFrame{};
 
+//Todo: Adoplot use values from Approach seq, if FinApr is receiving zeros as coords
+static Cartesian_Pos_t targetStart_worldFrame{};
+static Cartesian_Pos_t targetDir_worldFrame{};
+
 static Tcp_Data_t tcp_data_state = TCP_DATA_NOT_AVAILABLE;  // tracks if new cmd is received from compv
 
 static json jsonParse(const std::string* data);
@@ -456,8 +460,7 @@ static void handleApproachRequest(const json& json) {
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
-    Cartesian_Pos_t targetStart_worldFrame{};
-    Cartesian_Pos_t targetDir_worldFrame{};
+
 
     // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
@@ -623,8 +626,8 @@ static void handleFinalApproachRequest(const json& json) {
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
-    Cartesian_Pos_t targetStart_worldFrame{};
-    Cartesian_Pos_t targetDir_worldFrame{};
+    //Cartesian_Pos_t targetStart_worldFrame{};
+    //Cartesian_Pos_t targetDir_worldFrame{};
 
     // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
@@ -633,8 +636,8 @@ static void handleFinalApproachRequest(const json& json) {
     targetStart_camFrame.z = target.z1;
 
     //Transform targetParameters to worldFrame
-    targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
-    targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
+    //targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
+    //targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
 
     //Show targetStart_worldFrame coords
     std::cout << std::fixed << std::showpoint;
@@ -676,8 +679,25 @@ static void handleFinalApproachRequest(const json& json) {
     struct0_T solverParameters {};
     IK_InitSolverParameters(&solverParameters);
 
+    std::cout << std::fixed << std::showpoint;
+    std::cout << std::setprecision(3);
+    std::cout << "branchStart \t";
+    std::cout << "x=" << branchStart[0];
+    std::cout << " y=" << branchStart[1];
+    std::cout << " z=" << branchStart[2];
+    cout << endl;
+
+    for (int i = 0; i < 6; i++) {
+        printf("currentConfig[%d] = %f\n", i, currentConfig[i]);
+    }
+    cout << endl;
+
+
     Matlab_getGikCut(currentConfig,branchStart,&solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypointCut);
     code = static_cast<int>(exitCode+0.1);
+
+    cout << "exitCode = " << exitCode << endl;
+    cout << "code = " << code << endl;
 
     if (code != 1){
         cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
