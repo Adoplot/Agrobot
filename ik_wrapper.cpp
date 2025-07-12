@@ -202,7 +202,7 @@ void IK_getWaypointsForApproach(const double branchStart[3], const double branch
                                     CAM_ANGLE_OFFSET, DIST_WEIGHT_POS, DIST_WEIGHT_ORI, sortedList, &listLength);
 
     //Todo: comment out if not debugging
-    IK_PrintSortedPointList(&sortedList);
+    //IK_PrintSortedPointList(&sortedList);
 
     double exitCode {0};
     int n {0};

@@ -564,7 +564,7 @@ static void handleApproachRequest(const json& json) {
             cout << "\tPath is NOT valid" << endl;
             sendStatusResponse(APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_UNREACHABLE);
         }
-
+/*
         //Print for debug
         if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
@@ -591,6 +591,7 @@ static void handleApproachRequest(const json& json) {
             }
             cout << endl;
         }
+*/
     }
 }
 
@@ -688,17 +689,15 @@ static void handleFinalApproachRequest(const json& json) {
     std::cout << " z=" << branchStart[2];
     cout << endl;
 
+    printf("currentConfig:\t");
     for (int i = 0; i < 6; i++) {
-        printf("currentConfig[%d] = %f\n", i, currentConfig[i]);
+        printf("%f ", currentConfig[i]);
     }
     cout << endl;
 
 
     Matlab_getGikCut(currentConfig,branchStart,&solverParameters, CAM_ANGLE_OFFSET, &exitCode,&solutionInfoApr,qWaypointCut);
     code = static_cast<int>(exitCode+0.1);
-
-    cout << "exitCode = " << exitCode << endl;
-    cout << "code = " << code << endl;
 
     if (code != 1){
         cout << "Matlab_getGikCut: GIK failed, aborting FinalApproach Sequence" << endl;
@@ -739,7 +738,7 @@ static void handleFinalApproachRequest(const json& json) {
             sendStatusResponse(FINAL_APPROACH_STR, COMPV_RESULT_FAIL, COMPV_REASON_UNREACHABLE);
 
         }
-
+/*
         //Print for debug
         if (pathCartesian.size() >= 2) {
             cout << "pathCartesian:" << endl;
@@ -766,6 +765,7 @@ static void handleFinalApproachRequest(const json& json) {
             }
             cout << endl;
         }
+*/
 
     }
 
