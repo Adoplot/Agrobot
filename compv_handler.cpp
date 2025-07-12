@@ -184,6 +184,7 @@ void Compv_HandleCmd(const std::string* data) {
 
         case COMPV_REQ_SAFE_POSITION:
             handleSafePositionRequest();
+            break;
 
         case COMPV_REQ_GO_HOME:
             handleGoHomeRequest();
