@@ -302,7 +302,7 @@ static void handleCutRequest(){
 }
 
 static void sendStatusResponse(const char* request, const char* result, const char* reason){
-    cout << "[CompV]: Sending reason response:\n\tRequest = " << request << "\n\tStatus = " << result << "\n\tResult = " << result << endl; //todo elaborate
+    cout << "[CompV]: Sending reason response:\n\tRequest = " << request << "\n\tStatus = " << reason << "\n\tResult = " << result << endl; //todo elaborate
     json json_send;
     json_send["request"] = request;
     json_send["result"] = result;
