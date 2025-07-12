@@ -32,6 +32,16 @@ enum class Robot_Sequence_Result_t {
     SUCCESS ///< Finished successfully
 };
 
+enum class Robot_Comm_State_t {
+    INIT,
+    IDLE,
+    WAITING_FOR_RESPONSE,
+    RESPONSE_RECEIVED,
+    TIMED_OUT,
+    SUCCESS,
+    FAIL,
+    END
+};
 bool RobotAPI_StartApproachSequence();
 bool RobotAPI_StartFinalApproachSequence();
 bool RobotAPI_StartCutSequence();
@@ -59,5 +69,6 @@ Robot_Sequence_t RobotAPI_GetSequence();
 Robot_Sequence_State_t RobotAPI_GetSequenceState();
 Robot_Sequence_Result_t RobotAPI_GetSequenceResult();
 void RobotAPI_ResetSequenceData();
+void RobotAPI_ProcessAction();
 
 #endif //ROBOTARM_ROBOT_API_H

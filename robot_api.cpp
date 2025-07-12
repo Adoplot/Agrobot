@@ -5,18 +5,63 @@
 #include "Matlab_ik_types.h"
 #include "ik_wrapper.h"
 #include <sstream>
+#include <iostream>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 using std::cout;
 using std::cerr;
 using std::endl;
 
 #define LOCAL_LOG_PREFIX "[RobotAPI]: "
+#define COMM_TIMEOUT_MS 250
 
 #define LOCAL_LOG_INFO(msg) std::cout << LOCAL_LOG_PREFIX << msg << std::endl
 #define LOCAL_LOG_ERR(msg) std::cerr << LOCAL_LOG_PREFIX << msg << std::endl
 
+class OneShotTimer {
+public:
+    OneShotTimer() : cancelled(false) {}
+
+    void start(std::chrono::milliseconds duration, const std::function<void()>& callback) {
+        cancelled = false;
+        worker = std::thread([this, duration, callback]() {
+            std::unique_lock<std::mutex> lock(mtx);
+            if (cv.wait_for(lock, duration, [this]() { return cancelled.load(); })) {
+                return;
+            }
+            callback();
+        });
+    }
+
+    void cancel() {
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            cancelled = true;
+        }
+        cv.notify_all();
+        if (worker.joinable())
+            worker.join();
+    }
+
+    ~OneShotTimer() {
+        cancel();
+    }
+
+private:
+    std::thread worker;
+    std::condition_variable cv;
+    std::mutex mtx;
+    std::atomic<bool> cancelled;
+};
+
 static int sockfd_enet1;
 static sockaddr_in sockaddr_enet1;
+
+static int lastSentCmd = 0;
+static std::string lastSentCmdString;
+static OneShotTimer commTimer;
 
 static double currentRobotConfig[6];
 static std::vector<std::array<double, 6>> robotPathCartesian;
@@ -24,10 +69,17 @@ static std::vector<std::array<double, 6>> robotPathCartesian;
 static Robot_Sequence_t currentSequenceType = Robot_Sequence_t::IDLE;
 static Robot_Sequence_State_t currentSequenceState = Robot_Sequence_State_t::INIT;
 static Robot_Sequence_Result_t currentSequenceResult = Robot_Sequence_Result_t::INIT;
+static Robot_Comm_State_t currentCommState = Robot_Comm_State_t::INIT;
 
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result);
 static void sendRobotCommand(int command, const std::string& action_name);
 static void setRobotConfig(double a1, double a2, double a3, double a4, double a5, double a6);
+
+static void setCommState(Robot_Comm_State_t newState);
+static Robot_Comm_State_t getCommState();
+static void setCommTimer(int millis);
+static void disableCommTimer();
+static void commTimerCb();
 
 static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t newState, Robot_Sequence_Result_t result) {
     currentSequenceType = newType;
@@ -35,6 +87,29 @@ static void setSequenceState(Robot_Sequence_t newType, Robot_Sequence_State_t ne
     currentSequenceResult = result;
 }
 
+static void setCommState(Robot_Comm_State_t newState) {
+    currentCommState = newState;
+}
+
+static Robot_Comm_State_t getCommState(){
+    return currentCommState;
+}
+
+static void setCommTimer(int millis){
+    commTimer.start(std::chrono::milliseconds(millis), commTimerCb);
+}
+
+static void disableCommTimer(){
+    commTimer.cancel();
+}
+
+static void commTimerCb(){
+    if(getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
+        setCommState(Robot_Comm_State_t::TIMED_OUT);
+    } else {
+        LOCAL_LOG_ERR("Comm timer fired in wrong state");
+    }
+}
 
 bool RobotAPI_IsTargetReachable(Target_Parameters_t *targetParameters_worldFrame, Hyundai_Data_t *eePos_worldFrame){
     double branchStart[3]       {targetParameters_worldFrame->x1,targetParameters_worldFrame->y1,targetParameters_worldFrame->z1};
@@ -84,9 +159,19 @@ static void sendRobotCommand(int command, const std::string& action_name) {
 
     LOCAL_LOG_INFO("Initiating <" << action_name << "> sequence");
 
+    lastSentCmd = command;
+    lastSentCmdString = action_name;
+
     char buf_cmd[2]{};
     snprintf(buf_cmd, sizeof(buf_cmd), "%d", command);
-    Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd));
+
+    if(Connection_SendUdp(sockfd_enet1, sockaddr_enet1, buf_cmd, sizeof(buf_cmd)) != -1){
+        setCommTimer(COMM_TIMEOUT_MS);
+        setCommState(Robot_Comm_State_t::WAITING_FOR_RESPONSE);
+    } else {
+        LOCAL_LOG_ERR("Command transmission did not occur");
+    }
+
 }
 
 bool RobotAPI_StartApproachSequence(){
@@ -201,6 +286,12 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
     char temp[128];
     char* token;
 
+    if(cmd != ENET_UNDEFINED && getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
+        setCommState(Robot_Comm_State_t::RESPONSE_RECEIVED);
+    } else {
+        LOCAL_LOG_ERR("Received enet in invalid state");
+    }
+
     switch(cmd){
         case ENET_UNDEFINED: {
             cerr << "ENET_UNDEFINED: can't recognise received ENET1 cmd" << endl;
@@ -210,6 +301,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
         case ENET_INIT: {
             cout << "[RobotAPI]: ENET1 received <init> from Hyundai at start" << endl;
             //program receives init from hyundai at the start to detect pc address automatically
+            setCommState(Robot_Comm_State_t::IDLE);
             break;
         }
         case ENET_RETURN_TO_BASE_COMPLETE: {
@@ -364,6 +456,57 @@ void RobotAPI_ResetSequenceData(){
     LOCAL_LOG_INFO("Reset sequence parameters to idle state");
 }
 
+static void commStateMachine(){
+    static uint8_t commRetries;
+    Robot_Comm_State_t commSt = getCommState();
+
+    switch(commSt){
+        case Robot_Comm_State_t::INIT:
+        case Robot_Comm_State_t::IDLE:
+        case Robot_Comm_State_t::WAITING_FOR_RESPONSE:
+            break;
+
+        case Robot_Comm_State_t::RESPONSE_RECEIVED:
+            LOCAL_LOG_INFO("Response received");
+
+            disableCommTimer();
+            setCommState(Robot_Comm_State_t::SUCCESS);
+            break;
+
+        case Robot_Comm_State_t::TIMED_OUT:
+            if(commRetries < 3){
+                LOCAL_LOG_ERR("Command transmission timed out, retrying...");
+                commRetries++;
+
+                sendRobotCommand(lastSentCmd, lastSentCmdString);
+            } else {
+                LOCAL_LOG_ERR("Command transmission timed out, will not retry");
+                setCommState(Robot_Comm_State_t::FAIL);
+            }
+            break;
+
+        case Robot_Comm_State_t::FAIL:
+            LOCAL_LOG_ERR("Command transmission failed");
+            setCommState(Robot_Comm_State_t::END);
+            break;
+
+        case Robot_Comm_State_t::SUCCESS:
+            LOCAL_LOG_INFO("Command transmitted successfully");
+            setCommState(Robot_Comm_State_t::END);
+            break;
+
+        case Robot_Comm_State_t::END:
+            commRetries = 0;
+            lastSentCmd = 0;
+            lastSentCmdString.clear();
+            setCommState(Robot_Comm_State_t::IDLE);
+            break;
+    }
+}
+
+void RobotAPI_ProcessAction(){
+    commStateMachine();
+}
 
 
 void RobotAPI_ClearPath(){

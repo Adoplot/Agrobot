@@ -53,6 +53,7 @@ int main(void)
 
     while(1){
         Connection_ProcessAction();
+        RobotAPI_ProcessAction();
     }
 };
 

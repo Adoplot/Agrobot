@@ -42,6 +42,7 @@ typedef struct Enet_RecvStr_t {
     char safe_position_success[23] = "safe_position_success\012"; ///< robot moved to safe position successfully
 
     char robot_configuration[20] = "robot_configuration"; //do not use \012 here
+    char started_execution[19] = "started_execution\012";
 } Enet_RecvStr_t;
 
 void Enet1_HandleCmd(char* buffer, long buf_len);
