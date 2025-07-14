@@ -287,11 +287,6 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
     char temp[128];
     char* token;
 
-    if(cmd == ENET_STARTED_EXECUTION && getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
-        setCommState(Robot_Comm_State_t::RESPONSE_RECEIVED);
-        return;
-    }
-
     switch(cmd){
         case ENET_UNDEFINED: {
             cerr << "ENET_UNDEFINED: can't recognise received ENET1 cmd: " << std::string(buffer, buf_len) << endl;
@@ -406,6 +401,16 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
             }
 
             setRobotConfig(values[0], values[1], values[2], values[3], values[4], values[5]);
+            break;
+
+        case ENET_STARTED_EXECUTION:
+
+            if(getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
+                LOCAL_LOG_INFO("Received STARTED_EXECUTION cmd, switching state machine");
+                setCommState(Robot_Comm_State_t::RESPONSE_RECEIVED);
+            } else {
+                LOCAL_LOG_ERR("Received STARTED_EXECUTION cmd outside of the case");
+            }
             break;
 
             default:
