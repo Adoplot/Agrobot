@@ -304,10 +304,11 @@ static Received_Message_t receiveTcp(const int sockfd){
     char buffer[MAX_BUFFER_SIZE];
     bzero(buffer, MAX_BUFFER_SIZE);
 
-    printf("[Connection]: Received TCP data:\n\t"
-           "SockFd = %d\n", sockfd);
-
     long recv_bytes = recv(sockfd, buffer, MAX_BUFFER_SIZE-1, 0);
+
+    printf("[Connection]: Received TCP data:\n\t"
+           "%s", buffer);
+
 
     if (recv_bytes == RECV_ERR) {
         if (errno == EWOULDBLOCK) {
