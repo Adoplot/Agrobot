@@ -598,8 +598,8 @@ static void handleFinalApproachRequest(const json& json) {
 
     Cartesian_Pos_t targetStart_camFrame{};
     Cartesian_Pos_t targetDir_camFrame{};
-    //Cartesian_Pos_t targetStart_worldFrame{};
-    //Cartesian_Pos_t targetDir_worldFrame{};
+    Cartesian_Pos_t targetStartFinal_worldFrame{};
+    Cartesian_Pos_t targetDirFinal_worldFrame{};
 
     // ToDo: ADOPLOT - refactor into the function (targetParameters_worldFrame to camFrame)
     //Divide targetParameters into targetStart_camFrame and targetDir_camFrame
@@ -608,39 +608,39 @@ static void handleFinalApproachRequest(const json& json) {
     targetStart_camFrame.z = target.z1;
 
     //Transform targetParameters to worldFrame
-    //targetStart_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
-    //targetDir_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
+    if (target.x1 == 0 && target.y1 == 0 && target.z1 == 0){
+        cout << "[CompV]: FinalApproach received 0 in target_parameters. Using target_parameters from Approach" << endl;
+        targetStartFinal_worldFrame = targetStart_worldFrame;
+        targetDirFinal_worldFrame = targetDir_worldFrame;
+    } else{
+        targetStartFinal_worldFrame = Transform_ConvertFrameTarget2World(&targetStart_camFrame,eeCoords_worldFrame);
+        targetDirFinal_worldFrame = Transform_ConvertFrameTarget2World(&targetDir_camFrame,eeCoords_worldFrame);
+    }
 
-    //Show targetStart_worldFrame coords
+    //Print target parameters
     std::cout << std::fixed << std::showpoint;
     std::cout << std::setprecision(3);
     std::cout << "targetStart \t";
-    std::cout << "x=" << targetStart_worldFrame.x;
-    std::cout << " y=" << targetStart_worldFrame.y;
-    std::cout << " z=" << targetStart_worldFrame.z;
-    std::cout << " rotX=" << targetStart_worldFrame.rotx;
-    std::cout << " rotY=" << targetStart_worldFrame.roty;
-    std::cout << " rotZ=" << targetStart_worldFrame.rotz;
+    std::cout << "x=" << targetStartFinal_worldFrame.x;
+    std::cout << " y=" << targetStartFinal_worldFrame.y;
+    std::cout << " z=" << targetStartFinal_worldFrame.z;
     cout << endl;
     std::cout << std::fixed << std::showpoint;
     std::cout << std::setprecision(3);
     std::cout << "targetDir \t";
-    std::cout << "x=" << targetDir_worldFrame.x;
-    std::cout << " y=" << targetDir_worldFrame.y;
-    std::cout << " z=" << targetDir_worldFrame.z;
-    std::cout << " rotX=" << targetDir_worldFrame.rotx;
-    std::cout << " rotY=" << targetDir_worldFrame.roty;
-    std::cout << " rotZ=" << targetDir_worldFrame.rotz;
+    std::cout << "x=" << targetDirFinal_worldFrame.x;
+    std::cout << " y=" << targetDirFinal_worldFrame.y;
+    std::cout << " z=" << targetDirFinal_worldFrame.z;
     cout << endl;
 
     double branchStart[3] {0};
     double branchDir[3] {0};
-    branchStart[0] = targetStart_worldFrame.x;
-    branchStart[1] = targetStart_worldFrame.y;
-    branchStart[2] = targetStart_worldFrame.z;
-    branchDir[0] = targetDir_worldFrame.x;
-    branchDir[1] = targetDir_worldFrame.y;
-    branchDir[2] = targetDir_worldFrame.z;
+    branchStart[0] = targetStartFinal_worldFrame.x;
+    branchStart[1] = targetStartFinal_worldFrame.y;
+    branchStart[2] = targetStartFinal_worldFrame.z;
+    branchDir[0] = targetDirFinal_worldFrame.x;
+    branchDir[1] = targetDirFinal_worldFrame.y;
+    branchDir[2] = targetDirFinal_worldFrame.z;
 
     // Declare outputs
     int code;
@@ -650,14 +650,6 @@ static void handleFinalApproachRequest(const json& json) {
     //Initialize solver parameters
     struct0_T solverParameters {};
     IK_InitSolverParameters(&solverParameters);
-
-    std::cout << std::fixed << std::showpoint;
-    std::cout << std::setprecision(3);
-    std::cout << "branchStart \t";
-    std::cout << "x=" << branchStart[0];
-    std::cout << " y=" << branchStart[1];
-    std::cout << " z=" << branchStart[2];
-    cout << endl;
 
     printf("currentConfig:\t");
     for (int i = 0; i < 6; i++) {
