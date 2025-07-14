@@ -417,25 +417,6 @@ static void sendFinalApproachResponse(double x1, double y1, double z1, double x2
 }
 
 static void handleApproachRequest(const json& json) {
-    /*
-    cout << "Initiating <Set Pos> sequence" << endl;
-
-    Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
-
-    tcp_data_state = TCP_DATA_NEW_AVAILABLE;
-    targetPos_camFrame = getJsonPos(&json);
-    targetPos_worldFrame = Transform_ConvertFrameTarget2World(&targetPos_camFrame,
-                                                              eePos_worldFrame,
-                                                              SCISSORS_LENGTH);
-*/
-
-    // + get targetParameters and divide them into targetStart_camFrame and targetDir_camFrame
-    // + convert them from camFrame to worldFrame
-    // + get sortedList
-    // + receive currentConfig from hyundai
-    // + loop through sortedList with getGikFull and output qWaypoints or send failMessage
-    // + get pathApr from IK_getTrajectory
-    // o save pathApr for further onltrack increment calculations
 
     cout << "[CompV]: Received Approach request" << endl;
     //Get current robot EE coords
@@ -597,17 +578,6 @@ static void handleApproachRequest(const json& json) {
 
 static void handleFinalApproachRequest(const json& json) {
     cout << "Initiating <Final Approach> sequence" << endl;
-/*
- * OLD CODE
-    Hyundai_Data_t *eePos_worldFrame = Connection_GetEePosWorldFrame();
-
-    tcp_data_state = TCP_DATA_NEW_AVAILABLE;
-    targetPos_camFrame = getJsonPos(&json);
-    targetPos_worldFrame = Transform_ConvertFrameTarget2World(&targetPos_camFrame,
-                                                              eePos_worldFrame,
-                                                              SCISSORS_LENGTH);
- * OLD CODE END
-*/
 
     //Get current robot EE coords
     Hyundai_Data_t *eeCoords_worldFrame = Connection_GetEePosWorldFrame();
