@@ -51,6 +51,10 @@ static Enet_Cmd_t getEnet1CmdType(char* buffer, long buf_len){
         return ENET_ROBOT_CONFIGURATION;
     }
 
+    if (strncmp(buffer, enet_recv_str.started_execution, buf_len) == 0) {
+        return ENET_STARTED_EXECUTION;
+    }
+
     return ENET_UNDEFINED;
 }
 

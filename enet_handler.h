@@ -25,7 +25,8 @@ typedef enum {
     ENET_SWITCH_BASE_HOME_COMPLETE, ///< Robot is in Home position
     ENET_SWITCH_BASE_NO_BASE_LEFT, ///< No next base available
     ENET_ROBOT_CONFIGURATION, ///< Received robot axis configuration
-    ENET_SAFE_POSITION_COMPLETE ///< Robot is in safe position for transportation
+    ENET_SAFE_POSITION_COMPLETE, ///< Robot is in safe position for transportation
+    ENET_STARTED_EXECUTION
 } Enet_Cmd_t;
 
 

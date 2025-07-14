@@ -287,12 +287,9 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
     char temp[128];
     char* token;
 
-    if(cmd != ENET_UNDEFINED && getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
+    if(cmd == ENET_STARTED_EXECUTION && getCommState() == Robot_Comm_State_t::WAITING_FOR_RESPONSE){
         setCommState(Robot_Comm_State_t::RESPONSE_RECEIVED);
-    } else {
-        if(cmd != ENET_ROBOT_CONFIGURATION) {
-            LOCAL_LOG_ERR("Received enet in invalid state");
-        }
+        return;
     }
 
     switch(cmd){
