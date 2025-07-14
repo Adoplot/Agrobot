@@ -297,7 +297,7 @@ void RobotAPI_HandleEnetResponse(Enet_Cmd_t cmd, char* buffer, long buf_len){
 
     switch(cmd){
         case ENET_UNDEFINED: {
-            cerr << "ENET_UNDEFINED: can't recognise received ENET1 cmd" << endl;
+            cerr << "ENET_UNDEFINED: can't recognise received ENET1 cmd: " << std::string(buffer, buf_len) << endl;
             // ToDo: handle when cmd in not recognised?
             break;
         }
