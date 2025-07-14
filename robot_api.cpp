@@ -26,6 +26,7 @@ public:
     OneShotTimer() : cancelled(false) {}
 
     void start(std::chrono::milliseconds duration, const std::function<void()>& callback) {
+        cancel();
         cancelled = false;
         worker = std::thread([this, duration, callback]() {
             std::unique_lock<std::mutex> lock(mtx);
